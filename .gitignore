@@ -1,0 +1,35 @@
+# 本地配置与凭据
+.env
+.env.*
+!.env.example
+
+# Python环境与缓存
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 前端依赖与构建产物
+node_modules/
+dist/
+
+# 模型权重、数据及运行产物
+/weights/
+/data/
+/runs/
+/runtime/
+*.ckpt
+*.safetensors
+*.pth
+*.pt
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.log
+
+# 系统文件
+Thumbs.db
+.DS_Store
