@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runtime\\envs\\build-cpu\\Scripts\\python.exe",
+    "-m",
+    "pip",
+    "wheel",
+    "--no-build-isolation",
+    "--no-deps",
+    "--wheel-dir",
+    "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runtime\\wheels",
+    "--config-settings=build-dir=build-cpu-p0",
+    "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runtime\\upstream\\torchmcubes"
+  ],
+  "returncode": 0,
+  "seconds": 71.02586110000266,
+  "build_torch": "2.5.1+cpu",
+  "runtime_torch": "2.5.1+cu121",
+  "cuda_kernels_compiled": false
+}

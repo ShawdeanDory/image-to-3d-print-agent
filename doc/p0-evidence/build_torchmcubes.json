@@ -1,0 +1,14 @@
+{
+  "returncode": 1,
+  "seconds": 23.614,
+  "command": [
+    "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runtime\\tools\\uv\\uv.exe",
+    "pip",
+    "install",
+    "--python",
+    "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runtime\\envs\\reconstruction\\Scripts\\python.exe",
+    "--no-build-isolation",
+    "--no-progress",
+    "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runtime\\upstream\\torchmcubes"
+  ]
+}

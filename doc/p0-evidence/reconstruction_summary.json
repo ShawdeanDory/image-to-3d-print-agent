@@ -1,0 +1,113 @@
+{
+  "cases": [
+    {
+      "case": "hamburger",
+      "command": [
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runtime\\envs\\reconstruction\\Scripts\\python.exe",
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训\\scripts\\p0\\reconstruct_case.py",
+        "--root",
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训",
+        "--image",
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训\\fixtures\\p0\\hamburger.png",
+        "--output",
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runs\\p0\\p0-20261018-01\\reconstruction\\hamburger"
+      ],
+      "returncode": 0,
+      "process_seconds": 110.33596450000186,
+      "input": "fixtures\\p0\\hamburger.png",
+      "model_device": "cuda:0",
+      "scene_code_device": "cuda:0",
+      "marching_cubes_cuda_compiled": false,
+      "parameters": {
+        "chunk_size": 2048,
+        "mc_resolution": 128,
+        "foreground_ratio": 0.85,
+        "dtype": "float32",
+        "seed": 0,
+        "preprocessing": "existing_alpha_resize_and_gray_composite"
+      },
+      "seconds": {
+        "load_and_cuda_transfer": 29.985312300006626,
+        "preprocessing": 0.281794299982721,
+        "neural_inference": 13.457157800003188,
+        "mesh_extraction": 1.6078596000152174,
+        "total": 45.33776759999455
+      },
+      "peak_cuda_allocated_mib": 1866.54150390625,
+      "peak_cuda_reserved_mib": 2058.0,
+      "torch_version": "2.5.1+cu121",
+      "cuda_runtime": "12.1",
+      "vertices": 13424,
+      "faces": 26704,
+      "raw_mesh": "runs\\p0\\p0-20261018-01\\reconstruction\\hamburger\\raw_mesh.glb",
+      "independent_read": {
+        "valid": true,
+        "vertices": 13424,
+        "faces": 26704,
+        "extents": [
+          0.9084474742412567,
+          0.9155091345310211,
+          0.49039316177368164
+        ],
+        "watertight": false,
+        "coordinates_unit": "model_unit_not_mm"
+      },
+      "pass": true
+    },
+    {
+      "case": "robot",
+      "command": [
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runtime\\envs\\reconstruction\\Scripts\\python.exe",
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训\\scripts\\p0\\reconstruct_case.py",
+        "--root",
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训",
+        "--image",
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训\\fixtures\\p0\\robot.png",
+        "--output",
+        "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runs\\p0\\p0-20261018-01\\reconstruction\\robot"
+      ],
+      "returncode": 0,
+      "process_seconds": 21.237639500002842,
+      "input": "fixtures\\p0\\robot.png",
+      "model_device": "cuda:0",
+      "scene_code_device": "cuda:0",
+      "marching_cubes_cuda_compiled": false,
+      "parameters": {
+        "chunk_size": 2048,
+        "mc_resolution": 128,
+        "foreground_ratio": 0.85,
+        "dtype": "float32",
+        "seed": 0,
+        "preprocessing": "existing_alpha_resize_and_gray_composite"
+      },
+      "seconds": {
+        "load_and_cuda_transfer": 5.9516550000116695,
+        "preprocessing": 0.09776699999929406,
+        "neural_inference": 4.138188099983381,
+        "mesh_extraction": 0.9840270000277087,
+        "total": 11.176619000005303
+      },
+      "peak_cuda_allocated_mib": 1866.54150390625,
+      "peak_cuda_reserved_mib": 2058.0,
+      "torch_version": "2.5.1+cu121",
+      "cuda_runtime": "12.1",
+      "vertices": 19102,
+      "faces": 38064,
+      "raw_mesh": "runs\\p0\\p0-20261018-01\\reconstruction\\robot\\raw_mesh.glb",
+      "independent_read": {
+        "valid": true,
+        "vertices": 19102,
+        "faces": 38064,
+        "extents": [
+          0.7118130326271057,
+          0.9704296588897705,
+          0.9965932965278625
+        ],
+        "watertight": false,
+        "coordinates_unit": "model_unit_not_mm"
+      },
+      "pass": true
+    }
+  ],
+  "pass": true
+}

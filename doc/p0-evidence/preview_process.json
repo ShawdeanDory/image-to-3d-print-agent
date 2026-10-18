@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runtime\\tools\\blender\\blender-4.5.14-windows-x64\\blender.exe",
+    "--background",
+    "--factory-startup",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "C:\\Users\\Lenovo\\Desktop\\大数据实训\\scripts\\p0\\preview_meshes.py",
+    "--",
+    "--input",
+    "C:\\Users\\Lenovo\\Desktop\\大数据实训\\runs\\p0\\p0-20261018-01\\reconstruction"
+  ],
+  "returncode": 0,
+  "seconds": 2.068024999985937
+}

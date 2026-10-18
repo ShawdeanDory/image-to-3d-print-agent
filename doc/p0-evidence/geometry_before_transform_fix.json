@@ -1,0 +1,46 @@
+{
+  "blender_version": "4.5.14 LTS",
+  "addon_version": null,
+  "addon_commit": "b42d68627734cb18af0e6f41537063984313a284",
+  "units": {
+    "internal": "m",
+    "stl_coordinates": "mm",
+    "thickness_min_mm": 1.2
+  },
+  "cube": {
+    "dimensions_mm": [
+      10.000000707805157,
+      10.000000707805157,
+      10.000000707805157
+    ],
+    "volume_mm3": 999999999999.9999,
+    "checks": {
+      "Non Manifold Edges": 0,
+      "Bad Contiguous Edges": 0,
+      "Intersect Face": 0,
+      "Thin Faces": 0
+    },
+    "pass": false
+  },
+  "thin_wall": {
+    "thickness_mm": 0.9,
+    "checks": {
+      "Non Manifold Edges": 0,
+      "Bad Contiguous Edges": 0,
+      "Intersect Face": 0,
+      "Thin Faces": 2
+    },
+    "pass": true
+  },
+  "self_intersection": {
+    "construction": "two_closed_overlapping_cubes_without_boolean_union",
+    "checks": {
+      "Non Manifold Edges": 0,
+      "Bad Contiguous Edges": 0,
+      "Intersect Face": 6,
+      "Thin Faces": 0
+    },
+    "pass": true
+  },
+  "pass": false
+}

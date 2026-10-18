@@ -1,0 +1,6 @@
+{
+  "setup_file_exists": true,
+  "returncode": 1,
+  "stderr": "'\\\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat\\\"' is not recognized as an internal or external command,\noperable program or batch file.\n",
+  "stdout_error_only": ""
+}

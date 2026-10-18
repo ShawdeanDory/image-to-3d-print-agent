@@ -1,0 +1,29 @@
+{
+  "stage": "P0",
+  "execution_id": "p0-20261018-01",
+  "recorded_at": "2026-10-18T12:31:33.696110+08:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": {
+    "executable": "C:\\Users\\Lenovo\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "version": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "disk_free_bytes": 117445840896,
+  "tools": {
+    "python": "C:\\Users\\Lenovo\\AppData\\Local\\Programs\\Python\\Python313\\python.EXE",
+    "py": "C:\\WINDOWS\\py.EXE",
+    "uv": null,
+    "blender": null,
+    "nvcc": null,
+    "cmake": null,
+    "cl": null
+  },
+  "system_modules": {
+    "torch": true,
+    "trimesh": false,
+    "PIL": true,
+    "numpy": true
+  },
+  "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU, 6144 MiB, 3935 MiB, 591.86",
+  "reconstruction": "not_run",
+  "geometry_checks": "not_run"
+}

@@ -1,0 +1,12 @@
+{
+  "torch": "2.5.1+cu121",
+  "cuda": "12.1",
+  "extension_version": "0.1.0",
+  "extension_cuda_compiled": false,
+  "input_device": "cuda:0",
+  "result_device": "cuda:0",
+  "vertices": 96,
+  "faces": 188,
+  "finite": true,
+  "pass": true
+}

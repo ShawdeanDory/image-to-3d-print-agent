@@ -1,0 +1,18 @@
+{
+  "command": [
+    "$PROJECT_ROOT\\runtime\\tools\\blender\\blender-4.5.14-windows-x64\\blender.exe",
+    "--background",
+    "--factory-startup",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "$PROJECT_ROOT\\scripts\\p0\\verify_geometry.py",
+    "--",
+    "--addon-dir",
+    "$PROJECT_ROOT\\runtime\\upstream\\blender-addons",
+    "--output",
+    "$PROJECT_ROOT\\runs\\p0\\p0-20261018-01\\geometry"
+  ],
+  "returncode": 0,
+  "seconds": 1.916
+}

@@ -1,0 +1,33 @@
+{
+  "execution_id": "p0-20261018-01",
+  "python": "3.11.17",
+  "uv": "0.13.1",
+  "pytorch_runtime": "2.5.1+cu121",
+  "cuda_runtime": "12.1",
+  "driver": "591.86",
+  "blender": "4.5.14 LTS",
+  "blender_build": "62c1db4208e8",
+  "prusaslicer": "2.9.6",
+  "tripo_sr_commit": "107cefdc244c39106fa830359024f6a2f1c78871",
+  "torchmcubes_commit": "879926d0ef58e6ce0ac2630fdecb5e53af7ed3ff",
+  "print_toolbox_commit": "b42d68627734cb18af0e6f41537063984313a284",
+  "model": {
+    "repo": "stabilityai/TripoSR",
+    "revision": "5b521936b01fbe1890f6f9baed0254ab6351c04a",
+    "files": [
+      "config.yaml",
+      "model.ckpt"
+    ]
+  },
+  "dino_config": {
+    "repo": "facebook/dino-vitb16",
+    "revision": "f205d5d8e640a89a2b8ef0369670dfc37cc07fc2",
+    "filename": "config.json",
+    "bytes": 454,
+    "weights_downloaded": false
+  },
+  "build_compiler": "MSVC19.44.35211.0",
+  "source_base_commit": "a3d4c01",
+  "business_schema_implemented": false,
+  "physical_printer_available": false
+}
