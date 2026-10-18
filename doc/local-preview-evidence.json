@@ -1,0 +1,151 @@
+{
+  "execution_id": "local-launcher-20261018-01",
+  "baseline": {
+    "base_commit": "3acd9377c721ea5a31fde3abb156821fc0de1ad8",
+    "entry_files_before": {
+      "双击生成3D模型.cmd": false,
+      "scripts/local_preview/launcher.py": false,
+      "scripts/local_preview/prepare_image.py": false,
+      "scripts/local_preview/open_result.py": false
+    },
+    "p1_started": false,
+    "p0_reopened": false
+  },
+  "regression": {
+    "before": "ModuleNotFoundError: No module named launcher",
+    "after": "6 tests passed",
+    "normal": "PNG and JPEG",
+    "cancel": "exit 0, no model execution",
+    "concurrency": "second launch refused",
+    "bad_image": {
+      "returncode": 1,
+      "output": "本机图片到3D试用；完成后会打开Blender。\n未完成：图片不存在、损坏或无法读取\n",
+      "no_run_created": true
+    },
+    "cmd_failure": {
+      "returncode": 1,
+      "output": "本机图片到3D试用；完成后会打开Blender。\n未完成：图片不存在、损坏或无法读取\nPress any key to continue . . . \n",
+      "stderr": ""
+    }
+  },
+  "runs": [
+    {
+      "run": {
+        "source_image": "$PROJECT_ROOT\\fixtures\\p0\\hamburger.png",
+        "input": {
+          "format": "PNG",
+          "size": [
+            614,
+            614
+          ]
+        },
+        "status": "generated",
+        "parameters": {
+          "chunk_size": 2048,
+          "mc_resolution": 128,
+          "model_device": "cuda:0"
+        },
+        "reconstruction_seconds": 17.78200000000652,
+        "mesh": "$PROJECT_ROOT\\runs\\manual\\20261018-131857-6ptf2848\\raw_mesh.glb",
+        "vertices": 13424,
+        "faces": 26704,
+        "watertight": false
+      },
+      "reconstruction": {
+        "input": "runs\\manual\\20261018-131857-6ptf2848\\prepared.png",
+        "model_device": "cuda:0",
+        "scene_code_device": "cuda:0",
+        "marching_cubes_cuda_compiled": false,
+        "parameters": {
+          "chunk_size": 2048,
+          "mc_resolution": 128,
+          "foreground_ratio": 0.85,
+          "dtype": "float32",
+          "seed": 0,
+          "preprocessing": "existing_alpha_resize_and_gray_composite"
+        },
+        "seconds": {
+          "load_and_cuda_transfer": 5.682692500005942,
+          "preprocessing": 0.09000009999726899,
+          "neural_inference": 3.058525100001134,
+          "mesh_extraction": 1.0206075000169221,
+          "total": 9.86037710000528
+        },
+        "peak_cuda_allocated_mib": 1866.54150390625,
+        "peak_cuda_reserved_mib": 2058.0,
+        "torch_version": "2.5.1+cu121",
+        "cuda_runtime": "12.1",
+        "vertices": 13424,
+        "faces": 26704,
+        "raw_mesh": "runs\\manual\\20261018-131857-6ptf2848\\raw_mesh.glb"
+      }
+    },
+    {
+      "run": {
+        "source_image": "$PROJECT_ROOT\\runs\\local-launcher-20261018-01\\输入有空格\\机器人 & 测试.jpg",
+        "input": {
+          "format": "JPEG",
+          "size": [
+            512,
+            512
+          ]
+        },
+        "status": "opened",
+        "parameters": {
+          "chunk_size": 2048,
+          "mc_resolution": 128,
+          "model_device": "cuda:0"
+        },
+        "reconstruction_seconds": 18.109000000025844,
+        "mesh": "$PROJECT_ROOT\\runs\\manual\\20261018-132436-5eywm7tg\\raw_mesh.glb",
+        "vertices": 18984,
+        "faces": 37816,
+        "watertight": false,
+        "blender": {
+          "mesh": "$PROJECT_ROOT\\runs\\manual\\20261018-132436-5eywm7tg\\raw_mesh.glb",
+          "mesh_objects": 1,
+          "vertices": 18984,
+          "faces": 37816,
+          "blender": "4.5.14 LTS",
+          "preview_only_axis_transform": true
+        }
+      },
+      "reconstruction": {
+        "input": "runs\\manual\\20261018-132436-5eywm7tg\\prepared.png",
+        "model_device": "cuda:0",
+        "scene_code_device": "cuda:0",
+        "marching_cubes_cuda_compiled": false,
+        "parameters": {
+          "chunk_size": 2048,
+          "mc_resolution": 128,
+          "foreground_ratio": 0.85,
+          "dtype": "float32",
+          "seed": 0,
+          "preprocessing": "existing_alpha_resize_and_gray_composite"
+        },
+        "seconds": {
+          "load_and_cuda_transfer": 5.369831500021974,
+          "preprocessing": 0.07370049998280592,
+          "neural_inference": 3.1655352000088897,
+          "mesh_extraction": 1.1198788000037894,
+          "total": 9.734141799999634
+        },
+        "peak_cuda_allocated_mib": 1866.54150390625,
+        "peak_cuda_reserved_mib": 2058.0,
+        "torch_version": "2.5.1+cu121",
+        "cuda_runtime": "12.1",
+        "vertices": 18984,
+        "faces": 37816,
+        "raw_mesh": "runs\\manual\\20261018-132436-5eywm7tg\\raw_mesh.glb"
+      }
+    }
+  ],
+  "ui_observation": "native file picker selected JPEG; Blender displayed imported model",
+  "p1_started": false,
+  "human_review": {
+    "reviewer": "当前用户",
+    "date": "2026-10-18",
+    "scope": "使用说明、主要脚本和Blender结果",
+    "conclusion": "已核对说明、主要脚本和结果，复核通过"
+  }
+}
