@@ -1,0 +1,243 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "00000000-0000-4000-8000-000000000001",
+  "task_id": "image_to_3d_print",
+  "run_id": "00000000-0000-4000-8000-000000000001",
+  "status": "succeeded",
+  "data": {
+    "request": {
+      "schema_version": "1.0.0",
+      "image_asset_id": "asset_cube",
+      "height_value": 80,
+      "height_unit": "mm",
+      "scale_source": "user_target",
+      "orientation": {
+        "up_axis": "z",
+        "confirmed": true
+      },
+      "printer_profile_id": "demo_v1"
+    },
+    "state": {
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "stage": "complete",
+      "status": "succeeded",
+      "mesh_version": "mesh_v1",
+      "artifacts": [
+        "inspection_1",
+        "preview_1",
+        "stl_1",
+        "confirmation_1"
+      ]
+    },
+    "printer_profile": {
+      "profile_id": "demo_v1",
+      "version": "1.0.0",
+      "profile_kind": "demo",
+      "process": "FDM",
+      "material": "PLA",
+      "nozzle_mm": 0.4,
+      "layer_height_mm": 0.2,
+      "min_wall_mm": 1.2,
+      "build_volume_mm": [
+        220,
+        220,
+        250
+      ],
+      "slicer_version": "2.9.6",
+      "supports_policy": "human_review"
+    },
+    "inspection": {
+      "mesh_version": "mesh_v1",
+      "unit": "mm",
+      "dimensions_mm": [
+        40,
+        40,
+        80
+      ],
+      "volume_mm3": 128000,
+      "component_count": 1,
+      "watertight": true,
+      "normals_consistent": true,
+      "boundary_edge_count": 0,
+      "non_manifold_edge_count": 0,
+      "non_manifold_vertex_count": 0,
+      "checks": [
+        {
+          "name": "finite_coordinates",
+          "status": "pass",
+          "value": true,
+          "unit": "bool",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "watertight",
+          "status": "pass",
+          "value": true,
+          "unit": "bool",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "normals",
+          "status": "pass",
+          "value": true,
+          "unit": "bool",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "boundary_edges",
+          "status": "pass",
+          "value": 0,
+          "unit": "count",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "non_manifold_edges",
+          "status": "pass",
+          "value": 0,
+          "unit": "count",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "non_manifold_vertices",
+          "status": "pass",
+          "value": 0,
+          "unit": "count",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "self_intersection",
+          "status": "pass",
+          "value": 0,
+          "unit": "faces",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "wall_thickness",
+          "status": "pass",
+          "value": 1.6,
+          "unit": "mm",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1",
+          "threshold": 1.2
+        },
+        {
+          "name": "dimensions",
+          "status": "pass",
+          "value": 80,
+          "unit": "mm",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "build_volume",
+          "status": "pass",
+          "value": true,
+          "unit": "bool",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "overhang",
+          "status": "pass",
+          "value": 0,
+          "unit": "faces",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        },
+        {
+          "name": "bed_contact",
+          "status": "pass",
+          "value": true,
+          "unit": "bool",
+          "tool_version": "offline_fixture_v1",
+          "evidence_artifact_id": "inspection_1"
+        }
+      ]
+    },
+    "slicer_confirmation": {
+      "pending_input_id": "pending_slice",
+      "mesh_version": "mesh_v1",
+      "result": "pass",
+      "slicer_version": "2.9.6",
+      "printer_profile_id": "demo_v1",
+      "dimensions_mm": [
+        40,
+        40,
+        80
+      ],
+      "supports_enabled": false,
+      "layer_preview_asset_id": "preview_1",
+      "confirmation_artifact_id": "confirmation_1",
+      "notes": "仅为离线契约fixture，不是实际切片"
+    }
+  },
+  "artifacts": [
+    {
+      "artifact_id": "inspection_1",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "kind": "inspection_report",
+      "relative_path": "fixtures/p1/contracts/inspection_fixture.json",
+      "mesh_version": "mesh_v1",
+      "unit": "mm",
+      "created_at": "2026-10-19T23:00:00+08:00"
+    },
+    {
+      "artifact_id": "preview_1",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "kind": "slicer_preview",
+      "relative_path": "fixtures/p1/contracts/preview_fixture.png",
+      "mesh_version": "mesh_v1",
+      "unit": "mm",
+      "created_at": "2026-10-19T23:00:00+08:00"
+    },
+    {
+      "artifact_id": "stl_1",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "kind": "candidate_stl",
+      "relative_path": "fixtures/p1/contracts/candidate_fixture.stl",
+      "mesh_version": "mesh_v1",
+      "unit": "mm",
+      "created_at": "2026-10-19T23:00:00+08:00"
+    },
+    {
+      "artifact_id": "confirmation_1",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "kind": "slicer_confirmation",
+      "relative_path": "fixtures/p1/contracts/slicer_fixture.json",
+      "mesh_version": "mesh_v1",
+      "unit": "mm",
+      "created_at": "2026-10-19T23:00:00+08:00"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence_1",
+      "source_type": "tool",
+      "source_id": "inspect_fixture",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "mesh_version": "mesh_v1",
+      "artifact_id": "inspection_1",
+      "locator": "checks",
+      "created_at": "2026-10-19T23:00:00+08:00",
+      "summary": "合成契约输入，无真实工具结果"
+    },
+    {
+      "evidence_id": "human_evidence_1",
+      "source_type": "human",
+      "source_id": "human_fixture",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "mesh_version": "mesh_v1",
+      "artifact_id": "confirmation_1",
+      "locator": "confirmation",
+      "created_at": "2026-10-19T23:00:00+08:00",
+      "summary": "仅为人工确认结构的离线fixture，没有实际用户确认"
+    }
+  ]
+}

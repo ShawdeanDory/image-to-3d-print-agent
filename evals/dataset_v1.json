@@ -1,0 +1,818 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_version": "1.0.0",
+  "policy": {
+    "cases_per_split": 10,
+    "normal_per_split": 6
+  },
+  "scope": "P1固定契约与受控生成测试集：2张已见P0图片+16个项目自产CPU渲染对象；不能据此推断自然图片泛化。保留集本轮仅静态检查，无模型评估。",
+  "cases": [
+    {
+      "case_id": "dev_n01",
+      "split": "development",
+      "category": "normal",
+      "object_group": "p0_hamburger",
+      "asset_path": "fixtures/p0/hamburger.png",
+      "mask_path": "fixtures/p1/masks/hamburger.png",
+      "source_kind": "authorized_p0",
+      "source_ref": "TripoSR@107cefdc244c39106fa830359024f6a2f1c78871/examples/hamburger.png",
+      "license": "MIT-source-repository; original-image-author-unverified",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_hamburger",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "dev_n02",
+      "split": "development",
+      "category": "normal",
+      "object_group": "p0_robot",
+      "asset_path": "fixtures/p0/robot.png",
+      "mask_path": "fixtures/p1/masks/robot.png",
+      "source_kind": "authorized_p0",
+      "source_ref": "TripoSR@107cefdc244c39106fa830359024f6a2f1c78871/examples/robot.png",
+      "license": "MIT-source-repository; original-image-author-unverified",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_robot",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "dev_n03",
+      "split": "development",
+      "category": "normal",
+      "object_group": "procedural_block",
+      "asset_path": "fixtures/p1/procedural/block.png",
+      "mask_path": "fixtures/p1/masks/block.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:block",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_block",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "dev_n04",
+      "split": "development",
+      "category": "normal",
+      "object_group": "procedural_pyramid",
+      "asset_path": "fixtures/p1/procedural/pyramid.png",
+      "mask_path": "fixtures/p1/masks/pyramid.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:pyramid",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_pyramid",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "dev_n05",
+      "split": "development",
+      "category": "normal",
+      "object_group": "procedural_bead",
+      "asset_path": "fixtures/p1/procedural/bead.png",
+      "mask_path": "fixtures/p1/masks/bead.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:bead",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_bead",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "dev_n06",
+      "split": "development",
+      "category": "normal",
+      "object_group": "procedural_knob",
+      "asset_path": "fixtures/p1/procedural/knob.png",
+      "mask_path": "fixtures/p1/masks/knob.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:knob",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_knob",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "dev_b01",
+      "split": "development",
+      "category": "boundary",
+      "object_group": "procedural_block",
+      "asset_path": "fixtures/p1/procedural/block.png",
+      "mask_path": null,
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:block",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_block",
+        "height_value": null,
+        "height_unit": null,
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "wait",
+      "expected_reason": "请求补齐高度和单位",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "dev_b02",
+      "split": "development",
+      "category": "boundary",
+      "object_group": "procedural_pyramid",
+      "asset_path": "fixtures/p1/boundary/corrupt.png",
+      "mask_path": null,
+      "source_kind": "boundary_fixture",
+      "source_ref": "scripts/p1/prepare_fixture_manifest.py@1.0.0:corrupt.png",
+      "license": "CC0-1.0",
+      "image_should_decode": false,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "pending_upload_dev_b02",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "reject",
+      "expected_reason": "INVALID_IMAGE：上传内容损坏",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "dev_b03",
+      "split": "development",
+      "category": "boundary",
+      "object_group": "procedural_bead",
+      "asset_path": "fixtures/p1/boundary/person.png",
+      "mask_path": null,
+      "source_kind": "boundary_fixture",
+      "source_ref": "scripts/p1/prepare_fixture_manifest.py@1.0.0:person.png",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "dev_b03_asset",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "reject",
+      "expected_reason": "人物不在第一版物体范围；语义判断待后续实现",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "dev_b04",
+      "split": "development",
+      "category": "boundary",
+      "object_group": "procedural_knob",
+      "asset_path": "fixtures/p1/procedural/knob.png",
+      "mask_path": null,
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:knob",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_knob",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "tool_failure",
+      "expected_reason": "TOOL_UNAVAILABLE；不得编造成功",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_n01",
+      "split": "evaluation",
+      "category": "normal",
+      "object_group": "procedural_cone",
+      "asset_path": "fixtures/p1/procedural/cone.png",
+      "mask_path": "fixtures/p1/masks/cone.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:cone",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_cone",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_n02",
+      "split": "evaluation",
+      "category": "normal",
+      "object_group": "procedural_octahedron",
+      "asset_path": "fixtures/p1/procedural/octahedron.png",
+      "mask_path": "fixtures/p1/masks/octahedron.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:octahedron",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_octahedron",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_n03",
+      "split": "evaluation",
+      "category": "normal",
+      "object_group": "procedural_ring",
+      "asset_path": "fixtures/p1/procedural/ring.png",
+      "mask_path": "fixtures/p1/masks/ring.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:ring",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_ring",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_n04",
+      "split": "evaluation",
+      "category": "normal",
+      "object_group": "procedural_stairs",
+      "asset_path": "fixtures/p1/procedural/stairs.png",
+      "mask_path": "fixtures/p1/masks/stairs.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:stairs",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_stairs",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_n05",
+      "split": "evaluation",
+      "category": "normal",
+      "object_group": "procedural_tower",
+      "asset_path": "fixtures/p1/procedural/tower.png",
+      "mask_path": "fixtures/p1/masks/tower.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:tower",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_tower",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_n06",
+      "split": "evaluation",
+      "category": "normal",
+      "object_group": "procedural_mushroom",
+      "asset_path": "fixtures/p1/procedural/mushroom.png",
+      "mask_path": "fixtures/p1/masks/mushroom.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:mushroom",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_mushroom",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_b01",
+      "split": "evaluation",
+      "category": "boundary",
+      "object_group": "procedural_cone",
+      "asset_path": "fixtures/p1/procedural/cone.png",
+      "mask_path": null,
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:cone",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_cone",
+        "height_value": 80,
+        "height_unit": null,
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "wait",
+      "expected_reason": "单位缺失，不能定标",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_b02",
+      "split": "evaluation",
+      "category": "boundary",
+      "object_group": "procedural_ring",
+      "asset_path": "fixtures/p1/boundary/background.png",
+      "mask_path": null,
+      "source_kind": "boundary_fixture",
+      "source_ref": "scripts/p1/prepare_fixture_manifest.py@1.0.0:background.png",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "eval_b02_asset",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "review",
+      "expected_reason": "复杂背景需要前景复核，不预设算法结果",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_b03",
+      "split": "evaluation",
+      "category": "boundary",
+      "object_group": "procedural_octahedron",
+      "asset_path": "fixtures/p1/procedural/octahedron.png",
+      "mask_path": null,
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:octahedron",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_octahedron",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_unknown_space"
+      },
+      "expected": "wait",
+      "expected_reason": "打印空间未知，不能确认build_volume通过",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "eval_b04",
+      "split": "evaluation",
+      "category": "boundary",
+      "object_group": "procedural_stairs",
+      "asset_path": "fixtures/p1/procedural/stairs.png",
+      "mask_path": null,
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:stairs",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_stairs",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "tool_failure",
+      "expected_reason": "TOOL_TIMEOUT；实际工具未执行",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_n01",
+      "split": "holdout",
+      "category": "normal",
+      "object_group": "procedural_arch",
+      "asset_path": "fixtures/p1/procedural/arch.png",
+      "mask_path": "fixtures/p1/masks/arch.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:arch",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_arch",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_n02",
+      "split": "holdout",
+      "category": "normal",
+      "object_group": "procedural_cross",
+      "asset_path": "fixtures/p1/procedural/cross.png",
+      "mask_path": "fixtures/p1/masks/cross.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:cross",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_cross",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_n03",
+      "split": "holdout",
+      "category": "normal",
+      "object_group": "procedural_spool",
+      "asset_path": "fixtures/p1/procedural/spool.png",
+      "mask_path": "fixtures/p1/masks/spool.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:spool",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_spool",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_n04",
+      "split": "holdout",
+      "category": "normal",
+      "object_group": "procedural_trophy",
+      "asset_path": "fixtures/p1/procedural/trophy.png",
+      "mask_path": "fixtures/p1/masks/trophy.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:trophy",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_trophy",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_n05",
+      "split": "holdout",
+      "category": "normal",
+      "object_group": "procedural_pedestal",
+      "asset_path": "fixtures/p1/procedural/pedestal.png",
+      "mask_path": "fixtures/p1/masks/pedestal.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:pedestal",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_pedestal",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_n06",
+      "split": "holdout",
+      "category": "normal",
+      "object_group": "procedural_toy_house",
+      "asset_path": "fixtures/p1/procedural/toy_house.png",
+      "mask_path": "fixtures/p1/masks/toy_house.png",
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:toy_house",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_toy_house",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "candidate",
+      "expected_reason": "后续生成非空、有限坐标且可独立读取的候选网格；打印合格另验收",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_b01",
+      "split": "holdout",
+      "category": "boundary",
+      "object_group": "procedural_arch",
+      "asset_path": "fixtures/p1/boundary/occluded.png",
+      "mask_path": null,
+      "source_kind": "boundary_fixture",
+      "source_ref": "scripts/p1/prepare_fixture_manifest.py@1.0.0:occluded.png",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "hold_b01_asset",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "review",
+      "expected_reason": "主体遮挡，需换图或人工复核",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_b02",
+      "split": "holdout",
+      "category": "boundary",
+      "object_group": "procedural_cross",
+      "asset_path": "fixtures/p1/boundary/spoofed.png",
+      "mask_path": null,
+      "source_kind": "boundary_fixture",
+      "source_ref": "scripts/p1/prepare_fixture_manifest.py@1.0.0:spoofed.png",
+      "license": "CC0-1.0",
+      "image_should_decode": false,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "pending_upload_hold_b02",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "reject",
+      "expected_reason": "真实BMP伪装PNG，上传格式拒绝",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_b03",
+      "split": "holdout",
+      "category": "boundary",
+      "object_group": "procedural_spool",
+      "asset_path": "fixtures/p1/procedural/spool.png",
+      "mask_path": null,
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:spool",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_spool",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": "user_target",
+        "orientation": {},
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "wait",
+      "expected_reason": "姿态未确认，不能定标",
+      "result_status": "not_run"
+    },
+    {
+      "case_id": "hold_b04",
+      "split": "holdout",
+      "category": "boundary",
+      "object_group": "procedural_trophy",
+      "asset_path": "fixtures/p1/procedural/trophy.png",
+      "mask_path": null,
+      "source_kind": "procedural_cpu",
+      "source_ref": "scripts/p1/build_fixture_images.py@1.0.0:trophy",
+      "license": "CC0-1.0",
+      "image_should_decode": true,
+      "request_should_validate": true,
+      "request": {
+        "image_asset_id": "asset_trophy",
+        "height_value": 80,
+        "height_unit": "mm",
+        "scale_source": null,
+        "orientation": {
+          "up_axis": "z",
+          "confirmed": true
+        },
+        "printer_profile_id": "demo_v1"
+      },
+      "expected": "wait",
+      "expected_reason": "尺度来源未知，需追问",
+      "result_status": "not_run"
+    }
+  ]
+}

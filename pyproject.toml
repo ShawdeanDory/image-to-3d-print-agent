@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "image-to-3d-print-agent"
+version = "0.1.0"
+description = "单图到3D打印工作流的公共契约与离线实验清单"
+requires-python = ">=3.11"
+dependencies = ["pydantic==2.12.5", "Pillow==10.1.0"]
+
+[project.optional-dependencies]
+test = ["pytest==8.4.2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests/unit", "tests/contract"]
+addopts = "-ra"

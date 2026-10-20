@@ -1,0 +1,10 @@
+{
+  "budget_id": "p2a_draft",
+  "state": "draft",
+  "preparation_timeout_s": null,
+  "inference_timeout_s": null,
+  "max_retries": null,
+  "cost_limit_cny": null,
+  "confirmed_by": null,
+  "reason": "P2未授权；费用上限与真实配额待确认，不可执行"
+}

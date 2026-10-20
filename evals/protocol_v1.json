@@ -1,0 +1,146 @@
+{
+  "protocol_version": "1.0.0",
+  "dataset_version": "1.0.0",
+  "status": "designed_not_executed",
+  "seed": 0,
+  "model_installation_in_p1": false,
+  "holdout_stage": "P7_after_release_freeze",
+  "paired_normal_cases": [
+    "eval_n01",
+    "eval_n02",
+    "eval_n03",
+    "eval_n04",
+    "eval_n05",
+    "eval_n06"
+  ],
+  "boundary_cases": [
+    "eval_b01",
+    "eval_b02",
+    "eval_b03",
+    "eval_b04"
+  ],
+  "experiments": [
+    {
+      "type": "official_inference",
+      "stage": "P2-A",
+      "backends": [
+        "triposr",
+        "trellis2_candidate"
+      ],
+      "inputs": "TripoSR两张P0输入；新候选至少1张官方样例",
+      "variable": "官方默认/低显存变体分别记录",
+      "status": "not_run"
+    },
+    {
+      "type": "model_comparison",
+      "stage": "P2-B",
+      "split": "evaluation",
+      "backends": [
+        "triposr",
+        "trellis2_candidate"
+      ],
+      "variable": "backend",
+      "repeat_policy": {
+        "cold_per_case": 1,
+        "warm_per_case": 1
+      },
+      "status": "not_run"
+    },
+    {
+      "type": "repair_comparison",
+      "stage": "P3",
+      "input": "same_original_mesh_and_geometry_fixtures",
+      "variants": [
+        "raw",
+        "basic_repair",
+        "one_changed_factor"
+      ],
+      "max_rounds": 2,
+      "status": "not_run"
+    },
+    {
+      "type": "workflow_comparison",
+      "stage": "P4",
+      "variants": [
+        "fixed_pipeline",
+        "team_agent"
+      ],
+      "required_scenarios": [
+        "normal",
+        "missing_scale_resume",
+        "blocking_defect",
+        "timeout",
+        "cancel",
+        "repair_limit"
+      ],
+      "variable": "orchestration_only",
+      "status": "not_run"
+    }
+  ],
+  "preprocessing": {
+    "policy_id": "foreground_v1",
+    "alpha_threshold": 128,
+    "background": "white",
+    "foreground_long_side_px": 224,
+    "canvas_px": 256,
+    "resize": "isotropic_bilinear",
+    "shared_between_backends": true,
+    "backend_internal_preprocessing": "separately_recorded"
+  },
+  "silhouette": {
+    "policy_id": "silhouette_v1",
+    "camera_type": "orthographic",
+    "position": [
+      0,
+      -3,
+      0
+    ],
+    "target": [
+      0,
+      0,
+      0
+    ],
+    "up": [
+      0,
+      0,
+      1
+    ],
+    "orthographic_scale": 2.2,
+    "mesh_normalization": "center_bbox_and_isotropic_longest_extent_2",
+    "mask_normalization": "tight_bbox_isotropic_224_center_256",
+    "input_view_mapping": "fixed_backend_to_input_rigid_transform_calibrated_in_P2A_before_comparison",
+    "missing_camera_or_mapping": "not_run_with_reason",
+    "empty_mask": "invalid_metric_and_retained_failure"
+  },
+  "chamfer": {
+    "optional": true,
+    "current_reference_meshes": 0,
+    "points_per_mesh": 10000,
+    "sampling": "surface_area_uniform_seed_0",
+    "distance": "symmetric_mean_euclidean_not_squared",
+    "alignment": "rigid_only_after_each_bbox_diagonal_normalization",
+    "missing_reference": "unknown"
+  },
+  "measurements": {
+    "clock": "perf_counter_with_cuda_synchronize_around_gpu_section",
+    "timing_segments": [
+      "preparation",
+      "cold_load",
+      "inference",
+      "mesh_extraction_export",
+      "repair",
+      "inspection",
+      "total_active"
+    ],
+    "memory": [
+      "torch_peak_allocated_mib",
+      "torch_peak_reserved_mib",
+      "nvidia_smi_process_used_mib_1hz"
+    ],
+    "failed_cases": "retained_in_denominator",
+    "status": "not_run"
+  },
+  "budget_ref": "p2a_draft",
+  "execution_allowed": false,
+  "authority": "doc/评估设计.md#6p1冻结的可执行测量口径"
+}

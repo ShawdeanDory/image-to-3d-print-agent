@@ -1,0 +1,74 @@
+{
+  "evaluation_id": "P1-EVAL-001",
+  "date": "2026-10-19",
+  "schema_version": "1.0.0",
+  "dataset_version": "1.0.0",
+  "protocol_version": "1.0.0",
+  "baseline_commit": "ef84c1fcfc24917715172538f3af65cc0cd64eac",
+  "executor": "agent_local_cpu",
+  "python": "3.11.17",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "dependencies": {
+    "pydantic": "2.12.5",
+    "pytest": "8.4.2",
+    "Pillow": "10.1.0"
+  },
+  "checks": [
+    {
+      "name": "pytest_final",
+      "command": "runtime/envs/contracts/Scripts/python.exe -m pytest tests/unit tests/contract -q",
+      "exit_code": 0,
+      "wall_seconds": 1.212
+    },
+    {
+      "name": "schema_final",
+      "command": "runtime/envs/contracts/Scripts/python.exe scripts/p1/export_schemas.py --check",
+      "exit_code": 0,
+      "wall_seconds": 0.485
+    },
+    {
+      "name": "data_final",
+      "command": "runtime/envs/contracts/Scripts/python.exe scripts/p1/check_prepared_data.py --output runs/p1-20261019-01/static_data.json",
+      "exit_code": 0,
+      "wall_seconds": 0.622
+    }
+  ],
+  "pytest_summary": "57 passed in 0.52s",
+  "static_data": {
+    "check_kind": "static_preparation_only",
+    "schema_version": "1.0.0",
+    "dataset_version": "1.0.0",
+    "cases": 30,
+    "splits": {
+      "development": 10,
+      "evaluation": 10,
+      "holdout": 10
+    },
+    "categories": {
+      "normal": 18,
+      "boundary": 12
+    },
+    "registered_images": 21,
+    "geometry_files": 12,
+    "all_case_results": "not_run",
+    "holdout_model_execution": "not_run",
+    "contract_examples": "validated_synthetic_fixtures",
+    "gpu_used": false,
+    "model_installed_or_executed": false,
+    "p2_budget_blocked": true
+  },
+  "gpu_used": false,
+  "models_installed_or_executed": false,
+  "formal_model_evaluation": "not_run",
+  "human_review": "deferred_by_user",
+  "full_logs": "runs/p1-20261019-01/ (ignored)",
+  "human_review_note": "暂未复核，保留待人工验收",
+  "delivery_record_date": "2026-10-20",
+  "documentation_preflight": {
+    "markdown_files": 28,
+    "local_links": 237,
+    "text_files_sensitive_scan": 64,
+    "errors": [],
+    "full_model_evaluation": "not_run"
+  }
+}

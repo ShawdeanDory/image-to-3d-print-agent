@@ -1,0 +1,523 @@
+{
+  "generator_version": "1.0.0",
+  "blender": "4.5.14 LTS",
+  "engine": "CYCLES",
+  "device": "CPU",
+  "seed": 0,
+  "samples": 8,
+  "camera": {
+    "location": [
+      3,
+      -4,
+      3
+    ],
+    "target": [
+      0,
+      0,
+      0
+    ],
+    "orthographic_scale": 3.6
+  },
+  "license": "CC0-1.0",
+  "objects": [
+    {
+      "object_group": "procedural_block",
+      "image": "block.png",
+      "recipe": [
+        [
+          "cube",
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.7,
+            0.5,
+            0.9
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_pyramid",
+      "image": "pyramid.png",
+      "recipe": [
+        [
+          "pyramid",
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.8,
+            0.8,
+            0.9
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_bead",
+      "image": "bead.png",
+      "recipe": [
+        [
+          "sphere",
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.8,
+            0.8,
+            0.8
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_knob",
+      "image": "knob.png",
+      "recipe": [
+        [
+          "cylinder",
+          [
+            0,
+            0,
+            -0.3
+          ],
+          [
+            0.6,
+            0.6,
+            0.4
+          ]
+        ],
+        [
+          "sphere",
+          [
+            0,
+            0,
+            0.4
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_cone",
+      "image": "cone.png",
+      "recipe": [
+        [
+          "cone",
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.7,
+            0.7,
+            0.9
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_octahedron",
+      "image": "octahedron.png",
+      "recipe": [
+        [
+          "octahedron",
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.8,
+            0.8,
+            0.8
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_ring",
+      "image": "ring.png",
+      "recipe": [
+        [
+          "torus",
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.8,
+            0.8,
+            0.8
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_stairs",
+      "image": "stairs.png",
+      "recipe": [
+        [
+          "cube",
+          [
+            -0.6,
+            0,
+            -0.4
+          ],
+          [
+            0.3,
+            0.6,
+            0.2
+          ]
+        ],
+        [
+          "cube",
+          [
+            0,
+            0,
+            -0.2
+          ],
+          [
+            0.3,
+            0.6,
+            0.4
+          ]
+        ],
+        [
+          "cube",
+          [
+            0.6,
+            0,
+            0
+          ],
+          [
+            0.3,
+            0.6,
+            0.6
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_tower",
+      "image": "tower.png",
+      "recipe": [
+        [
+          "cylinder",
+          [
+            0,
+            0,
+            -0.3
+          ],
+          [
+            0.5,
+            0.5,
+            0.6
+          ]
+        ],
+        [
+          "cone",
+          [
+            0,
+            0,
+            0.65
+          ],
+          [
+            0.7,
+            0.7,
+            0.4
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_mushroom",
+      "image": "mushroom.png",
+      "recipe": [
+        [
+          "cylinder",
+          [
+            0,
+            0,
+            -0.4
+          ],
+          [
+            0.25,
+            0.25,
+            0.5
+          ]
+        ],
+        [
+          "sphere",
+          [
+            0,
+            0,
+            0.25
+          ],
+          [
+            0.8,
+            0.8,
+            0.35
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_arch",
+      "image": "arch.png",
+      "recipe": [
+        [
+          "cube",
+          [
+            -0.6,
+            0,
+            0
+          ],
+          [
+            0.2,
+            0.4,
+            0.8
+          ]
+        ],
+        [
+          "cube",
+          [
+            0.6,
+            0,
+            0
+          ],
+          [
+            0.2,
+            0.4,
+            0.8
+          ]
+        ],
+        [
+          "cube",
+          [
+            0,
+            0,
+            0.7
+          ],
+          [
+            0.8,
+            0.4,
+            0.2
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_cross",
+      "image": "cross.png",
+      "recipe": [
+        [
+          "cube",
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.25,
+            0.25,
+            0.9
+          ]
+        ],
+        [
+          "cube",
+          [
+            0,
+            0,
+            0.3
+          ],
+          [
+            0.8,
+            0.25,
+            0.25
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_spool",
+      "image": "spool.png",
+      "recipe": [
+        [
+          "cylinder",
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.3,
+            0.3,
+            0.7
+          ]
+        ],
+        [
+          "cylinder",
+          [
+            0,
+            0,
+            -0.65
+          ],
+          [
+            0.7,
+            0.7,
+            0.12
+          ]
+        ],
+        [
+          "cylinder",
+          [
+            0,
+            0,
+            0.65
+          ],
+          [
+            0.7,
+            0.7,
+            0.12
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_trophy",
+      "image": "trophy.png",
+      "recipe": [
+        [
+          "cylinder",
+          [
+            0,
+            0,
+            -0.65
+          ],
+          [
+            0.5,
+            0.5,
+            0.1
+          ]
+        ],
+        [
+          "cylinder",
+          [
+            0,
+            0,
+            -0.25
+          ],
+          [
+            0.17,
+            0.17,
+            0.4
+          ]
+        ],
+        [
+          "sphere",
+          [
+            0,
+            0,
+            0.5
+          ],
+          [
+            0.6,
+            0.6,
+            0.6
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_pedestal",
+      "image": "pedestal.png",
+      "recipe": [
+        [
+          "cube",
+          [
+            0,
+            0,
+            -0.5
+          ],
+          [
+            0.7,
+            0.7,
+            0.2
+          ]
+        ],
+        [
+          "cube",
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.3,
+            0.3,
+            0.4
+          ]
+        ],
+        [
+          "cube",
+          [
+            0,
+            0,
+            0.5
+          ],
+          [
+            0.6,
+            0.6,
+            0.15
+          ]
+        ]
+      ]
+    },
+    {
+      "object_group": "procedural_toy_house",
+      "image": "toy_house.png",
+      "recipe": [
+        [
+          "cube",
+          [
+            0,
+            0,
+            -0.2
+          ],
+          [
+            0.65,
+            0.6,
+            0.6
+          ]
+        ],
+        [
+          "pyramid",
+          [
+            0,
+            0,
+            0.65
+          ],
+          [
+            0.9,
+            0.85,
+            0.35
+          ]
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "experiment_fixture",
+  "experiment_type": "official_inference",
+  "run_id": "00000000-0000-4000-8000-000000000001",
+  "case_id": "contract_case",
+  "dataset_version": "1.0.0",
+  "split": "development",
+  "executed_by": "test_author",
+  "evidence_origin": "offline_fixture",
+  "created_at": "2026-10-19T23:00:00+08:00",
+  "status": "succeeded",
+  "backend_id": "fixture_backend",
+  "project_commit": "1111111111111111111111111111111111111111",
+  "upstream_commit": "2222222222222222222222222222222222222222",
+  "submodule_revisions": {},
+  "weights_revision": "3333333333333333333333333333333333333333",
+  "environment_ref": "fixture_env",
+  "hardware_ref": "fixture_cpu",
+  "budget_ref": "fixture_budget",
+  "preprocessing_ref": "fixture_preprocess",
+  "metrics_protocol_version": "1.0.0",
+  "parameters": {
+    "example_parameter": 1
+  },
+  "seed": 0,
+  "command": [
+    "python",
+    "offline_fixture.py"
+  ],
+  "exit_code": 0,
+  "artifact_ids": [
+    "artifact_fixture"
+  ],
+  "evidence_ids": [
+    "evidence_fixture"
+  ],
+  "metrics": [
+    {
+      "name": "inference_seconds",
+      "status": "measured",
+      "value": 0,
+      "unit": "s"
+    }
+  ]
+}

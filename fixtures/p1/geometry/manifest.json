@@ -1,0 +1,79 @@
+{
+  "version": "1.0.0",
+  "unit": "mm",
+  "license": "CC0-1.0",
+  "fixtures": [
+    {
+      "file": "cube_10mm.stl",
+      "source": "scripts/p0/verify_geometry.py@3acd937",
+      "expected": "尺寸10×10×10毫米，正常拓扑",
+      "verification": "P0已实测；P1不重跑检查"
+    },
+    {
+      "file": "thin_wall_0p9mm.stl",
+      "source": "scripts/p0/verify_geometry.py@3acd937",
+      "expected": "1.2毫米阈值下检出薄壁",
+      "verification": "P0已实测；P1不重跑检查"
+    },
+    {
+      "file": "self_intersection.stl",
+      "source": "scripts/p0/verify_geometry.py@3acd937",
+      "expected": "检出相交面，不能用水密替代",
+      "verification": "P0已实测；P1不重跑检查"
+    },
+    {
+      "file": "open_cube.obj",
+      "source": "scripts/p1/prepare_geometry_fixtures.py@1.0.0",
+      "expected": "存在开口边界",
+      "verification": "P1仅准备，工具检查待P3"
+    },
+    {
+      "file": "reversed_face.obj",
+      "source": "scripts/p1/prepare_geometry_fixtures.py@1.0.0",
+      "expected": "存在反向面",
+      "verification": "P1仅准备，工具检查待P3"
+    },
+    {
+      "file": "duplicate_face.obj",
+      "source": "scripts/p1/prepare_geometry_fixtures.py@1.0.0",
+      "expected": "重复面及非流形边",
+      "verification": "P1仅准备，工具检查待P3"
+    },
+    {
+      "file": "thin_wall_0p6mm.obj",
+      "source": "scripts/p1/prepare_geometry_fixtures.py@1.0.0",
+      "expected": "已知厚度0.6毫米；1.2毫米临界项需复核",
+      "verification": "P1仅准备，工具检查待P3"
+    },
+    {
+      "file": "thin_wall_1p2mm.obj",
+      "source": "scripts/p1/prepare_geometry_fixtures.py@1.0.0",
+      "expected": "已知厚度1.2毫米；1.2毫米临界项需复核",
+      "verification": "P1仅准备，工具检查待P3"
+    },
+    {
+      "file": "wall_1p6mm.obj",
+      "source": "scripts/p1/prepare_geometry_fixtures.py@1.0.0",
+      "expected": "已知厚度1.6毫米；1.2毫米临界项需复核",
+      "verification": "P1仅准备，工具检查待P3"
+    },
+    {
+      "file": "slanted_face.obj",
+      "source": "scripts/p1/prepare_geometry_fixtures.py@1.0.0",
+      "expected": "向下45度临界斜面，核对角度定义",
+      "verification": "P1仅准备，工具检查待P3"
+    },
+    {
+      "file": "multiple_components.obj",
+      "source": "scripts/p1/prepare_geometry_fixtures.py@1.0.0",
+      "expected": "两个分离闭合组件",
+      "verification": "P1仅准备，工具检查待P3"
+    },
+    {
+      "file": "non_manifold_vertex.obj",
+      "source": "scripts/p1/prepare_geometry_fixtures.py@1.0.0",
+      "expected": "仅共享一点的非流形顶点",
+      "verification": "P1仅准备，工具检查待P3"
+    }
+  ]
+}

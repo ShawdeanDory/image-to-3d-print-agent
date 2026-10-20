@@ -1,0 +1,86 @@
+solid contract_fixture
+facet normal 0 0 0
+outer loop
+vertex 0 0 0
+vertex 0 40 0
+vertex 40 0 0
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 40 0 0
+vertex 0 40 0
+vertex 40 40 0
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 0 0 80
+vertex 40 0 80
+vertex 0 40 80
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 40 0 80
+vertex 40 40 80
+vertex 0 40 80
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 0 0 0
+vertex 40 0 0
+vertex 0 0 80
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 40 0 0
+vertex 40 0 80
+vertex 0 0 80
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 0 40 0
+vertex 0 40 80
+vertex 40 40 0
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 40 40 0
+vertex 0 40 80
+vertex 40 40 80
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 0 0 0
+vertex 0 0 80
+vertex 0 40 0
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 0 40 0
+vertex 0 0 80
+vertex 0 40 80
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 40 0 0
+vertex 40 40 0
+vertex 40 0 80
+endloop
+endfacet
+facet normal 0 0 0
+outer loop
+vertex 40 40 0
+vertex 40 40 80
+vertex 40 0 80
+endloop
+endfacet
+endsolid contract_fixture

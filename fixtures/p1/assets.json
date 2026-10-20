@@ -1,0 +1,170 @@
+[
+  {
+    "asset_id": "asset_hamburger",
+    "relative_path": "fixtures/p0/hamburger.png",
+    "content_type": "image/png",
+    "byte_count": 125172,
+    "width": 614,
+    "height": 614
+  },
+  {
+    "asset_id": "asset_robot",
+    "relative_path": "fixtures/p0/robot.png",
+    "content_type": "image/png",
+    "byte_count": 151541,
+    "width": 512,
+    "height": 512
+  },
+  {
+    "asset_id": "asset_block",
+    "relative_path": "fixtures/p1/procedural/block.png",
+    "content_type": "image/png",
+    "byte_count": 39396,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_pyramid",
+    "relative_path": "fixtures/p1/procedural/pyramid.png",
+    "content_type": "image/png",
+    "byte_count": 30174,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_bead",
+    "relative_path": "fixtures/p1/procedural/bead.png",
+    "content_type": "image/png",
+    "byte_count": 32870,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_knob",
+    "relative_path": "fixtures/p1/procedural/knob.png",
+    "content_type": "image/png",
+    "byte_count": 33224,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_cone",
+    "relative_path": "fixtures/p1/procedural/cone.png",
+    "content_type": "image/png",
+    "byte_count": 30981,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_octahedron",
+    "relative_path": "fixtures/p1/procedural/octahedron.png",
+    "content_type": "image/png",
+    "byte_count": 26814,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_ring",
+    "relative_path": "fixtures/p1/procedural/ring.png",
+    "content_type": "image/png",
+    "byte_count": 27452,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_stairs",
+    "relative_path": "fixtures/p1/procedural/stairs.png",
+    "content_type": "image/png",
+    "byte_count": 35386,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_tower",
+    "relative_path": "fixtures/p1/procedural/tower.png",
+    "content_type": "image/png",
+    "byte_count": 32540,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_mushroom",
+    "relative_path": "fixtures/p1/procedural/mushroom.png",
+    "content_type": "image/png",
+    "byte_count": 30695,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_arch",
+    "relative_path": "fixtures/p1/procedural/arch.png",
+    "content_type": "image/png",
+    "byte_count": 40974,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_cross",
+    "relative_path": "fixtures/p1/procedural/cross.png",
+    "content_type": "image/png",
+    "byte_count": 33837,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_spool",
+    "relative_path": "fixtures/p1/procedural/spool.png",
+    "content_type": "image/png",
+    "byte_count": 37397,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_trophy",
+    "relative_path": "fixtures/p1/procedural/trophy.png",
+    "content_type": "image/png",
+    "byte_count": 34449,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_pedestal",
+    "relative_path": "fixtures/p1/procedural/pedestal.png",
+    "content_type": "image/png",
+    "byte_count": 40404,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "asset_toy_house",
+    "relative_path": "fixtures/p1/procedural/toy_house.png",
+    "content_type": "image/png",
+    "byte_count": 38425,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "dev_b03_asset",
+    "relative_path": "fixtures/p1/boundary/person.png",
+    "content_type": "image/png",
+    "byte_count": 1928,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "eval_b02_asset",
+    "relative_path": "fixtures/p1/boundary/background.png",
+    "content_type": "image/png",
+    "byte_count": 11632,
+    "width": 256,
+    "height": 256
+  },
+  {
+    "asset_id": "hold_b01_asset",
+    "relative_path": "fixtures/p1/boundary/occluded.png",
+    "content_type": "image/png",
+    "byte_count": 13864,
+    "width": 256,
+    "height": 256
+  }
+]

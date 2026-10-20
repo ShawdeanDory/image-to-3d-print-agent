@@ -1,4 +1,22 @@
-# P0环境版本与交接
+# 环境版本与交接
+
+## P1本机CPU契约环境
+
+2026-10-19实际使用Windows、Python3.11.17、Pydantic2.12.5、pytest8.4.2、Pillow10.1.0；精确传递依赖见[p1-contracts.txt](p1-contracts.txt)。Pydantic用于输入/结果校验，pytest用于离线回归，Pillow只读取fixture格式和尺寸；没有torch、模型库或GPU需求，不改P0环境。
+
+在项目根目录准备独立环境；若队友已有Python3.11，可将--python替换为其解释器绝对路径。依赖安装需要网络，安装完成后下面3项检查均离线运行。
+
+```powershell
+& runtime/tools/uv/uv.exe venv --python runtime/envs/probe/Scripts/python.exe runtime/envs/contracts
+& runtime/tools/uv/uv.exe pip install --python runtime/envs/contracts/Scripts/python.exe -r locks/p1-contracts.txt
+& runtime/envs/contracts/Scripts/python.exe -m pytest tests/unit tests/contract -q
+& runtime/envs/contracts/Scripts/python.exe scripts/p1/export_schemas.py --check
+& runtime/envs/contracts/Scripts/python.exe scripts/p1/check_prepared_data.py
+```
+
+接手机器只做P1时无需重建下方GPU环境或下载模型。上述解释器路径是Windows格式；Linux接手使用自己的Python3.11虚拟环境，重新运行检查，不假定本机结果已覆盖Linux。
+
+## P0历史快照
 
 本目录是2026-10-18实际环境的版本快照。所有命令在项目根目录运行；接手机器先核对Windows、NVIDIA驱动和MSVC工具，再重新验证，不能只复制“通过”结论。
 
