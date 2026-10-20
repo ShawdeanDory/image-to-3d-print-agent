@@ -2,12 +2,12 @@
 
 - 日期：2026-10-20；对应[当前任务](../spec/当前开发任务.md)。这是预训练模型的推理环境安装，不训练模型。
 - 已实际验证：SSH公钥登录、[只读采集脚本](../scripts/p2a/collect_environment.py)；RTX4090D24564MiB、16核、80GiB内存、100G数据盘，详细证据见[云端检查](云端环境检查记录.md#5cloud-env-002ssh只读复查2026-10-20)。
-- 安装状态：以下安装、下载、CUDA张量和模型命令尚未云端执行；预算仍待用户确认，不能把本手册当成安装成功记录。每段实际完成后记录返回码、日志及版本，再更新状态。
+- 安装状态：已确认2小时/4元预算并部分执行，随后按用户明确要求暂停；probe环境安装完成，模型环境/权重未完成，CUDA张量和模型命令未执行。真实状态见[暂停证据](p2a-paused-evidence.json)和第9节，不将整份手册当作已经执行通过。
 - 来源计划：[p2a-source-plan.json](../locks/p2a-source-plan.json)。源码/权重revision已列明，Linux传递依赖锁定须在实际安装验证后生成。
 
 ## 1.执行前与目录
 
-安装授权已具备；还需最长准备时间与GPU计算费上限。由本机现有Pydantic的BudgetPlan.require_ready()校验已确认配置，另存p2a_confirmed.json；[draft](../evals/budgets/p2a_draft.json)保留未确认状态，不靠手工把state改成confirmed放行。单次验证和重试次数也必须明确。
+安装及预算授权已具备：[确认预算](../evals/budgets/p2a_confirmed.json)为7200秒、GPU计算费4元、单次验证300秒、自动重试0次，已通过BudgetPlan.require_ready()；[draft](../evals/budgets/p2a_draft.json)保留为拒绝样例。当前按用户指令暂停，不能因预算已确认就在后台继续。
 
 准备时间从开始实际安装计时。每步只使用总预算剩余时间，长任务放screen中运行，并对整个安装作业设置timeout；不能每段都重新获得完整总预算。到上限停止进程并归档，GPU计费仍需在控制台关机或定时关机才能停止，数据盘固定费用另计。
 
@@ -56,6 +56,8 @@ export MAX_JOBS=4
 mkdir -p "$HF_HUB_CACHE" "$PIP_CACHE_DIR" "$CONDA_PKGS_DIRS" "$TMPDIR" "$TORCH_EXTENSIONS_DIR" runtime/envs runtime/upstream runs/p2a-20261020-01
 source /root/miniconda3/etc/profile.d/conda.sh
 ```
+
+实际执行发现并行conda创建会争用共同缓存，安装辅助脚本已改为各自的conda-triposr、conda-probe、conda-trellis2目录。恢复不照抄共同缓存并发创建。Windows发送Bash脚本需使用LF字节；后台入口从项目内规范脚本路径exec，保持相对依赖位置。
 
 已存在的screen会话用screen -ls查询、screen -r会话名恢复；Ctrl+A后按D离开。screen只能防SSH断开，关机后进程仍会停止。安装的stdout/stderr保存至runs，不用终端滚屏作为唯一记录。
 
@@ -224,4 +226,21 @@ $p2aConfig = Join-Path $PWD 'runtime/ssh/p2a_config'
 scp -F $p2aConfig p2a-autodl:/root/autodl-tmp/image-to-3d-print-agent/runs/p2a-20261020-01-results.tar.gz runs/
 ```
 
-恢复前先重新阅读工作前必读约定、当前任务、实际日志与预算剩余量；已完成步骤核对后复用，未完整下载使用官方缓存续传，不自动删除重下，不重新运行已经成功的模型。普通关机后的数据保留、GPU空闲限制和备份规则见[云端检查第4节](云端环境检查记录.md#4关机数据与交接)。
+恢复前先重新阅读工作前必读约定、当前任务、实际日志与预算剩余量；已完成步骤核对后复用，未完整下载按第9节核对partial和获取方式，不自动删除重下，不重新运行已经成功的模型。普通关机后的数据保留、GPU空闲限制和备份规则见[云端检查第4节](云端环境检查记录.md#4关机数据与交接)。
+
+## 9.本轮暂停与恢复入口
+
+2026-10-20约11:30按用户明确要求暂停，用户自行关闭云端和本机。本轮活动安装/下载进程组均已停止，剩余本轮timeout进程0、GPU占用0MiB；日志/检查点已经备份到本机runs/p2a-20261020-02/cloud-pause-logs.zip。普通关机保留数据盘已落盘文件，恢复以实际文件核对为准。
+
+| 内容 | 暂停时状态 |
+| --- | --- |
+| probe独立环境 | Python3.11.17、numpy1.26.4、trimesh4.0.5、huggingface-hub0.36.0安装，pip check通过；freeze已保存，网格读取尚未执行 |
+| TripoSR环境 | Python前缀建立；PyTorch/CUDA包下载中被停止，尚未安装成可用模型环境 |
+| TRELLIS.2环境 | 尚未建立；完整历史克隆已取消，Git清理了未完成目录；浅取固定提交脚本尚未实际运行 |
+| 公开权重 | 10份小配置已复制；9份大文件计划总计16644709244字节，当前仅部分文件，完整性校验尚未通过 |
+| CUDA与模型 | 张量、扩展、加载、2+1样例和独立读回均未执行，P2-A未验收 |
+| 受限模型 | DINOv3/RMBG账号访问条件尚待用户处理，无令牌传入聊天或仓库 |
+
+恢复须用户明确发起，不自动重新启动。先核对原2小时/4元预算已用量和实例实际账单，不把暂停当作新预算；再核对环境和缓存。当前CDN辅助脚本尚未实现partial续传，恢复先刷新临时链接、核对Range/ETag并明确续传方式，不能直接重跑覆盖已有partial或把partial改名当作完成。临时签名URL只保存在被忽略的runs，公开记录不含它们。
+
+本轮新增scripts/p2a/中的安装、来源、下载和检查辅助入口，属于P2-A内部工具；仅probe安装及部分获取路径实际执行，其他入口不得当作已经完整验证。不进入P2-B。

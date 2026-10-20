@@ -6,5 +6,5 @@
   "max_retries": null,
   "cost_limit_cny": null,
   "confirmed_by": null,
-  "reason": "P2-A云端安装已获授权、实际配额已只读核对；最长准备时间和费用上限仍待用户确认，不能启动安装下载或模型执行"
+  "reason": "保留P1原始未确认预算的拒绝样例；实际授权另见p2a_confirmed.json，当前因用户明确要求暂停，不按此draft决定已确认预算状态"
 }

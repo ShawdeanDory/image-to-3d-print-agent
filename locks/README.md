@@ -2,7 +2,7 @@
 
 ## P2-A云端安装准备
 
-2026-10-20已授权在指定AutoDL实例通过SSH安装/验证，当前完成只读连接与环境核对，预算待确认。来源计划为[p2a-source-plan.json](p2a-source-plan.json)，详细命令见[云端安装手册](../doc/P2-A云端安装与验证手册.md)。该JSON是待安装的固定源码/权重计划，不是已经验证的Linux依赖锁；实际安装后另存两个环境的freeze和conda清单，不覆盖P0的Windows快照。
+2026-10-20已确认指定AutoDL实例2小时/4元的SSH安装/验证预算，部分执行后按用户要求暂停。来源计划为[p2a-source-plan.json](p2a-source-plan.json)，状态见[安装手册第9节](../doc/P2-A云端安装与验证手册.md#9本轮暂停与恢复入口)。probe的freeze/conda清单已随完整日志备份，两个模型环境尚未安装验证完成；来源JSON不是Linux模型环境锁，不覆盖P0的Windows快照。
 
 ## P1本机CPU契约环境
 

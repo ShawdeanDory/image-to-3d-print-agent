@@ -1,0 +1,88 @@
+{
+  "status": "paused_by_user",
+  "remaining_own_timeout_processes": [],
+  "weight_files": [
+    {
+      "file": "weights/TripoSR/config.yaml",
+      "bytes": 987
+    },
+    {
+      "file": "weights/TripoSR/model.ckpt.partial",
+      "bytes": 121470976
+    },
+    {
+      "file": "weights/TripoSR/model.ckpt.cdn-partial",
+      "bytes": 840957952
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/pipeline.json",
+      "bytes": 4186
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/shape_dec_next_dc_f16c32_fp16.json",
+      "bytes": 678
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.json",
+      "bytes": 458
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.json",
+      "bytes": 458
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json",
+      "bytes": 458
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/slat_flow_imgshape2tex_dit_1_3B_512_bf16.json",
+      "bytes": 458
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/ss_flow_img_dit_1_3B_64_bf16.json",
+      "bytes": 467
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/tex_dec_next_dc_f16c32_fp16.json",
+      "bytes": 705
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors.cdn-partial",
+      "bytes": 775946240
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS.2-4B/snapshots/af44b45f2e35a493886929c6d786e563ec68364d/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors.cdn-partial",
+      "bytes": 917504000
+    },
+    {
+      "file": "runtime/cache/huggingface/hub/models--microsoft--TRELLIS-image-large/snapshots/25e0d31ffbebe4b5a97464dd851910efc3002d96/ckpts/ss_dec_conv3d_16l8_fp16.json",
+      "bytes": 245
+    }
+  ],
+  "environments": {
+    "triposr": {
+      "inventory_exit_code": 0,
+      "inventory": "{\"python\": \"3.11.17 (main, Oct  1 2026, 20:17:42) [GCC 14.3.0]\", \"packages\": {}}"
+    },
+    "probe": {
+      "inventory_exit_code": 0,
+      "inventory": "{\"python\": \"3.11.17 (main, Oct  1 2026, 20:17:42) [GCC 14.3.0]\", \"packages\": {\"trimesh\": \"4.0.5\", \"numpy\": \"1.26.4\", \"huggingface-hub\": \"0.36.0\"}}"
+    },
+    "trellis2": {
+      "interpreter_present": false
+    }
+  },
+  "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/md0        100G   11G   90G  11% /root/autodl-tmp\n",
+  "gpu": "0 MiB, 0 %\n",
+  "run_id": "p2a-20261020-02",
+  "paused_at_client": "2026-10-20T11:30:40.250651+08:00",
+  "elapsed_s_until_checkpoint_backup": 1240.913446187973,
+  "original_budget_s": 7200,
+  "gpu_price_cny_per_hour_quote": 1.88,
+  "actual_bill_cny": null,
+  "user_shutdown_choice": "manual",
+  "model_inference": "not_run",
+  "cuda_tensor_or_extension_test": "not_run",
+  "p2a_acceptance": "not_run",
+  "full_logs_backed_up_locally": true
+}

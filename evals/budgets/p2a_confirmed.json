@@ -1,0 +1,10 @@
+{
+  "budget_id": "p2a_confirmed_20261020",
+  "state": "confirmed",
+  "preparation_timeout_s": 7200,
+  "inference_timeout_s": 300,
+  "max_retries": 0,
+  "cost_limit_cny": 4.0,
+  "confirmed_by": "current_user",
+  "reason": "2026-10-20用户明确选择最多2小时、GPU计算费不超过4元；页面报价1.88元/小时，磁盘固定费用另计；单次验证300秒、自动重试0次；不进入P2-B"
+}

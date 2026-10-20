@@ -1,7 +1,7 @@
 {
   "plan_id": "p2a-20261020-01",
-  "state": "planned_not_installed",
-  "purpose": "源码与权重来源计划，不是已验证的Linux依赖锁定",
+  "state": "partially_executed_paused_by_user",
+  "purpose": "固定来源计划；安装部分执行后按用户要求暂停，不是已验证的Linux模型依赖锁定",
   "environments": {
     "triposr": {"python": "3.11", "torch": "2.5.1", "torchvision": "0.20.1", "torch_index": "https://download.pytorch.org/whl/cu124"},
     "trellis2": {"python": "3.10", "torch": "2.6.0", "torchvision": "0.21.0", "torch_index": "https://download.pytorch.org/whl/cu124"}

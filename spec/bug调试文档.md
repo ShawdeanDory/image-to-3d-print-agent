@@ -152,6 +152,51 @@
 - 修订计划：先只读定位基础解释器和conda实际路径，再用明确解释器执行采集；安装时显式初始化conda并使用项目独立前缀，不修改全局默认Python。
 - 回归：使用/root/miniconda3/bin/python -执行scripts/p2a/collect_environment.py，实际退出码0、壁钟5.422秒；conda/nvcc/磁盘/GPU查询均为0，torch导入成功。日志为ssh_preflight_explicit_python_stdout.json与同名stderr.txt，位于原运行目录；不涉及模型或CUDA张量计算。
 
+## P2A-BUG-002：Windows文本管道向Bash传入CRLF
+
+- 日期/分类：2026-10-20；工具类、SSH传输子类。
+- 基线：首次实际项目准备命令以subprocess的text=True写入SSH标准输入，远端set -euo pipefail报invalid option name，退出2；日志runs/p2a-20261020-02/project_clone.log，尚未执行克隆。
+- 根因与预期：Windows文本写管道会转换换行，Bash将行末CR当成参数。传输Bash脚本须明确LF字节；此前bash -n只解析语法不能证明set选项运行正确。
+- 修订计划：SSH脚本使用UTF-8字节输入，上传文本统一为LF；不通过全局shell配置掩盖问题。
+- 回归：改用UTF-8字节/LF输入后，项目克隆步骤实际退出0，见project_clone_lf.log；模型重试次数未扩大。
+
+## P2A-BUG-003：后台入口复制位置改变相对依赖路径
+
+- 日期/分类：2026-10-20；工具类、安装入口子类。
+- 基线：后台控制把安装脚本正文复制到runs/steps执行，dirname指向steps而非scripts/p2a，environment.sh未找到；安装脚本自身尚未启用fail-fast，继续到conda/python均不可用，退出127。triposr_install.log保留；只有两份官方源码克隆成功，没有安装依赖。
+- 修订计划：安装脚本首先set -euo pipefail；后台步骤只exec项目内规范位置的安装脚本，不复制改变相对路径；复用已核对的固定源码。
+- 回归：规范入口成功加载环境和固定源码，进入conda创建；此问题已修正，随后缓存竞争单列BUG-005。不是模型推理重试。
+
+## P2A-BUG-004：云端直接访问HuggingFace失败
+
+- 日期/分类：2026-10-20；工具类、下载网络子类。
+- 基线：network_check对固定TripoSR配置URL使用8秒超时，返回URLError；同次PyPI返回200，平台/etc/network_turbo存在，尚不能据此确认更具体网络根因。
+- 修订计划：仅在HF/Git学术资源下载子进程使用AutoDL官方network_turbo代理，保留官方仓库和revision；不换模型、不绕过访问授权、不在日志输出代理凭据。
+- 回归：平台代理TLS握手超时、镜像403均保留；本机访问官方HF正常，后续解析公开模型官方CDN，云端Range试取206、1048576字节/1.270秒。实际大文件下载已开始，用户暂停时尚无完整文件，不能记下载完成。
+
+## P2A-BUG-005：并行创建环境争用同一conda包缓存
+
+- 日期/分类：2026-10-20；工具类、依赖安装子类。
+- 实际基线：TripoSR和probe同时执行conda create，共用runtime/cache/conda；两份日志出现同包.partial重命名失败、InvalidArchiveError，两步均退出1，尚未开始模型依赖安装。
+- 原因/预期：并发共享下载目录发生文件竞争；各环境应使用独立conda包缓存，环境创建顺序控制，不能删除他人缓存或把失败记为安装成功。
+- 修订计划：分别使用conda-triposr、conda-probe和conda-trellis2缓存，先只读检查目标前缀，复用本轮有效文件，不清空已有目录。
+- 回归：独立缓存后probe安装和pip check返回0，TripoSR的Python3.11.17前缀建立并进入PyTorch下载；随后按用户暂停而中止，模型环境尚未完成。原始竞争缓存和日志保留。
+
+## P2A-BUG-006：Windows下载辅助入口未显式读取UTF-8
+
+- 日期/分类：2026-10-20；工具类、文本编码子类。
+- 实际基线：本机公开权重中转脚本读取中文JSON计划时使用系统默认GBK，立即UnicodeDecodeError退出1，未下载文件；日志local_public_download.log。
+- 修订计划：来源计划读取显式encoding=utf-8，Linux/Windows共用同一来源与过滤；不改业务契约或模型版本。
+- 回归：UTF-8修订后计划解析通过、固定公开文件开始下载；因云端CDN路径已可用而主动停止本机中转，未声明整组下载完成。
+
+## P2A-BUG-007：克隆完整历史浪费云端准备预算
+
+- 日期/分类：2026-10-20；工具类、源码获取子类。
+- 基线：TRELLIS.2完整历史克隆持续约15分钟尚未完成，官方仓库元数据大小676187KiB，固定提交当前树只有21228411字节/271个文件；源码版本不要求完整历史。
+- 修订计划：只停止本轮TRELLIS.2安装进程组，将本轮未完成目录在项目内保留为full-history-attempt1；改为git fetch --depth=1 origin固定提交并检出、按固定引用浅取子模块，保留版本证据。
+- 实际停止：本轮TRELLIS.2进程组终止、返回143；Git在取消时自行清理了未完成克隆目录，后续rename因源目录不存在返回1，没有实际生成full-history-attempt1备份目录。
+- 回归/遗留：浅取脚本改动尚未运行，随后用户要求暂停；恢复从不存在的TRELLIS.2目录重新浅取固定提交，不把计划的目录保留或浅取写成已成功。不切换官方实现/模型。
+
 ## 后续Bug记录模板
 
 - Bug编号、发现日期、来源、关联任务和严重程度。
