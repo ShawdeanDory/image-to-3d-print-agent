@@ -246,3 +246,17 @@ scp -F $p2aConfig p2a-autodl:/root/autodl-tmp/image-to-3d-print-agent/runs/p2a-2
 - TRELLIS.2仍未完成。用户再次关机后旧screen为Dead，不能把无exit文件理解为仍在运行；只有本轮新启动的作业才按剩余deadline继续。
 - 用户报告两项受限模型已获批；令牌仅在云端runtime/cache/huggingface/token配置，权限600，不回显。两项官方HEAD访问仍超时；配置文件存在不等于访问验证通过。聊天中暴露的令牌须用户撤销重建，新令牌不再发送到聊天。
 - P2-A完整门槛和P2-B启动条件保持。主要AI代码及结果仍待人工复核，不把下载完成或TripoSR子成果写成整阶段验收。
+
+
+## 11.HF网络修复后的执行方式
+
+最新P2A-NET-001已验证：AutoDL官方网络配置必须同时包含代理与配套CA，不能只复制http_proxy/https_proxy。新增包装入口只影响传入的子进程，不需要重新安装包或更改系统DNS。DINOv3/RMBG实际权限已通过，详细结果见[专项报告](HuggingFace网络排查与权限验证.md)。
+
+以下为已实际运行通过的权限检查，仅访问小配置及各1KiB权重，不安装依赖或运行模型：
+
+```bash
+cd /root/autodl-tmp/image-to-3d-print-agent
+bash scripts/p2a/with_hf_network.sh /root/miniconda3/bin/python scripts/p2a/check_hf_permissions.py --report runs/hf-permissions.json
+```
+
+后续获准执行HF下载命令时，同样用bash scripts/p2a/with_hf_network.sh包裹命令及参数；不要仅设置代理后丢弃SSL_CERT_FILE/REQUESTS_CA_BUNDLE，也不要关闭证书校验。本轮第1步完成即停止，其他依赖安装/完整权重下载/模型验证尚未启动。

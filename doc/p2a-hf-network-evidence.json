@@ -1,0 +1,204 @@
+{
+  "task_id": "P2A-NET-001",
+  "date": "2026-10-20",
+  "project_baseline": "a3d3bee63c3417ba9447f671c73e9089aa57a567",
+  "baseline": {
+    "network": [
+      {
+        "host": "huggingface.co",
+        "ipv4": [
+          "103.42.176.244"
+        ],
+        "dns_seconds": 0.006149180233478546,
+        "connection_error": "ConnectionRefusedError"
+      },
+      {
+        "host": "pypi.org",
+        "ipv4": [
+          "151.101.0.223",
+          "151.101.192.223",
+          "151.101.128.223",
+          "151.101.64.223"
+        ],
+        "dns_seconds": 0.0047929249703884125,
+        "tcp_seconds": 0.22773458808660507,
+        "tls_seconds": 0.262323047965765,
+        "tls_version": "TLSv1.3"
+      },
+      {
+        "host": "us.aws.cdn.hf.co",
+        "ipv4": [
+          "18.136.219.244",
+          "13.229.7.180",
+          "47.130.32.119",
+          "13.215.180.201",
+          "54.254.163.78",
+          "52.221.162.66",
+          "13.214.85.108",
+          "47.131.129.243",
+          "54.169.134.11",
+          "3.0.71.232"
+        ],
+        "dns_seconds": 0.004443630576133728,
+        "tcp_seconds": 0.06804581359028816,
+        "tls_seconds": 0.11503643169999123,
+        "tls_version": "TLSv1.3"
+      }
+    ],
+    "proxy_variables_present": {
+      "HTTP_PROXY": false,
+      "HTTPS_PROXY": false,
+      "ALL_PROXY": false,
+      "http_proxy": false,
+      "https_proxy": false
+    },
+    "platform_network_turbo_exists": true
+  },
+  "alternate_dns_probe": {
+    "pinned_ip_probes": [
+      {
+        "ip": "13.35.202.121",
+        "tcp_seconds": 0.07132767140865326,
+        "error_type": "ConnectionResetError",
+        "seconds": 0.26486069709062576
+      },
+      {
+        "ip": "13.35.202.40",
+        "tcp_seconds": 0.06991643086075783,
+        "error_type": "ConnectionResetError",
+        "seconds": 0.2661403641104698
+      },
+      {
+        "ip": "13.35.202.97",
+        "tcp_seconds": 0.07902903482317924,
+        "error_type": "ConnectionResetError",
+        "seconds": 0.2719987630844116
+      },
+      {
+        "ip": "13.35.202.34",
+        "tcp_seconds": 0.07485329359769821,
+        "error_type": "ConnectionResetError",
+        "seconds": 0.26641369983553886
+      }
+    ],
+    "hf_hosts_entries": [],
+    "resolver_hosts": {
+      "dns.google": [
+        "8.8.4.4",
+        "8.8.8.8"
+      ],
+      "cloudflare-dns.com": [
+        "104.16.248.249",
+        "104.16.249.249"
+      ]
+    }
+  },
+  "ca_comparison": {
+    "proxy_schemes": {
+      "https": "http",
+      "http": "http"
+    },
+    "ca_env": {
+      "SSL_CERT_FILE": "/etc/ssl/certs/ca-certificates.crt",
+      "SSL_CERT_DIR": null,
+      "CURL_CA_BUNDLE": null,
+      "REQUESTS_CA_BUNDLE": "/etc/ssl/certs/ca-certificates.crt"
+    },
+    "default_verify_paths": {
+      "cafile": "/root/miniconda3/ssl/cert.pem",
+      "capath": null,
+      "openssl_cafile_env": "SSL_CERT_FILE",
+      "openssl_cafile": "/root/miniconda3/ssl/cert.pem",
+      "openssl_capath_env": "SSL_CERT_DIR",
+      "openssl_capath": "/root/miniconda3/ssl/certs"
+    },
+    "probes": [
+      {
+        "ca": "default",
+        "error_type": "SSLCertVerificationError",
+        "verify_code": 19,
+        "verify_message": "self-signed certificate in certificate chain",
+        "seconds": 0.9295887053012848
+      },
+      {
+        "ca": "/etc/ssl/certs/ca-certificates.crt",
+        "http_status": 200,
+        "seconds": 0.9277128800749779
+      }
+    ],
+    "curl": {
+      "exit_code": 0,
+      "http_and_ssl": "200 0"
+    }
+  },
+  "regression": {
+    "bash_syntax_exit_code": 0,
+    "probe_exit_code": 0,
+    "seconds": 4.377684060484171,
+    "stdout": {
+      "schema": "p2a_hf_network_evidence_v1",
+      "created_at": "2026-10-20T07:04:57.586647+00:00",
+      "status": "passed",
+      "tls_verification": true,
+      "route": "autodl_official_proxy_with_official_ca",
+      "models": [
+        {
+          "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+          "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+          "unauthenticated_config_status": 401,
+          "authenticated_config": {
+            "http_status": 200,
+            "bytes_read": 745
+          },
+          "authenticated_weight_range": {
+            "http_status": 206,
+            "bytes_read": 1024,
+            "content_range": "bytes 0-1023/1212559808",
+            "final_host": "us.aws.cdn.hf.co"
+          },
+          "status": "passed",
+          "seconds": 4.190390203148127
+        },
+        {
+          "repo": "briaai/RMBG-2.0",
+          "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+          "unauthenticated_config_status": 401,
+          "authenticated_config": {
+            "http_status": 200,
+            "bytes_read": 405
+          },
+          "authenticated_weight_range": {
+            "http_status": 206,
+            "bytes_read": 1024,
+            "content_range": "bytes 0-1023/884878856",
+            "final_host": "us.aws.cdn.hf.co"
+          },
+          "status": "passed",
+          "seconds": 4.223598003387451
+        }
+      ],
+      "model_loading": "not_run",
+      "dependency_installation": "not_run",
+      "full_weight_download": "not_run"
+    },
+    "stderr_type": "empty"
+  },
+  "offline_checks": {
+    "command": "python -m pytest tests/p2a -q",
+    "passed": 11,
+    "seconds": 0.2,
+    "new_tests": 4
+  },
+  "limits": {
+    "request_timeout_s": 8,
+    "weight_bytes_per_repo": 1024,
+    "full_weight_download": false,
+    "dependency_installation": false,
+    "model_execution": false
+  },
+  "status": "network_route_and_both_gated_repositories_verified",
+  "direct_route": "still_unavailable",
+  "working_route": "subprocess_only_autodl_official_proxy_and_ca",
+  "human_review": "pending",
+  "phase_acceptance": "P2-A_not_complete"
+}
