@@ -219,11 +219,11 @@
     ]
   },
   "candidate": {
-    "status": "incomplete_stopped_at_original_time_limit",
+    "status": "incomplete_stopped_user_requested_no_installation",
     "full_loading": "not_run",
     "official_sample": "not_run",
     "gated_access": "approved_as_reported_by_user",
-    "token_configuration": "configured_0600_rotation_required_after_chat_exposure"
+    "token_configuration": "new_credential_configured_0600"
   },
   "offline_regression": {
     "before": {
@@ -348,5 +348,23 @@
     "second_shutdown_duration": "unknown_not_deducted",
     "actual_gpu_cost_cny": null,
     "cost_reconciliation": "waived_by_user"
-  }
+  },
+  "credential_rotation_check": {
+    "status": "new_credential_configured",
+    "activated": true,
+    "permissions": "0o600",
+    "checks": [
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "error_type": "URLError",
+        "seconds": 8.104923743754625
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "error_type": "URLError",
+        "seconds": 8.102555807679892
+      }
+    ]
+  },
+  "latest_user_decision": "do_not_resume_installation"
 }
