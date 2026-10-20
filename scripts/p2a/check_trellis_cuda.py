@@ -43,7 +43,7 @@ def main():
                       "flash_attention_numeric_check": "passed", "nvdiffrast_cuda_raster": "passed",
                       "cumesh_cuda_init_normals_read": "passed",
                       "flex_gemm_o_voxel_renderutils_pipeline_import": "passed",
-                      "model_loading": "not_run_gated_dependencies_missing",
+                      "model_loading": "not_run_environment_check_only",
                       "seconds": time.perf_counter() - started}))
 
 

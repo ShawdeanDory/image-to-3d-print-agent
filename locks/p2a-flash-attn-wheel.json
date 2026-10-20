@@ -1,0 +1,12 @@
+{
+  "status": "downloaded",
+  "filename": "flash_attn-2.7.3+cu12torch2.6cxx11abiFALSE-cp310-cp310-linux_x86_64.whl",
+  "bytes": 191345582,
+  "sha256": "64ba4ed4a8c4c9b79d8a0959ebe3ffd6f7ea707ae222dbebe6a864237ac0e475",
+  "official_digest_provided": false,
+  "source_url": "https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.3/flash_attn-2.7.3%2Bcu12torch2.6cxx11abiFALSE-cp310-cp310-linux_x86_64.whl",
+  "release_tag": "v2.7.3",
+  "release_target": "89c5a7dd4e6a8644575bd0c04a286f48c42763ec",
+  "metadata_version": "Version: 2.7.3",
+  "seconds": 89.90085634589195
+}

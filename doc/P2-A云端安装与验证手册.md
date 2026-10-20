@@ -2,14 +2,16 @@
 
 - 日期：2026-10-20；对应[当前任务](../spec/当前开发任务.md)。这是预训练模型的推理环境安装，不训练模型。
 - 已实际验证：SSH公钥登录、[只读采集脚本](../scripts/p2a/collect_environment.py)；RTX4090D24564MiB、16核、80GiB内存、100G数据盘，详细证据见[云端检查](云端环境检查记录.md#5cloud-env-002ssh只读复查2026-10-20)。
-- 安装状态：恢复轮次已完成TripoSR环境、CUDA扩展、两例模型和独立读回，公开9份大文件校验完成；TRELLIS.2安装未完成，完整P2-A未验收。最新实际结果见[P2-A报告](P2-A云端安装与验证结果.md)，第9节保留历史暂停快照。
+- 安装状态：TripoSR两例迁移保留；TRELLIS.2基础/权重、5项源码扩展、GPU冒烟、完整模型/原官方例和独立读回现已通过，见[正常模式报告](P2-A正常模式编译与官方样例结果.md)。云端本轮工作已结束、产物已备份，用户随后明确已关机；不重跑已通过项。相机/测量及人工复核待完成，P2-A未整阶段验收，继续不上传GitHub；第9节保留历史暂停快照。
 - 来源计划：[p2a-source-plan.json](../locks/p2a-source-plan.json)。源码/权重revision已列明，Linux传递依赖锁定须在实际安装验证后生成。
+
+DOC-006边界：已有安装/官方复杂例只作环境成果保留，不再扩展安装其他调研模型；后续仅围绕简单摆件作两后端选型，并优先完成自己的Agent工作流。用户已明确本轮提交推送，覆盖历史暂缓上传；本轮只调整文档，不运行手册中的命令、不连接云端或进入P2-B。
 
 ## 1.执行前与目录
 
-安装及预算授权已具备：[确认预算](../evals/budgets/p2a_confirmed.json)为7200秒、GPU计算费4元、单次验证300秒、自动重试0次，已通过BudgetPlan.require_ready()；[draft](../evals/budgets/p2a_draft.json)保留为拒绝样例。用户已明确恢复；累计时限不重置，账单核对前置条件由用户取消，实付金额仍未知。
+历史[确认预算](../evals/budgets/p2a_confirmed.json)为7200秒/4元，[第2步预算](../evals/budgets/p2a_base_confirmed.json)为3600秒/2元，均保留对应历史；[draft](../evals/budgets/p2a_draft.json)保留为拒绝样例。用户现已授权无卡准备/正常模式接续，并明确取消本轮及后续工作整体时限，由其自行关机；不再重复索取准备时限，不把旧窗口重置为新预算。时限取消不修改业务BudgetPlan及产品超时契约，单个网络请求仍有技术超时；账单不虚构。
 
-准备时间从开始实际安装计时。每步只使用总预算剩余时间，长任务放screen中运行，并对整个安装作业设置timeout；不能每段都重新获得完整总预算。到上限停止进程并归档，GPU计费仍需在控制台关机或定时关机才能停止，数据盘固定费用另计。
+历史限时窗口从实际安装计时，各段共享剩余预算；本次用户已取消整体时限，因此P2A-GPU-001仅使用screen保活，不施加历史整体timeout，不把旧限额重新当作当前停止点。单个网络/SSH请求仍有技术超时。停止进程后GPU计费是否结束以平台实例状态为准，本项目由用户自行关机，数据盘费用另计。
 
 云端统一布局如下；首次将项目代码克隆到数据盘，并记录实际项目提交。后续已有目录先检查Git状态再同步，不覆盖他人修改。
 
@@ -94,6 +96,20 @@ python -c "import torch, torchmcubes; print(torch.__version__, torch.version.cud
 
 ## 5.TRELLIS.2独立环境与原生扩展
 
+第2步基础依赖现使用独立入口，不能在基础安装授权下执行本节后面的CUDA扩展命令：
+
+```bash
+cd /root/autodl-tmp/image-to-3d-print-agent
+export P2A_RUN_DIR="$PWD/runs/p2a-base-20261020-01"
+bash scripts/p2a/install_trellis2_base.sh
+```
+
+实际执行由screen和本轮共享截止时间包围；上面仅为安装入口，不会自行延长预算。入口复用现有Python3.10前缀，按PyPI官方SHA256经中科大镜像续传triton轮子，普通依赖使用同一镜像索引；Torch保持原官方固定URL及摘要，安装Torch2.6.0+cu124/torchvision0.21.0及官方basic组。额外明确固定transformers4.57.6和构建后端setuptools80.9.0，前者检查DINOv3类可导入，后者供utils3d/Pillow-SIMD的构建使用。除这两个本地CPU构建外，依赖只允许现成轮子；系统libjpeg-dev已存在时不重装。实际版本以本轮快照为准。
+
+基础验收只运行pip check、CPU导入、小矩阵乘法、PNG内存读写及JPEG能力查询，不加载DINOv3/RMBG/TRELLIS模型、不执行GPU算子。check_trellis2_base.py记录各包版本、导入结果和明确未执行项。flash-attn/nvdiffrast/nvdiffrec/CuMesh/FlexGEMM/o-voxel仍留给后续CUDA扩展步骤。
+
+基础安装现已退出0，28项依赖检查及pip check/CPU冒烟通过；[pip快照](../locks/p2a-trellis2-base-linux.txt)和[conda前缀清单](../locks/p2a-trellis2-base-conda-linux.txt)已从本机备份原样归档。快照包含云端file路径及conda/pip覆盖记录，复建顺序和Pillow-SIMD实际导入版本见基础安装报告第5节。以下整体环境命令仅作后续参考，不表示已经执行或已获本轮启动授权。
+
 此环境和TripoSR分离。安装顺序根据[官方setup.sh](https://github.com/microsoft/TRELLIS.2/blob/75fbf0183001ed9876c8dbb35de6b68552ee08bd/setup.sh)整理；原脚本包含系统目录临时构建和sudo，不直接把整体返回码当作每步都成功。项目缓存/构建使用数据盘，每条命令出错即停止。
 
 ```bash
@@ -102,7 +118,7 @@ conda activate "$PROJECT_ROOT/runtime/envs/trellis2"
 python -m pip install triton==3.2.0
 # 实际安装入口固定官方Torch轮子及其SHA256，避免r2节点低速。
 python -m pip install 'https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-linux_x86_64.whl#sha256=7f2ba7f7c0459320a521696f6b5bccc187f59890b23c9dfb6c49b0b87c6bfc97' torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
-python -m pip install imageio imageio-ffmpeg tqdm easydict opencv-python-headless ninja trimesh transformers gradio==6.0.1 tensorboard pandas lpips zstandard kornia timm packaging psutil wheel
+python -m pip install imageio imageio-ffmpeg tqdm easydict opencv-python-headless==4.10.0.84 ninja trimesh transformers==4.57.6 gradio==6.0.1 tensorboard pandas lpips zstandard kornia timm packaging psutil wheel
 python -m pip install "$PROJECT_ROOT/runtime/upstream/utils3d"
 ```
 

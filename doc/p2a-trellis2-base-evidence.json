@@ -1,0 +1,255 @@
+{
+  "task_id": "P2A-BASE-001",
+  "date": "2026-10-20",
+  "project_baseline": "dd5a9b4ea6352776641197ad2970d12662987502",
+  "cloud_project_baseline": "056e4df90a981d0d971e9534be8fe1b4102c7b8c",
+  "cloud_worktree_note": "使用已上传辅助脚本，非本机最新提交的干净检出",
+  "budget": {
+    "started_epoch": 1792480249.0,
+    "deadline_epoch": 1792483849.0,
+    "limit_s": 3600,
+    "cost_limit_cny": 2,
+    "quoted_rate_cny_per_hour": 1.88,
+    "completed_epoch": 1792481664.1802862,
+    "elapsed_s": 1415.1802861690521,
+    "estimated_compute_cny": 0.7390385938882827,
+    "actual_compute_cny": null,
+    "billing_note": "按既有实例单价估算，账单未知；用户手动关机，后续实例计费不受安装进程控制"
+  },
+  "baseline": {
+    "phase": "baseline",
+    "python": "3.10.22",
+    "versions": {
+      "torch": null,
+      "torchvision": null,
+      "triton": null,
+      "numpy": null,
+      "imageio": null,
+      "imageio-ffmpeg": null,
+      "tqdm": null,
+      "easydict": null,
+      "opencv-python-headless": null,
+      "ninja": null,
+      "trimesh": null,
+      "transformers": null,
+      "gradio": null,
+      "tensorboard": null,
+      "pandas": null,
+      "lpips": null,
+      "zstandard": null,
+      "kornia": null,
+      "timm": null,
+      "packaging": "26.3",
+      "psutil": null,
+      "wheel": "0.48.0",
+      "setuptools": "84.0.0",
+      "utils3d": null,
+      "pillow-simd": null,
+      "moderngl": null,
+      "plyfile": null,
+      "scipy": null
+    },
+    "deferred_versions": {
+      "flash-attn": null,
+      "nvdiffrast": null,
+      "nvdiffrec": null,
+      "cumesh": null,
+      "flex-gemm": null,
+      "o-voxel": null
+    },
+    "imports": {},
+    "errors": [],
+    "gpu_operations": "not_run",
+    "model_load": "not_run",
+    "cuda_extension_compile": "not_run",
+    "status": "passed"
+  },
+  "base_check": {
+    "phase": "installed",
+    "python": "3.10.22",
+    "versions": {
+      "torch": "2.6.0+cu124",
+      "torchvision": "0.21.0+cu124",
+      "triton": "3.2.0",
+      "numpy": "2.2.6",
+      "imageio": "2.38.0",
+      "imageio-ffmpeg": "0.6.0",
+      "tqdm": "4.70.1",
+      "easydict": "1.13",
+      "opencv-python-headless": "5.0.0.93",
+      "ninja": "1.13.2",
+      "trimesh": "5.1.1",
+      "transformers": "4.57.6",
+      "gradio": "6.0.1",
+      "tensorboard": "2.21.0",
+      "pandas": "2.3.3",
+      "lpips": "0.1.4",
+      "zstandard": "0.25.0",
+      "kornia": "0.8.2",
+      "timm": "1.0.30",
+      "packaging": "26.3",
+      "psutil": "7.2.2",
+      "wheel": "0.48.0",
+      "setuptools": "80.9.0",
+      "utils3d": "0.0.2",
+      "pillow-simd": "12.1.1.post0",
+      "moderngl": "5.13.0",
+      "plyfile": "1.1.5",
+      "scipy": "1.15.3"
+    },
+    "deferred_versions": {
+      "flash-attn": null,
+      "nvdiffrast": null,
+      "nvdiffrec": null,
+      "cumesh": null,
+      "flex-gemm": null,
+      "o-voxel": null
+    },
+    "imports": {
+      "torch": "passed",
+      "torchvision": "passed",
+      "triton": "passed",
+      "numpy": "passed",
+      "imageio": "passed",
+      "imageio-ffmpeg": "passed",
+      "tqdm": "passed",
+      "easydict": "passed",
+      "opencv-python-headless": "passed",
+      "ninja": "passed",
+      "trimesh": "passed",
+      "transformers": "passed",
+      "gradio": "passed",
+      "tensorboard": "passed",
+      "pandas": "passed",
+      "lpips": "passed",
+      "zstandard": "passed",
+      "kornia": "passed",
+      "timm": "passed",
+      "packaging": "passed",
+      "psutil": "passed",
+      "wheel": "passed",
+      "setuptools": "passed",
+      "utils3d": "passed",
+      "pillow-simd": "passed",
+      "moderngl": "passed",
+      "plyfile": "passed",
+      "scipy": "passed"
+    },
+    "errors": [],
+    "gpu_operations": "not_run",
+    "model_load": "not_run",
+    "cuda_extension_compile": "not_run",
+    "cpu_checks": {
+      "torch_matmul": "passed",
+      "png_roundtrip": "passed",
+      "transformers_classes": "passed",
+      "jpeg_support": true,
+      "torch_cuda_runtime": "12.4",
+      "pil_import_version": "12.1.1.post0"
+    },
+    "status": "passed"
+  },
+  "steps": [
+    {
+      "name": "base_install",
+      "timeout_s": 3296,
+      "started_epoch_server": 1792480554.9887319,
+      "script": "runs/p2a-base-20261020-01/steps/base_install.sh",
+      "screen": "p2a_base_install",
+      "exit_code": 143,
+      "ended_epoch": 1792480749.4062712
+    },
+    {
+      "name": "base_mirror",
+      "timeout_s": 2877,
+      "started_epoch_server": 1792480973.303014,
+      "script": "runs/p2a-base-20261020-01/steps/base_mirror.sh",
+      "screen": "p2a_base_mirror",
+      "exit_code": 0,
+      "ended_epoch": 1792481603.4244227
+    },
+    {
+      "name": "base_resume",
+      "timeout_s": 3098,
+      "started_epoch_server": 1792480752.2901757,
+      "script": "runs/p2a-base-20261020-01/steps/base_resume.sh",
+      "screen": "p2a_base_resume",
+      "exit_code": 143,
+      "ended_epoch": 1792480970.8426151
+    }
+  ],
+  "pip_check": {
+    "exit_code": 0,
+    "stdout": "No broken requirements found.",
+    "source": "steps/base_mirror.log"
+  },
+  "bash_syntax": {
+    "install_trellis2_base.sh": {
+      "exit_code": 0,
+      "stderr": ""
+    },
+    "environment.sh": {
+      "exit_code": 0,
+      "stderr": ""
+    }
+  },
+  "sources": {
+    "TRELLIS.2": {
+      "revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+      "tracked_diff": "",
+      "status": ""
+    },
+    "utils3d": {
+      "revision": "9a4eb15e4021b67b12c460c7057d642626897ec8",
+      "tracked_diff": "",
+      "status": ""
+    }
+  },
+  "stop": {
+    "active_own_timeout_processes": [],
+    "gpu": {
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=name,driver_version,memory.total,memory.used,utilization.gpu",
+        "--format=csv,noheader"
+      ],
+      "exit_code": 0,
+      "stdout": "NVIDIA GeForce RTX 4090 D, 580.76.05, 24564 MiB, 0 MiB, 0 %\n",
+      "stderr": ""
+    },
+    "disk": {
+      "command": [
+        "df",
+        "-h",
+        "/root/autodl-tmp"
+      ],
+      "exit_code": 0,
+      "stdout": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/md0        100G   44G   57G  44% /root/autodl-tmp\n",
+      "stderr": ""
+    },
+    "cpu_max": "1600000 100000",
+    "memory_max_bytes": 85899345920
+  },
+  "full_weights_download": "not_run",
+  "gpu_operations": "not_run",
+  "model_load": "not_run",
+  "cuda_extension_compile": "not_run",
+  "human_review": "pending",
+  "p2a_stage_acceptance": "not_completed",
+  "p2b": "not_started",
+  "backup": {
+    "local_file": "runs/p2a-base-20261020-01/cloud-backup.zip",
+    "bytes": 16382,
+    "files": 22
+  },
+  "interpretation": {
+    "dependency_checks": 28,
+    "actual_module_imports": 27,
+    "metadata_only": [
+      "setuptools"
+    ],
+    "baseline_status_meaning": "passed只表示基线采集成功，不表示依赖已安装",
+    "documentation_closeout": "2026-10-20仅本机备份归档，未云端复测",
+    "github_upload": "deferred_by_user"
+  }
+}

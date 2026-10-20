@@ -1,0 +1,10 @@
+{
+  "budget_id": "p2a_base_20261020",
+  "state": "confirmed",
+  "preparation_timeout_s": 3600,
+  "inference_timeout_s": 300,
+  "max_retries": 0,
+  "cost_limit_cny": 2.0,
+  "confirmed_by": "current_user",
+  "reason": "2026-10-20用户新授权第2步：最多1小时、GPU计算费不超过2元；只安装TRELLIS.2基础依赖，不编译CUDA扩展、不下载完整权重、不运行模型，用户手动关机。300秒字段沿用契约，本轮不执行推理。"
+}

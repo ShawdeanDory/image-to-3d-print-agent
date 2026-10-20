@@ -88,3 +88,9 @@ refs.mkdir(exist_ok=True)
 ```
 
 实际验证命令、结果及人工复核入口见[P0验证报告](../doc/P0环境与工具验证.md)。本目录不承诺跨系统、跨PyTorch版本或跨显卡的二进制兼容；交接后运行同组固定样例确认。
+
+## P2-A的Linux候选环境快照
+
+[p2a-trellis2-linux.txt](p2a-trellis2-linux.txt)及[conda清单](p2a-trellis2-conda-linux.txt)来自2026-10-20正常模式真实构建，110条pip记录/32个conda包；5项扩展、CUDA冒烟和原官方例已通过。前缀为云端runtime/envs/trellis2，不可复制为Windows环境。base/prepared快照保留原历史。
+
+pip freeze含真实源码file路径，conda清单中部分包被后续pip覆盖；换机使用[来源计划](p2a-source-plan.json)、[官方FlashAttention轮子记录](p2a-flash-attn-wheel.json)及[手册](../doc/P2-A云端安装与验证手册.md)重建，不能将本地源码路径直接交给另一台机器。实际步骤、Pillow-SIMD/conda-pip覆盖注意事项见[基础安装报告](../doc/TRELLIS.2基础环境安装记录.md#5依赖快照与证据)，最终模型结果及限制见[正常模式报告](../doc/P2-A正常模式编译与官方样例结果.md)。

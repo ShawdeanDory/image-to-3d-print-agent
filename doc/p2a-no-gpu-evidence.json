@@ -1,0 +1,750 @@
+{
+  "task_id": "P2A-CPU-001",
+  "time_limit_s": null,
+  "time_policy": "user_waived",
+  "started_epoch": 1792482360,
+  "completed_epoch": 1792483777.438392,
+  "source_baseline": {
+    "mode": "no_gpu",
+    "time_limit_s": null,
+    "time_policy": "user_waived",
+    "files": [
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "filename": "config.json",
+        "expected_bytes": 745,
+        "blob_id": "ab2a8b183fd4fd5213e9898a7f499c7c857b1a86",
+        "lfs_sha256": null,
+        "cached": false,
+        "cached_bytes": null
+      },
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "filename": "model.safetensors",
+        "expected_bytes": 1212559808,
+        "blob_id": "5fe30316feaa07b25590197bfad7216e9747863d",
+        "lfs_sha256": "dcb2e45127cccbf1601e5f42fef165eea275c8e5213197e8dcf3f48822718179",
+        "cached": false,
+        "cached_bytes": null
+      },
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "filename": "preprocessor_config.json",
+        "expected_bytes": 585,
+        "blob_id": "0126173c1ab7b75bbd9102e37de8a56ffe0a012b",
+        "lfs_sha256": null,
+        "cached": false,
+        "cached_bytes": null
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "BiRefNet_config.py",
+        "expected_bytes": 298,
+        "blob_id": "37c8ac58bec2f52dac34204978a7b61b69e3da76",
+        "lfs_sha256": null,
+        "cached": false,
+        "cached_bytes": null
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "birefnet.py",
+        "expected_bytes": 91403,
+        "blob_id": "6d56778af0737ad21a8a877f79e534f848589f05",
+        "lfs_sha256": null,
+        "cached": false,
+        "cached_bytes": null
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "config.json",
+        "expected_bytes": 405,
+        "blob_id": "06d8fa9d7f2f4c6f1cf0dc6e7bfd194153176a42",
+        "lfs_sha256": null,
+        "cached": false,
+        "cached_bytes": null
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "model.safetensors",
+        "expected_bytes": 884878856,
+        "blob_id": "121c871665f9d734c36f5be12556984df33667b1",
+        "lfs_sha256": "566ed80c3d95f87ada6864d4cbe2290a1c5eb1c7bb0b123e984f60f76b02c3a7",
+        "cached": false,
+        "cached_bytes": null
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "preprocessor_config.json",
+        "expected_bytes": 391,
+        "blob_id": "825398cfd94a348babce456f2bcc8422c9bebb93",
+        "lfs_sha256": null,
+        "cached": false,
+        "cached_bytes": null
+      }
+    ],
+    "sources": {
+      "TripoSR": {
+        "expected": "107cefdc244c39106fa830359024f6a2f1c78871",
+        "actual": "107cefdc244c39106fa830359024f6a2f1c78871",
+        "status": "",
+        "submodules": "",
+        "match": true
+      },
+      "torchmcubes": {
+        "expected": "879926d0ef58e6ce0ac2630fdecb5e53af7ed3ff",
+        "actual": "879926d0ef58e6ce0ac2630fdecb5e53af7ed3ff",
+        "status": "",
+        "submodules": "",
+        "match": true
+      },
+      "TRELLIS.2": {
+        "expected": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+        "actual": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+        "status": "",
+        "submodules": " 21e4582d1739107337a03460c81412981130373e o-voxel/third_party/eigen (21e4582)\n",
+        "match": true
+      },
+      "utils3d": {
+        "expected": "9a4eb15e4021b67b12c460c7057d642626897ec8",
+        "actual": "9a4eb15e4021b67b12c460c7057d642626897ec8",
+        "status": "",
+        "submodules": "",
+        "match": true
+      },
+      "nvdiffrast": {
+        "expected": "253ac4fcea7de5f396371124af597e6cc957bfae",
+        "actual": "253ac4fcea7de5f396371124af597e6cc957bfae",
+        "status": "",
+        "submodules": "",
+        "match": true
+      },
+      "nvdiffrec": {
+        "expected": "b296927cc7fd01c2ac1087c8065c4d7248f72da4",
+        "actual": "b296927cc7fd01c2ac1087c8065c4d7248f72da4",
+        "status": "",
+        "submodules": "",
+        "match": true
+      },
+      "CuMesh": {
+        "expected": "12289e1062f0603f2f0d0771b02e1395d247f26f",
+        "actual": "12289e1062f0603f2f0d0771b02e1395d247f26f",
+        "status": "",
+        "submodules": " ce92267a24ef6ad7d2c8ccbc2ae2c021a6597e70 third_party/cubvh (ce92267)\n e63d9f6ccb7f6f29f31241b87c542f3f0ab3112b third_party/cubvh/third_party/eigen (e63d9f6)\n",
+        "match": true
+      },
+      "FlexGEMM": {
+        "expected": "6dd94a859c26ee8246888502eada3dd8ad85532e",
+        "actual": "6dd94a859c26ee8246888502eada3dd8ad85532e",
+        "status": "",
+        "submodules": "",
+        "match": true
+      }
+    },
+    "dependency_versions": {
+      "torch": "2.6.0+cu124",
+      "torchvision": "0.21.0+cu124",
+      "triton": "3.2.0",
+      "flash-attn": null,
+      "nvdiffrast": null,
+      "nvdiffrec-render": null,
+      "cumesh": null,
+      "flex-gemm": null,
+      "o-voxel": null
+    },
+    "missing_count": 8,
+    "expected_bytes": 2097532491,
+    "status": "recorded"
+  },
+  "environment": {
+    "mode": "no_gpu",
+    "cpu_max": "50000 100000",
+    "memory_max_bytes": 2147483648,
+    "gpu_count": 0,
+    "gpu_available": false,
+    "torch": "2.6.0+cu124",
+    "cuda_runtime": "12.4",
+    "time_limit_s": null,
+    "time_policy": "user_waived"
+  },
+  "cpu_checks": {
+    "phase": "installed",
+    "python": "3.10.22",
+    "versions": {
+      "torch": "2.6.0+cu124",
+      "torchvision": "0.21.0+cu124",
+      "triton": "3.2.0",
+      "numpy": "2.2.6",
+      "imageio": "2.38.0",
+      "imageio-ffmpeg": "0.6.0",
+      "tqdm": "4.70.1",
+      "easydict": "1.13",
+      "opencv-python-headless": "4.10.0.84",
+      "ninja": "1.13.2",
+      "trimesh": "5.1.1",
+      "transformers": "4.57.6",
+      "gradio": "6.0.1",
+      "tensorboard": "2.21.0",
+      "pandas": "2.3.3",
+      "lpips": "0.1.4",
+      "zstandard": "0.25.0",
+      "kornia": "0.8.2",
+      "timm": "1.0.30",
+      "packaging": "26.3",
+      "psutil": "7.2.2",
+      "wheel": "0.48.0",
+      "setuptools": "80.9.0",
+      "utils3d": "0.0.2",
+      "pillow-simd": "12.1.1.post0",
+      "moderngl": "5.13.0",
+      "plyfile": "1.1.5",
+      "scipy": "1.15.3"
+    },
+    "deferred_versions": {
+      "flash-attn": "2.7.3",
+      "nvdiffrast": null,
+      "nvdiffrec": null,
+      "cumesh": null,
+      "flex-gemm": null,
+      "o-voxel": null
+    },
+    "imports": {
+      "torch": "passed",
+      "torchvision": "passed",
+      "triton": "passed",
+      "numpy": "passed",
+      "imageio": "passed",
+      "imageio-ffmpeg": "passed",
+      "tqdm": "passed",
+      "easydict": "passed",
+      "opencv-python-headless": "passed",
+      "ninja": "passed",
+      "trimesh": "passed",
+      "transformers": "passed",
+      "gradio": "passed",
+      "tensorboard": "passed",
+      "pandas": "passed",
+      "lpips": "passed",
+      "zstandard": "passed",
+      "kornia": "passed",
+      "timm": "passed",
+      "packaging": "passed",
+      "psutil": "passed",
+      "wheel": "passed",
+      "setuptools": "passed",
+      "utils3d": "passed",
+      "pillow-simd": "passed",
+      "moderngl": "passed",
+      "plyfile": "passed",
+      "scipy": "passed"
+    },
+    "errors": [],
+    "gpu_operations": "not_run",
+    "model_load": "not_run",
+    "cuda_extension_compile": "not_run",
+    "cpu_checks": {
+      "torch_matmul": "passed",
+      "png_roundtrip": "passed",
+      "transformers_classes": "passed",
+      "jpeg_support": true,
+      "torch_cuda_runtime": "12.4",
+      "pil_import_version": "12.1.1.post0"
+    },
+    "status": "passed"
+  },
+  "cpu_check_resources": {
+    "exit_code": 0,
+    "seconds": 24.49422949925065,
+    "max_rss_KiB": 695768
+  },
+  "gated_integrity": {
+    "status": "passed",
+    "file_count": 8,
+    "total_bytes": 2097532491,
+    "seconds": 6.793932516127825,
+    "files": [
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "filename": "config.json",
+        "expected_bytes": 745,
+        "blob_id": "ab2a8b183fd4fd5213e9898a7f499c7c857b1a86",
+        "lfs_sha256": null,
+        "cached": true,
+        "cached_bytes": 745,
+        "integrity_kind": "git_blob_sha1",
+        "actual_digest": "ab2a8b183fd4fd5213e9898a7f499c7c857b1a86",
+        "status": "verified",
+        "snapshot_path": "/root/autodl-tmp/image-to-3d-print-agent/runtime/cache/huggingface/hub/models--facebook--dinov3-vitl16-pretrain-lvd1689m/snapshots/ea8dc2863c51be0a264bab82070e3e8836b02d51/config.json"
+      },
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "filename": "model.safetensors",
+        "expected_bytes": 1212559808,
+        "blob_id": "5fe30316feaa07b25590197bfad7216e9747863d",
+        "lfs_sha256": "dcb2e45127cccbf1601e5f42fef165eea275c8e5213197e8dcf3f48822718179",
+        "cached": true,
+        "cached_bytes": 1212559808,
+        "integrity_kind": "sha256",
+        "actual_digest": "dcb2e45127cccbf1601e5f42fef165eea275c8e5213197e8dcf3f48822718179",
+        "status": "verified",
+        "snapshot_path": "/root/autodl-tmp/image-to-3d-print-agent/runtime/cache/huggingface/hub/models--facebook--dinov3-vitl16-pretrain-lvd1689m/snapshots/ea8dc2863c51be0a264bab82070e3e8836b02d51/model.safetensors"
+      },
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "filename": "preprocessor_config.json",
+        "expected_bytes": 585,
+        "blob_id": "0126173c1ab7b75bbd9102e37de8a56ffe0a012b",
+        "lfs_sha256": null,
+        "cached": true,
+        "cached_bytes": 585,
+        "integrity_kind": "git_blob_sha1",
+        "actual_digest": "0126173c1ab7b75bbd9102e37de8a56ffe0a012b",
+        "status": "verified",
+        "snapshot_path": "/root/autodl-tmp/image-to-3d-print-agent/runtime/cache/huggingface/hub/models--facebook--dinov3-vitl16-pretrain-lvd1689m/snapshots/ea8dc2863c51be0a264bab82070e3e8836b02d51/preprocessor_config.json"
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "BiRefNet_config.py",
+        "expected_bytes": 298,
+        "blob_id": "37c8ac58bec2f52dac34204978a7b61b69e3da76",
+        "lfs_sha256": null,
+        "cached": true,
+        "cached_bytes": 298,
+        "integrity_kind": "git_blob_sha1",
+        "actual_digest": "37c8ac58bec2f52dac34204978a7b61b69e3da76",
+        "status": "verified",
+        "snapshot_path": "/root/autodl-tmp/image-to-3d-print-agent/runtime/cache/huggingface/hub/models--briaai--RMBG-2.0/snapshots/5df4c9c76d8170882c34f6986e848ee07fd0ba43/BiRefNet_config.py"
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "birefnet.py",
+        "expected_bytes": 91403,
+        "blob_id": "6d56778af0737ad21a8a877f79e534f848589f05",
+        "lfs_sha256": null,
+        "cached": true,
+        "cached_bytes": 91403,
+        "integrity_kind": "git_blob_sha1",
+        "actual_digest": "6d56778af0737ad21a8a877f79e534f848589f05",
+        "status": "verified",
+        "snapshot_path": "/root/autodl-tmp/image-to-3d-print-agent/runtime/cache/huggingface/hub/models--briaai--RMBG-2.0/snapshots/5df4c9c76d8170882c34f6986e848ee07fd0ba43/birefnet.py"
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "config.json",
+        "expected_bytes": 405,
+        "blob_id": "06d8fa9d7f2f4c6f1cf0dc6e7bfd194153176a42",
+        "lfs_sha256": null,
+        "cached": true,
+        "cached_bytes": 405,
+        "integrity_kind": "git_blob_sha1",
+        "actual_digest": "06d8fa9d7f2f4c6f1cf0dc6e7bfd194153176a42",
+        "status": "verified",
+        "snapshot_path": "/root/autodl-tmp/image-to-3d-print-agent/runtime/cache/huggingface/hub/models--briaai--RMBG-2.0/snapshots/5df4c9c76d8170882c34f6986e848ee07fd0ba43/config.json"
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "model.safetensors",
+        "expected_bytes": 884878856,
+        "blob_id": "121c871665f9d734c36f5be12556984df33667b1",
+        "lfs_sha256": "566ed80c3d95f87ada6864d4cbe2290a1c5eb1c7bb0b123e984f60f76b02c3a7",
+        "cached": true,
+        "cached_bytes": 884878856,
+        "integrity_kind": "sha256",
+        "actual_digest": "566ed80c3d95f87ada6864d4cbe2290a1c5eb1c7bb0b123e984f60f76b02c3a7",
+        "status": "verified",
+        "snapshot_path": "/root/autodl-tmp/image-to-3d-print-agent/runtime/cache/huggingface/hub/models--briaai--RMBG-2.0/snapshots/5df4c9c76d8170882c34f6986e848ee07fd0ba43/model.safetensors"
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "preprocessor_config.json",
+        "expected_bytes": 391,
+        "blob_id": "825398cfd94a348babce456f2bcc8422c9bebb93",
+        "lfs_sha256": null,
+        "cached": true,
+        "cached_bytes": 391,
+        "integrity_kind": "git_blob_sha1",
+        "actual_digest": "825398cfd94a348babce456f2bcc8422c9bebb93",
+        "status": "verified",
+        "snapshot_path": "/root/autodl-tmp/image-to-3d-print-agent/runtime/cache/huggingface/hub/models--briaai--RMBG-2.0/snapshots/5df4c9c76d8170882c34f6986e848ee07fd0ba43/preprocessor_config.json"
+      }
+    ],
+    "model_loading": "not_run",
+    "gpu_operations": "not_run"
+  },
+  "flash_wheel": {
+    "status": "downloaded",
+    "filename": "flash_attn-2.7.3+cu12torch2.6cxx11abiFALSE-cp310-cp310-linux_x86_64.whl",
+    "bytes": 191345582,
+    "sha256": "64ba4ed4a8c4c9b79d8a0959ebe3ffd6f7ea707ae222dbebe6a864237ac0e475",
+    "official_digest_provided": false,
+    "source_url": "https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.3/flash_attn-2.7.3%2Bcu12torch2.6cxx11abiFALSE-cp310-cp310-linux_x86_64.whl",
+    "release_tag": "v2.7.3",
+    "release_target": "89c5a7dd4e6a8644575bd0c04a286f48c42763ec",
+    "metadata_version": "Version: 2.7.3",
+    "seconds": 89.90085634589195
+  },
+  "flash_import": {
+    "flash_attn": "2.7.3",
+    "einops": "0.8.1",
+    "torch": "2.6.0+cu124",
+    "torch_cxx11abi": false,
+    "gpu_count": 0,
+    "flash_attn_import": "passed",
+    "rmbg_config_class": "BiRefNetConfig",
+    "rmbg_model_class": "BiRefNet",
+    "rmbg_bb_pretrained": false,
+    "dynamic_code_revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+    "model_instantiation": "not_run",
+    "gpu_operations": "not_run"
+  },
+  "offline_cache": {
+    "status": "passed",
+    "cache_file_count": 25,
+    "files": [
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "pipeline.json",
+        "bytes": 4186
+      },
+      {
+        "repo": "microsoft/TRELLIS-image-large",
+        "revision": "25e0d31ffbebe4b5a97464dd851910efc3002d96",
+        "filename": "ckpts/ss_dec_conv3d_16l8_fp16.json",
+        "bytes": 245
+      },
+      {
+        "repo": "microsoft/TRELLIS-image-large",
+        "revision": "25e0d31ffbebe4b5a97464dd851910efc3002d96",
+        "filename": "ckpts/ss_dec_conv3d_16l8_fp16.safetensors",
+        "bytes": 147591972,
+        "tensor_count": 74,
+        "header_check": "passed"
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/ss_flow_img_dit_1_3B_64_bf16.json",
+        "bytes": 467
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors",
+        "bytes": 2584426920,
+        "tensor_count": 640,
+        "header_check": "passed"
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/shape_dec_next_dc_f16c32_fp16.json",
+        "bytes": 678
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/shape_dec_next_dc_f16c32_fp16.safetensors",
+        "bytes": 948490494,
+        "tensor_count": 292,
+        "header_check": "passed"
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.json",
+        "bytes": 458
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors",
+        "bytes": 2584574424,
+        "tensor_count": 640,
+        "header_check": "passed"
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.json",
+        "bytes": 458
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors",
+        "bytes": 2584574424,
+        "tensor_count": 640,
+        "header_check": "passed"
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/tex_dec_next_dc_f16c32_fp16.json",
+        "bytes": 705
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/tex_dec_next_dc_f16c32_fp16.safetensors",
+        "bytes": 948458812,
+        "tensor_count": 284,
+        "header_check": "passed"
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_imgshape2tex_dit_1_3B_512_bf16.json",
+        "bytes": 458
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_imgshape2tex_dit_1_3B_512_bf16.safetensors",
+        "bytes": 2584672728,
+        "tensor_count": 640,
+        "header_check": "passed"
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json",
+        "bytes": 458
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors",
+        "bytes": 2584672728,
+        "tensor_count": 640,
+        "header_check": "passed"
+      },
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "filename": "config.json",
+        "bytes": 745
+      },
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "filename": "preprocessor_config.json",
+        "bytes": 585
+      },
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "filename": "model.safetensors",
+        "bytes": 1212559808,
+        "tensor_count": 415,
+        "header_check": "passed"
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "config.json",
+        "bytes": 405
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "preprocessor_config.json",
+        "bytes": 391
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "model.safetensors",
+        "bytes": 884878856,
+        "tensor_count": 754,
+        "header_check": "passed"
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "BiRefNet_config.py",
+        "bytes": 298
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+        "filename": "birefnet.py",
+        "bytes": 91403
+      }
+    ],
+    "fixed_main_refs": {
+      "briaai/RMBG-2.0": "5df4c9c76d8170882c34f6986e848ee07fd0ba43",
+      "facebook/dinov3-vitl16-pretrain-lvd1689m": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+      "microsoft/TRELLIS-image-large": "25e0d31ffbebe4b5a97464dd851910efc3002d96",
+      "microsoft/TRELLIS.2-4B": "af44b45f2e35a493886929c6d786e563ec68364d"
+    },
+    "official_input": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "sha256": "db468bad8a04f1474a8d68140c07501b013b3ec6124b911fb7852675d64c05ee"
+    },
+    "official_hdri_shape": [
+      512,
+      1024,
+      3
+    ],
+    "pipeline_type": "1024_cascade",
+    "model_loading": "not_run",
+    "gpu_operations": "not_run",
+    "integrity_scope": "本步检查缓存/JSON/权重头，完整摘要分别引用已有公开组和本轮受限组验证"
+  },
+  "no_gpu_guard": {
+    "guard_exit": 2,
+    "output_directory_created": false,
+    "model_loading": "not_run"
+  },
+  "exr_before": [
+    {
+      "environment": "trellis2",
+      "exit": 0,
+      "stdout": "{\"opencv\": \"5.0.0\", \"numpy\": \"2.2.6\", \"shape\": null, \"build_exr\": [\"OpenEXR:                     NO\"]}\n",
+      "stderr": ""
+    },
+    {
+      "environment": "triposr",
+      "exit": 0,
+      "stdout": "{\"opencv\": \"4.10.0\", \"numpy\": \"1.26.4\", \"shape\": [512, 1024, 3], \"build_exr\": [\"OpenEXR:                     build (ver 2.3.0)\"]}\n",
+      "stderr": ""
+    }
+  ],
+  "bash_syntax": {
+    "install_trellis2_base.sh": {
+      "exit_code": 0
+    },
+    "install_trellis2.sh": {
+      "exit_code": 0
+    },
+    "install_trellis2_extensions.sh": {
+      "exit_code": 0
+    }
+  },
+  "steps": [
+    {
+      "name": "cpu_check",
+      "time_limit_s": null,
+      "started_epoch": 1792482733.5262723,
+      "screen": "p2a_cpu_cpu_check",
+      "script": "runs/p2a-cpu-20261020-01/steps/cpu_check.sh",
+      "exit_code": 2
+    },
+    {
+      "name": "cpu_check_lf",
+      "time_limit_s": null,
+      "started_epoch": 1792482767.9179437,
+      "screen": "p2a_cpu_cpu_check_lf",
+      "script": "runs/p2a-cpu-20261020-01/steps/cpu_check_lf.sh",
+      "exit_code": 127
+    },
+    {
+      "name": "cpu_check_stdlib",
+      "time_limit_s": null,
+      "started_epoch": 1792482918.716661,
+      "screen": "p2a_cpu_cpu_check_stdlib",
+      "script": "runs/p2a-cpu-20261020-01/steps/cpu_check_stdlib.sh",
+      "exit_code": 0
+    },
+    {
+      "name": "fix_exr",
+      "time_limit_s": null,
+      "started_epoch": 1792483559.0252364,
+      "screen": "p2a_cpu_fix_exr",
+      "script": "runs/p2a-cpu-20261020-01/steps/fix_exr.sh",
+      "exit_code": 0
+    },
+    {
+      "name": "flash_wheel",
+      "time_limit_s": null,
+      "started_epoch": 1792483086.0289934,
+      "screen": "p2a_cpu_flash_wheel",
+      "script": "runs/p2a-cpu-20261020-01/steps/flash_wheel.sh",
+      "exit_code": 0
+    },
+    {
+      "name": "gated_download",
+      "time_limit_s": null,
+      "started_epoch": 1792482697.118092,
+      "screen": "p2a_cpu_gated_download",
+      "script": "runs/p2a-cpu-20261020-01/steps/gated_download.sh",
+      "exit_code": 2
+    },
+    {
+      "name": "gated_download_lf",
+      "time_limit_s": null,
+      "started_epoch": 1792482765.3697128,
+      "screen": "p2a_cpu_gated_download_lf",
+      "script": "runs/p2a-cpu-20261020-01/steps/gated_download_lf.sh",
+      "exit_code": 0
+    },
+    {
+      "name": "install_flash",
+      "time_limit_s": null,
+      "started_epoch": 1792483228.7108295,
+      "screen": "p2a_cpu_install_flash",
+      "script": "runs/p2a-cpu-20261020-01/steps/install_flash.sh",
+      "exit_code": 0
+    },
+    {
+      "name": "no_gpu_guard",
+      "time_limit_s": null,
+      "started_epoch": 1792483635.5094953,
+      "screen": "p2a_cpu_no_gpu_guard",
+      "script": "runs/p2a-cpu-20261020-01/steps/no_gpu_guard.sh",
+      "exit_code": 0
+    },
+    {
+      "name": "offline_check",
+      "time_limit_s": null,
+      "started_epoch": 1792483402.4125283,
+      "screen": "p2a_cpu_offline_check",
+      "script": "runs/p2a-cpu-20261020-01/steps/offline_check.sh",
+      "exit_code": 1
+    },
+    {
+      "name": "verify_cached",
+      "time_limit_s": null,
+      "started_epoch": 1792483041.7338018,
+      "screen": "p2a_cpu_verify_cached",
+      "script": "runs/p2a-cpu-20261020-01/steps/verify_cached.sh",
+      "exit_code": 0
+    }
+  ],
+  "active_own_processes": [],
+  "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/md0        100G   47G   54G  47% /root/autodl-tmp\n",
+  "cuda_extension_source_build": "not_run",
+  "gpu_operations": "not_run",
+  "full_model_loading": "not_run",
+  "official_example": "not_run",
+  "human_review": "pending",
+  "p2a_stage_acceptance": "not_completed",
+  "p2b": "not_started",
+  "github_upload": "deferred_by_user",
+  "local_archive": {
+    "file": "runs/p2a-cpu-20261020-01/cloud-backup.zip",
+    "bytes": 34977,
+    "files": 62
+  },
+  "documentation_note": "无卡准备已完成；待用户正常GPU模式启动后接续；本轮不提交推送"
+}

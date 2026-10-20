@@ -1,0 +1,14 @@
+{
+  "policy_id": "p2a_user_execution_policy_20261020",
+  "kind": "operator_execution_authorization",
+  "time_limit_s": null,
+  "time_policy": "user_waived",
+  "cost_limit_cny": null,
+  "cost_policy": "user_previously_waived_billing_check",
+  "scope": "P2-A固定官方推理、验证与记录；不进入P2-B",
+  "github_upload": "deferred_by_user",
+  "shutdown": "user_manual",
+  "business_budget_schema_changed": false,
+  "budgetplan_require_ready": "not_called_operator_policy_is_not_product_budget",
+  "authorization": "用户明确正常模式已开机并要求完成扩展、GPU算子、模型加载和官方样例；取消整体工作时限，结束自行关机"
+}

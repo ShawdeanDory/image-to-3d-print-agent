@@ -1,0 +1,143 @@
+{
+  "records": [
+    {
+      "experiment_id": "p2a_trellis2_official_t",
+      "experiment_type": "official_inference",
+      "run_id": "d5265a8d-6d97-4fd2-b3dc-1004f224343f",
+      "case_id": "upstream_official_t",
+      "dataset_version": "official_assets_75fbf018",
+      "split": "development",
+      "executed_by": "codex",
+      "evidence_origin": "agent_executed",
+      "created_at": "2026-10-20T18:54:55.261355+08:00",
+      "status": "succeeded",
+      "backend_id": "trellis2_candidate",
+      "project_commit": "056e4df90a981d0d971e9534be8fe1b4102c7b8c",
+      "upstream_commit": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+      "submodule_revisions": {
+        "o_voxel_eigen": "21e4582d1739107337a03460c81412981130373e"
+      },
+      "weights_revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+      "environment_ref": "p2a_trellis2_linux_20261020",
+      "hardware_ref": "p2a_rtx4090d_16cpu_80gib",
+      "budget_ref": "p2a_user_execution_policy_20261020",
+      "preprocessing_ref": "original_trellis2_preprocess_image",
+      "metrics_protocol_version": "1.0.0",
+      "parameters": {
+        "seed": 42,
+        "configuration_group": "official_default",
+        "pipeline_type": "1024_cascade",
+        "num_samples": 1,
+        "max_num_tokens": 49152,
+        "low_vram": true,
+        "shape_sampler_steps": 12,
+        "texture_sampler_steps": 12,
+        "decimation_target": 1000000,
+        "texture_size": 4096,
+        "remesh": true,
+        "remesh_band": 1,
+        "remesh_project": 0,
+        "extension_webp": true,
+        "upstream_example_unmodified": true,
+        "input": "assets/example_image/T.png",
+        "input_sha256": "db468bad8a04f1474a8d68140c07501b013b3ec6124b911fb7852675d64c05ee",
+        "dataset_scope": "官方样例，不在P1的30例清单内，不执行evaluation或holdout",
+        "project_script_state": "local_dd5a9b4_with_uncommitted_helpers_uploaded_to_cloud_056e4df",
+        "source_snapshot_ref": "runs/p2a-gpu-20261020-01/cloud-backup/helper-sources",
+        "time_scope": "含模型加载、推理、PBR视频和GLB导出，不含Python启动与Torch导入",
+        "weights_references": {
+          "dinov3": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+          "rmbg": "5df4c9c76d8170882c34f6986e848ee07fd0ba43"
+        }
+      },
+      "seed": 42,
+      "command": [
+        "python",
+        "scripts/p2a/run_trellis2_official.py",
+        "--output",
+        "runs/p2a-gpu-20261020-01/official-default"
+      ],
+      "exit_code": 0,
+      "artifact_ids": [
+        "p2a_trellis2_official_mesh"
+      ],
+      "evidence_ids": [
+        "p2a_trellis2_official_read",
+        "p2a_trellis2_official_run"
+      ],
+      "metrics": [
+        {
+          "name": "official_example_total_time",
+          "status": "measured",
+          "value": 583.3294278383255,
+          "unit": "s"
+        },
+        {
+          "name": "peak_cuda_allocated",
+          "status": "measured",
+          "value": 8729.47314453125,
+          "unit": "MiB"
+        },
+        {
+          "name": "peak_cuda_reserved",
+          "status": "measured",
+          "value": 10364.0,
+          "unit": "MiB"
+        },
+        {
+          "name": "sampled_process_peak",
+          "status": "measured",
+          "value": 14132.0,
+          "unit": "MiB"
+        },
+        {
+          "name": "sampled_device_peak",
+          "status": "measured",
+          "value": 14177.0,
+          "unit": "MiB"
+        },
+        {
+          "name": "cold_load_time",
+          "status": "not_run",
+          "value": null,
+          "unit": "s",
+          "reason": "本次原样执行官方例，只测总区间，未插入独立加载计时"
+        },
+        {
+          "name": "pure_inference_time",
+          "status": "not_run",
+          "value": null,
+          "unit": "s",
+          "reason": "未单独采集，不用官方例总时长替代"
+        },
+        {
+          "name": "silhouette_iou",
+          "status": "not_run",
+          "value": null,
+          "unit": "ratio",
+          "reason": "后端到输入的统一相机映射尚未校准"
+        },
+        {
+          "name": "chamfer",
+          "status": "unknown",
+          "value": null,
+          "unit": "unitless",
+          "reason": "无独立参考网格"
+        },
+        {
+          "name": "actual_gpu_cost",
+          "status": "unknown",
+          "value": null,
+          "unit": "CNY",
+          "reason": "未读取平台账单"
+        }
+      ]
+    }
+  ],
+  "artifact_and_evidence_refs": {
+    "p2a_trellis2_official_mesh": "runs/p2a-gpu-20261020-01/cloud-backup/official-default/sample.glb",
+    "p2a_trellis2_official_read": "runs/p2a-gpu-20261020-01/cloud-backup/official-default/independent-read.json",
+    "p2a_trellis2_official_run": "runs/p2a-gpu-20261020-01/cloud-backup/official-default/official-run.json"
+  },
+  "operator_policy_ref": "evals/budgets/p2a_user_execution_policy.json"
+}
