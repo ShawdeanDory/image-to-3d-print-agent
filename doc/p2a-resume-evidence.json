@@ -1,0 +1,352 @@
+{
+  "run_id": "p2a-20261020-03",
+  "project_commit": "056e4df90a981d0d971e9534be8fe1b4102c7b8c",
+  "captured_epoch": 1792476778.9100974,
+  "cuda": {
+    "kind": "cuda_tensor_and_extension",
+    "status": "passed",
+    "torch": "2.5.1+cu124",
+    "cuda_runtime": "12.4",
+    "device": "NVIDIA GeForce RTX 4090 D",
+    "compute_capability": [
+      8,
+      9
+    ],
+    "marching_cubes_cuda_compiled": true,
+    "vertices": 3156,
+    "faces": 1052,
+    "seconds": 0.543436162173748
+  },
+  "triposr": {
+    "hamburger": {
+      "reconstruction": {
+        "input": "fixtures/p0/hamburger.png",
+        "model_device": "cuda:0",
+        "scene_code_device": "cuda:0",
+        "marching_cubes_cuda_compiled": true,
+        "parameters": {
+          "chunk_size": 2048,
+          "mc_resolution": 128,
+          "foreground_ratio": 0.85,
+          "dtype": "float32",
+          "seed": 0,
+          "preprocessing": "existing_alpha_resize_and_gray_composite"
+        },
+        "seconds": {
+          "load_and_cuda_transfer": 5.711578465998173,
+          "preprocessing": 0.04940006881952286,
+          "neural_inference": 1.0150499157607555,
+          "mesh_extraction": 0.39153654128313065,
+          "total": 7.170536048710346
+        },
+        "peak_cuda_allocated_mib": 1939.76611328125,
+        "peak_cuda_reserved_mib": 2346.0,
+        "torch_version": "2.5.1+cu124",
+        "cuda_runtime": "12.4",
+        "vertices": 13404,
+        "faces": 26699,
+        "raw_mesh": "runs/p2a-20261020-03/triposr-hamburger/raw_mesh.glb"
+      },
+      "independent_read": {
+        "kind": "independent_raw_mesh_read",
+        "path": "/root/autodl-tmp/image-to-3d-print-agent/runs/p2a-20261020-03/triposr-hamburger/raw_mesh.glb",
+        "vertices": 13404,
+        "faces": 26699,
+        "finite_coordinates": true,
+        "valid_indices": true,
+        "watertight": false,
+        "trimesh": "4.0.5",
+        "printability": "not_evaluated"
+      }
+    },
+    "robot": {
+      "reconstruction": {
+        "input": "fixtures/p0/robot.png",
+        "model_device": "cuda:0",
+        "scene_code_device": "cuda:0",
+        "marching_cubes_cuda_compiled": true,
+        "parameters": {
+          "chunk_size": 2048,
+          "mc_resolution": 128,
+          "foreground_ratio": 0.85,
+          "dtype": "float32",
+          "seed": 0,
+          "preprocessing": "existing_alpha_resize_and_gray_composite"
+        },
+        "seconds": {
+          "load_and_cuda_transfer": 5.640138003975153,
+          "preprocessing": 0.05045584589242935,
+          "neural_inference": 0.7646744325757027,
+          "mesh_extraction": 0.38915225863456726,
+          "total": 6.848372362554073
+        },
+        "peak_cuda_allocated_mib": 1940.97900390625,
+        "peak_cuda_reserved_mib": 2346.0,
+        "torch_version": "2.5.1+cu124",
+        "cuda_runtime": "12.4",
+        "vertices": 19111,
+        "faces": 38049,
+        "raw_mesh": "runs/p2a-20261020-03/triposr-robot/raw_mesh.glb"
+      },
+      "independent_read": {
+        "kind": "independent_raw_mesh_read",
+        "path": "/root/autodl-tmp/image-to-3d-print-agent/runs/p2a-20261020-03/triposr-robot/raw_mesh.glb",
+        "vertices": 19111,
+        "faces": 38049,
+        "finite_coordinates": true,
+        "valid_indices": true,
+        "watertight": false,
+        "trimesh": "4.0.5",
+        "printability": "not_evaluated"
+      }
+    }
+  },
+  "public_weights": {
+    "files": [
+      {
+        "repo": "stabilityai/TripoSR",
+        "revision": "5b521936b01fbe1890f6f9baed0254ab6351c04a",
+        "filename": "model.ckpt",
+        "bytes": 1677246742,
+        "sha256": "429e2c6b22a0923967459de24d67f05962b235f79cde6b032aa7ed2ffcd970ee",
+        "status": "verified",
+        "resumed_bytes": 840957952,
+        "seconds": 128.49844818934798
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/shape_dec_next_dc_f16c32_fp16.safetensors",
+        "bytes": 948490494,
+        "sha256": "e3b718d3e43e4f8780e9a24ac6fff231811a67e3b058e336e10fe654c911d581",
+        "status": "verified",
+        "resumed_bytes": 917504000,
+        "seconds": 7.1740153059363365
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors",
+        "bytes": 2584574424,
+        "sha256": "07cd0596f634c5adc1890023d16023afc5eed02fb84b22bb23aff5bf0030fbbd",
+        "status": "verified",
+        "resumed_bytes": 775946240,
+        "seconds": 245.67850222066045
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors",
+        "bytes": 2584574424,
+        "sha256": "ec5e0917ef9b7e25ad51dffc7d19687a42019871f94239f2fa7f86264c55b70f",
+        "status": "verified",
+        "resumed_bytes": 0,
+        "seconds": 682.1198339834809
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors",
+        "bytes": 2584672728,
+        "sha256": "580401269059a339b8318ab9ced459a13ba63391721c83a6c383198c29e77686",
+        "status": "verified",
+        "resumed_bytes": 0,
+        "seconds": 482.40506458655
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/slat_flow_imgshape2tex_dit_1_3B_512_bf16.safetensors",
+        "bytes": 2584672728,
+        "sha256": "8371aa1c5d13be79dcd5ddfd2cf3835e902e204dc34427169a1c702828e1a94d",
+        "status": "verified",
+        "resumed_bytes": 0,
+        "seconds": 310.9490937963128
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors",
+        "bytes": 2584426920,
+        "sha256": "ca01377c485bec418076d38ee80166d32dc776d744f2553b835cba1e97a7abf6",
+        "status": "verified",
+        "resumed_bytes": 0,
+        "seconds": 273.44990760087967
+      },
+      {
+        "repo": "microsoft/TRELLIS.2-4B",
+        "revision": "af44b45f2e35a493886929c6d786e563ec68364d",
+        "filename": "ckpts/tex_dec_next_dc_f16c32_fp16.safetensors",
+        "bytes": 948458812,
+        "sha256": "97ea69addea2ecd9312910f5f548234665eef51c088386180b7cd5b258645e3c",
+        "status": "verified",
+        "resumed_bytes": 0,
+        "seconds": 130.02648944035172
+      },
+      {
+        "repo": "microsoft/TRELLIS-image-large",
+        "revision": "25e0d31ffbebe4b5a97464dd851910efc3002d96",
+        "filename": "ckpts/ss_dec_conv3d_16l8_fp16.safetensors",
+        "bytes": 147591972,
+        "sha256": "1c76d4a40519aa2d711cc263a8404105231ac26db31d946bed48b84fee79009a",
+        "status": "verified",
+        "resumed_bytes": 0,
+        "seconds": 37.4750720821321
+      }
+    ],
+    "status": "verified"
+  },
+  "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/md0        100G   37G   64G  37% /root/autodl-tmp\n",
+  "gpu": "NVIDIA GeForce RTX 4090 D, 0 MiB, 0 %\n",
+  "steps": {
+    "read_extension_api": 0,
+    "source_snapshot": 0,
+    "triposr_resume_install": 143,
+    "trellis2_shallow_install": 143,
+    "public_weights_resume": 0,
+    "triposr_pinned_opencv_install": 2,
+    "triposr_build_backend_install": 1,
+    "triposr_cxx17_build": 0,
+    "triposr_fixed_validation": 0
+  },
+  "token_present": false,
+  "build_variant": {
+    "torchmcubes": "cxx17_cuda17",
+    "upstream_directory_preserved": true,
+    "changes": [
+      "CMAKE_CXX_STANDARD:20->17",
+      "CMAKE_CUDA_STANDARD:20->17"
+    ]
+  },
+  "candidate": {
+    "status": "incomplete_stopped_at_original_time_limit",
+    "full_loading": "not_run",
+    "official_sample": "not_run",
+    "gated_access": "approved_as_reported_by_user",
+    "token_configuration": "configured_0600_rotation_required_after_chat_exposure"
+  },
+  "offline_regression": {
+    "before": {
+      "failed": 5
+    },
+    "after": {
+      "passed": 64,
+      "seconds": 0.92,
+      "cdn_cases": 7
+    }
+  },
+  "human_review": "pending",
+  "p2a_acceptance": "not_complete",
+  "p2b": "not_started",
+  "gated_access_check": {
+    "configured": true,
+    "permissions": "0o600",
+    "checks": [
+      {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "error_type": "URLError",
+        "seconds": 8.101807430386543
+      },
+      {
+        "repo": "briaai/RMBG-2.0",
+        "error_type": "URLError",
+        "seconds": 8.101735685020685
+      }
+    ]
+  },
+  "source_revisions": [
+    {
+      "name": "TRELLIS.2",
+      "revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+      "submodules": " 21e4582d1739107337a03460c81412981130373e o-voxel/third_party/eigen (21e4582)\n"
+    },
+    {
+      "name": "utils3d",
+      "revision": "9a4eb15e4021b67b12c460c7057d642626897ec8",
+      "submodules": ""
+    },
+    {
+      "name": "nvdiffrast",
+      "revision": "253ac4fcea7de5f396371124af597e6cc957bfae",
+      "submodules": ""
+    },
+    {
+      "name": "nvdiffrec",
+      "revision": "b296927cc7fd01c2ac1087c8065c4d7248f72da4",
+      "submodules": ""
+    },
+    {
+      "name": "CuMesh",
+      "revision": "12289e1062f0603f2f0d0771b02e1395d247f26f",
+      "submodules": " ce92267a24ef6ad7d2c8ccbc2ae2c021a6597e70 third_party/cubvh (ce92267)\n e63d9f6ccb7f6f29f31241b87c542f3f0ab3112b third_party/cubvh/third_party/eigen (e63d9f6)\n"
+    },
+    {
+      "name": "FlexGEMM",
+      "revision": "6dd94a859c26ee8246888502eada3dd8ad85532e",
+      "submodules": ""
+    }
+  ],
+  "final_stop": {
+    "captured_epoch": 1792477241.3632712,
+    "stopped_steps": [
+      {
+        "pid": 2465,
+        "signal": "TERM"
+      }
+    ],
+    "reason": "original_cumulative_preparation_time_limit",
+    "new_token_file": "runtime/cache/huggingface/hf_token_new.txt",
+    "new_token_file_nonempty": false,
+    "gpu": "NVIDIA GeForce RTX 4090 D, 0 MiB, 0 %\n",
+    "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/md0        100G   37G   64G  37% /root/autodl-tmp\n"
+  },
+  "final_state": {
+    "active_timeout_processes": [],
+    "step_exit_codes": {
+      "read_extension_api": 0,
+      "source_snapshot": 0,
+      "triposr_resume_install": 143,
+      "trellis2_shallow_install": 143,
+      "public_weights_resume": 0,
+      "triposr_pinned_opencv_install": 2,
+      "triposr_build_backend_install": 1,
+      "triposr_cxx17_build": 0,
+      "triposr_fixed_validation": 0,
+      "trellis2_after_restart_install": 143
+    },
+    "environment_versions": {
+      "triposr": {
+        "python": "3.11.17",
+        "torch": "2.5.1+cu124",
+        "triton": "3.1.0",
+        "trimesh": "4.0.5",
+        "numpy": "1.26.4"
+      },
+      "trellis2": {
+        "python": "3.10.22",
+        "torch": null,
+        "triton": null,
+        "trimesh": null,
+        "numpy": null
+      },
+      "probe": {
+        "python": "3.11.17",
+        "torch": null,
+        "triton": null,
+        "trimesh": "4.0.5",
+        "numpy": "1.26.4"
+      }
+    },
+    "source_status": {
+      "TripoSR": "",
+      "torchmcubes": ""
+    }
+  },
+  "budget_accounting": {
+    "original_limit_seconds": 7200,
+    "conservative_used_window_seconds": 7186.717542409897,
+    "second_shutdown_duration": "unknown_not_deducted",
+    "actual_gpu_cost_cny": null,
+    "cost_reconciliation": "waived_by_user"
+  }
+}

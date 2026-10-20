@@ -1,0 +1,208 @@
+{
+  "records": [
+    {
+      "schema_version": "1.0.0",
+      "experiment_id": "p2a_triposr_hamburger",
+      "experiment_type": "official_inference",
+      "run_id": "deac344b-6df2-4fab-b033-b87e93cb8627",
+      "case_id": "dev_n01",
+      "dataset_version": "1.0.0",
+      "split": "development",
+      "executed_by": "codex",
+      "evidence_origin": "agent_executed",
+      "created_at": "2026-10-20T14:13:55.427504+08:00",
+      "status": "succeeded",
+      "backend_id": "triposr",
+      "project_commit": "056e4df90a981d0d971e9534be8fe1b4102c7b8c",
+      "upstream_commit": "107cefdc244c39106fa830359024f6a2f1c78871",
+      "submodule_revisions": {
+        "torchmcubes": "879926d0ef58e6ce0ac2630fdecb5e53af7ed3ff"
+      },
+      "weights_revision": "5b521936b01fbe1890f6f9baed0254ab6351c04a",
+      "environment_ref": "p2a_triposr_linux_20261020",
+      "hardware_ref": "p2a_rtx4090d_16cpu_80gib",
+      "budget_ref": "p2a_confirmed_20261020",
+      "preprocessing_ref": "existing_alpha_resize_and_gray_composite",
+      "printer_profile_id": null,
+      "metrics_protocol_version": "1.0.0",
+      "parameters": {
+        "chunk_size": 2048,
+        "mc_resolution": 128,
+        "foreground_ratio": 0.85,
+        "dtype": "float32",
+        "seed": 0,
+        "preprocessing": "existing_alpha_resize_and_gray_composite",
+        "build_variant": "torchmcubes_cxx17_cuda17",
+        "installation_scripts": "local_5d69309_plus_uncommitted_p2a_helpers",
+        "configuration_group": "p0_low_memory_migration",
+        "created_at_scope": "record_created_after_run"
+      },
+      "seed": 0,
+      "command": [
+        "python",
+        "scripts/p0/reconstruct_case.py",
+        "--root",
+        "/root/autodl-tmp/image-to-3d-print-agent",
+        "--image",
+        "/root/autodl-tmp/image-to-3d-print-agent/fixtures/p0/hamburger.png",
+        "--output",
+        "/root/autodl-tmp/image-to-3d-print-agent/runs/p2a-20261020-03/triposr-hamburger"
+      ],
+      "exit_code": 0,
+      "artifact_ids": [
+        "p2a_triposr_hamburger_mesh"
+      ],
+      "evidence_ids": [
+        "p2a_triposr_hamburger_read"
+      ],
+      "metrics": [
+        {
+          "name": "model_total_time",
+          "status": "measured",
+          "value": 7.170536048710346,
+          "unit": "s",
+          "reason": null
+        },
+        {
+          "name": "peak_cuda_allocated",
+          "status": "measured",
+          "value": 1939.76611328125,
+          "unit": "MiB",
+          "reason": null
+        },
+        {
+          "name": "peak_cuda_reserved",
+          "status": "measured",
+          "value": 2346.0,
+          "unit": "MiB",
+          "reason": null
+        },
+        {
+          "name": "silhouette_iou",
+          "status": "not_run",
+          "value": null,
+          "unit": "ratio",
+          "reason": "本轮只验证迁移，正式测量与相机映射尚未实现"
+        },
+        {
+          "name": "actual_gpu_cost",
+          "status": "unknown",
+          "value": null,
+          "unit": "CNY",
+          "reason": "用户取消账单核对前置条件，未读取实际账单"
+        }
+      ],
+      "error": null,
+      "comparison_group_id": null,
+      "baseline_run_id": null,
+      "changed_factor": null,
+      "release_frozen": false,
+      "release_ref": null
+    },
+    {
+      "schema_version": "1.0.0",
+      "experiment_id": "p2a_triposr_robot",
+      "experiment_type": "official_inference",
+      "run_id": "db4f0b00-50cf-45c9-ad37-c37edad47bf4",
+      "case_id": "dev_n02",
+      "dataset_version": "1.0.0",
+      "split": "development",
+      "executed_by": "codex",
+      "evidence_origin": "agent_executed",
+      "created_at": "2026-10-20T14:13:55.429509+08:00",
+      "status": "succeeded",
+      "backend_id": "triposr",
+      "project_commit": "056e4df90a981d0d971e9534be8fe1b4102c7b8c",
+      "upstream_commit": "107cefdc244c39106fa830359024f6a2f1c78871",
+      "submodule_revisions": {
+        "torchmcubes": "879926d0ef58e6ce0ac2630fdecb5e53af7ed3ff"
+      },
+      "weights_revision": "5b521936b01fbe1890f6f9baed0254ab6351c04a",
+      "environment_ref": "p2a_triposr_linux_20261020",
+      "hardware_ref": "p2a_rtx4090d_16cpu_80gib",
+      "budget_ref": "p2a_confirmed_20261020",
+      "preprocessing_ref": "existing_alpha_resize_and_gray_composite",
+      "printer_profile_id": null,
+      "metrics_protocol_version": "1.0.0",
+      "parameters": {
+        "chunk_size": 2048,
+        "mc_resolution": 128,
+        "foreground_ratio": 0.85,
+        "dtype": "float32",
+        "seed": 0,
+        "preprocessing": "existing_alpha_resize_and_gray_composite",
+        "build_variant": "torchmcubes_cxx17_cuda17",
+        "installation_scripts": "local_5d69309_plus_uncommitted_p2a_helpers",
+        "configuration_group": "p0_low_memory_migration",
+        "created_at_scope": "record_created_after_run"
+      },
+      "seed": 0,
+      "command": [
+        "python",
+        "scripts/p0/reconstruct_case.py",
+        "--root",
+        "/root/autodl-tmp/image-to-3d-print-agent",
+        "--image",
+        "/root/autodl-tmp/image-to-3d-print-agent/fixtures/p0/robot.png",
+        "--output",
+        "/root/autodl-tmp/image-to-3d-print-agent/runs/p2a-20261020-03/triposr-robot"
+      ],
+      "exit_code": 0,
+      "artifact_ids": [
+        "p2a_triposr_robot_mesh"
+      ],
+      "evidence_ids": [
+        "p2a_triposr_robot_read"
+      ],
+      "metrics": [
+        {
+          "name": "model_total_time",
+          "status": "measured",
+          "value": 6.848372362554073,
+          "unit": "s",
+          "reason": null
+        },
+        {
+          "name": "peak_cuda_allocated",
+          "status": "measured",
+          "value": 1940.97900390625,
+          "unit": "MiB",
+          "reason": null
+        },
+        {
+          "name": "peak_cuda_reserved",
+          "status": "measured",
+          "value": 2346.0,
+          "unit": "MiB",
+          "reason": null
+        },
+        {
+          "name": "silhouette_iou",
+          "status": "not_run",
+          "value": null,
+          "unit": "ratio",
+          "reason": "本轮只验证迁移，正式测量与相机映射尚未实现"
+        },
+        {
+          "name": "actual_gpu_cost",
+          "status": "unknown",
+          "value": null,
+          "unit": "CNY",
+          "reason": "用户取消账单核对前置条件，未读取实际账单"
+        }
+      ],
+      "error": null,
+      "comparison_group_id": null,
+      "baseline_run_id": null,
+      "changed_factor": null,
+      "release_frozen": false,
+      "release_ref": null
+    }
+  ],
+  "artifact_and_evidence_refs": {
+    "p2a_triposr_hamburger_mesh": "runs/p2a-20261020-03/triposr-hamburger/raw_mesh.glb",
+    "p2a_triposr_hamburger_read": "runs/p2a-20261020-03/triposr-hamburger/independent_read.json",
+    "p2a_triposr_robot_mesh": "runs/p2a-20261020-03/triposr-robot/raw_mesh.glb",
+    "p2a_triposr_robot_read": "runs/p2a-20261020-03/triposr-robot/independent_read.json"
+  }
+}

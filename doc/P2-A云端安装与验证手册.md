@@ -2,12 +2,12 @@
 
 - 日期：2026-10-20；对应[当前任务](../spec/当前开发任务.md)。这是预训练模型的推理环境安装，不训练模型。
 - 已实际验证：SSH公钥登录、[只读采集脚本](../scripts/p2a/collect_environment.py)；RTX4090D24564MiB、16核、80GiB内存、100G数据盘，详细证据见[云端检查](云端环境检查记录.md#5cloud-env-002ssh只读复查2026-10-20)。
-- 安装状态：已确认2小时/4元预算并部分执行，随后按用户明确要求暂停；probe环境安装完成，模型环境/权重未完成，CUDA张量和模型命令未执行。真实状态见[暂停证据](p2a-paused-evidence.json)和第9节，不将整份手册当作已经执行通过。
+- 安装状态：恢复轮次已完成TripoSR环境、CUDA扩展、两例模型和独立读回，公开9份大文件校验完成；TRELLIS.2安装未完成，完整P2-A未验收。最新实际结果见[P2-A报告](P2-A云端安装与验证结果.md)，第9节保留历史暂停快照。
 - 来源计划：[p2a-source-plan.json](../locks/p2a-source-plan.json)。源码/权重revision已列明，Linux传递依赖锁定须在实际安装验证后生成。
 
 ## 1.执行前与目录
 
-安装及预算授权已具备：[确认预算](../evals/budgets/p2a_confirmed.json)为7200秒、GPU计算费4元、单次验证300秒、自动重试0次，已通过BudgetPlan.require_ready()；[draft](../evals/budgets/p2a_draft.json)保留为拒绝样例。当前按用户指令暂停，不能因预算已确认就在后台继续。
+安装及预算授权已具备：[确认预算](../evals/budgets/p2a_confirmed.json)为7200秒、GPU计算费4元、单次验证300秒、自动重试0次，已通过BudgetPlan.require_ready()；[draft](../evals/budgets/p2a_draft.json)保留为拒绝样例。用户已明确恢复；累计时限不重置，账单核对前置条件由用户取消，实付金额仍未知。
 
 准备时间从开始实际安装计时。每步只使用总预算剩余时间，长任务放screen中运行，并对整个安装作业设置timeout；不能每段都重新获得完整总预算。到上限停止进程并归档，GPU计费仍需在控制台关机或定时关机才能停止，数据盘固定费用另计。
 
@@ -63,23 +63,12 @@ source /root/miniconda3/etc/profile.d/conda.sh
 
 ## 3.获取固定官方源码
 
-在公共环境变量已加载的终端运行。以下按计划检出完整提交并初始化该提交的子模块；目标目录已存在时主动停止，先核对已有HEAD和状态，再决定复用，不自动删除或重置。
+在公共环境变量已加载的终端运行。实际使用prepare_source.py按固定完整revision浅取并初始化固定子模块；已有目录先核对HEAD/状态，版本一致才复用，不删除或重置。
 
 ```bash
-/root/miniconda3/bin/python - <<'PY'
-import json, os, pathlib, subprocess
-root = pathlib.Path(os.environ['PROJECT_ROOT'])
-plan = json.loads((root / 'locks/p2a-source-plan.json').read_text())
-for item in plan['sources']:
-    target = root / 'runtime/upstream' / item['name']
-    if target.exists():
-        raise SystemExit(f'目录已存在，请先核对而非覆盖：{target}')
-    subprocess.run(['git', 'clone', '--no-checkout', item['url'], str(target)], check=True)
-    subprocess.run(['git', '-C', str(target), 'checkout', '--detach', item['revision']], check=True)
-    subprocess.run(['git', '-C', str(target), 'submodule', 'update', '--init', '--recursive'], check=True)
-    subprocess.run(['git', '-C', str(target), 'rev-parse', 'HEAD'], check=True)
-    subprocess.run(['git', '-C', str(target), 'submodule', 'status', '--recursive'], check=True)
-PY
+for source_name in TripoSR torchmcubes TRELLIS.2 utils3d nvdiffrast nvdiffrec CuMesh FlexGEMM; do
+    /root/miniconda3/bin/python scripts/p2a/prepare_source.py "$source_name"
+done
 ```
 
 实际执行可以先只获取TripoSR和torchmcubes，再处理TRELLIS.2，避免候选依赖阻碍已有基线。记录完整源码/子模块版本，不把分支名当作固定版本。
@@ -92,13 +81,14 @@ PY
 conda create -y -p "$PROJECT_ROOT/runtime/envs/triposr" python=3.11 pip
 conda activate "$PROJECT_ROOT/runtime/envs/triposr"
 python -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
-python -m pip install numpy==1.26.4 omegaconf==2.3.0 Pillow==10.1.0 einops==0.7.0 transformers==4.35.0 trimesh==4.0.5 rembg==2.0.57 huggingface-hub==0.17.3 onnxruntime==1.18.1 xatlas==0.0.9 moderngl==5.10.0 'imageio[ffmpeg]' setuptools==69.5.1 cmake==3.29.6 pybind11==3.1.0 ninja
-python -m pip install --no-build-isolation "$PROJECT_ROOT/runtime/upstream/torchmcubes"
+python -m pip install numpy==1.26.4 omegaconf==2.3.0 Pillow==10.1.0 einops==0.7.0 transformers==4.35.0 trimesh==4.0.5 rembg==2.0.57 huggingface-hub==0.17.3 onnxruntime==1.18.1 opencv-python-headless==4.10.0.84 xatlas==0.0.9 moderngl==5.10.0 'imageio[ffmpeg]' setuptools==69.5.1 cmake==3.29.6 pybind11==3.1.0 scikit-build-core==1.1.1 ninja
+python scripts/p2a/prepare_torchmcubes_build.py
+python -m pip install --no-build-isolation "$PROJECT_ROOT/runtime/build/torchmcubes-cxx17"
 python -m pip check
 python -c "import torch, torchmcubes; print(torch.__version__, torch.version.cuda, torch.cuda.is_available(), torchmcubes.HAS_CUDA)"
 ```
 
-检查点：CUDA可见、torchmcubes.HAS_CUDA为True，实际CUDA张量及扩展调用通过。若构建失败，先保留日志并更新Bug，不悄悄改成P0的CPU表面提取。本轮不启动Gradio界面。
+检查点：CUDA可见、torchmcubes.HAS_CUDA为True，实际CUDA张量及扩展调用通过。若构建失败，先保留日志并更新Bug，不悄悄改成P0的CPU表面提取。本轮不启动Gradio界面。实际固定上游的C++20构建遇到lerp声明冲突，原始失败保留；prepare_torchmcubes_build.py只复制Git跟踪文件到独立目录，显式把CXX/CUDA标准改为17并保存差异，上游源码目录不变。这是已验证的构建兼容变体，不称为未修改上游。
 
 权重下载在此环境完成，使用第6节代码并选择MODEL_GROUP=triposr。读取来源计划的固定revision，将config.yaml/model.ckpt复制至weights/TripoSR；facebook/dino-vitb16只下载config.json到HF缓存，不另下DINO模型。不要从Windows复制虚拟环境或CUDA二进制。
 
@@ -109,7 +99,9 @@ python -c "import torch, torchmcubes; print(torch.__version__, torch.version.cud
 ```bash
 conda create -y -p "$PROJECT_ROOT/runtime/envs/trellis2" python=3.10 pip
 conda activate "$PROJECT_ROOT/runtime/envs/trellis2"
-python -m pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
+python -m pip install triton==3.2.0
+# 实际安装入口固定官方Torch轮子及其SHA256，避免r2节点低速。
+python -m pip install 'https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-linux_x86_64.whl#sha256=7f2ba7f7c0459320a521696f6b5bccc187f59890b23c9dfb6c49b0b87c6bfc97' torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
 python -m pip install imageio imageio-ffmpeg tqdm easydict opencv-python-headless ninja trimesh transformers gradio==6.0.1 tensorboard pandas lpips zstandard kornia timm packaging psutil wheel
 python -m pip install "$PROJECT_ROOT/runtime/upstream/utils3d"
 ```
@@ -241,6 +233,16 @@ scp -F $p2aConfig p2a-autodl:/root/autodl-tmp/image-to-3d-print-agent/runs/p2a-2
 | CUDA与模型 | 张量、扩展、加载、2+1样例和独立读回均未执行，P2-A未验收 |
 | 受限模型 | DINOv3/RMBG账号访问条件尚待用户处理，无令牌传入聊天或仓库 |
 
-恢复须用户明确发起，不自动重新启动。先核对原2小时/4元预算已用量和实例实际账单，不把暂停当作新预算；再核对环境和缓存。当前CDN辅助脚本尚未实现partial续传，恢复先刷新临时链接、核对Range/ETag并明确续传方式，不能直接重跑覆盖已有partial或把partial改名当作完成。临时签名URL只保存在被忽略的runs，公开记录不含它们。
+恢复须用户明确发起，不自动重新启动。先核对原2小时/4元预算已用量和实例实际账单，不把暂停当作新预算；再核对环境和缓存。暂停时的CDN脚本尚未实现续传；本次恢复已加入Range/Content-Range及SHA256校验并实际完成全部公开大文件。临时链接须刷新，不能把partial改名当作完成。临时签名URL只保存在被忽略的runs，公开记录不含它们。
 
 本轮新增scripts/p2a/中的安装、来源、下载和检查辅助入口，属于P2-A内部工具；仅probe安装及部分获取路径实际执行，其他入口不得当作已经完整验证。不进入P2-B。
+
+
+## 10.本次恢复的已验证入口与接续
+
+- TripoSR安装入口为scripts/p2a/install_triposr.sh，固定OpenCV4.10.0.84和scikit-build-core1.1.1，C++17独立构建副本；安装及pip check退出0。
+- 验证入口为scripts/p2a/verify_triposr.sh；P2A_RUN_DIR指向本轮runs目录，外层只使用剩余总预算，内部每次CUDA/模型验证上限300秒。它拒绝已有输出目录，不自动重跑成功样例。
+- 本次两张P0图片均通过，独立probe读回成功；Linux依赖、模型版本、耗时/显存和限制见[结果报告](P2-A云端安装与验证结果.md)。9份公开大文件16644709244字节均经官方SHA256验证。
+- TRELLIS.2仍未完成。用户再次关机后旧screen为Dead，不能把无exit文件理解为仍在运行；只有本轮新启动的作业才按剩余deadline继续。
+- 用户报告两项受限模型已获批；令牌仅在云端runtime/cache/huggingface/token配置，权限600，不回显。两项官方HEAD访问仍超时；配置文件存在不等于访问验证通过。聊天中暴露的令牌须用户撤销重建，新令牌不再发送到聊天。
+- P2-A完整门槛和P2-B启动条件保持。主要AI代码及结果仍待人工复核，不把下载完成或TripoSR子成果写成整阶段验收。

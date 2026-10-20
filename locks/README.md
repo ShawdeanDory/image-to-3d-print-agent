@@ -2,7 +2,7 @@
 
 ## P2-A云端安装准备
 
-2026-10-20已确认指定AutoDL实例2小时/4元的SSH安装/验证预算，部分执行后按用户要求暂停。来源计划为[p2a-source-plan.json](p2a-source-plan.json)，状态见[安装手册第9节](../doc/P2-A云端安装与验证手册.md#9本轮暂停与恢复入口)。probe的freeze/conda清单已随完整日志备份，两个模型环境尚未安装验证完成；来源JSON不是Linux模型环境锁，不覆盖P0的Windows快照。
+2026-10-20恢复安装后，TripoSR的pip check、CUDA扩展和两张固定图片已通过；实际Linux依赖为[p2a-triposr-linux.txt](p2a-triposr-linux.txt)，conda来源清单为[p2a-triposr-conda-linux.txt](p2a-triposr-conda-linux.txt)。torchmcubes使用固定源码的独立C++17构建变体，准确步骤见[安装手册](../doc/P2-A云端安装与验证手册.md)；TRELLIS.2未完成，不能将其来源计划视为已验证环境锁。P0的Windows历史快照保持。
 
 ## P1本机CPU契约环境
 

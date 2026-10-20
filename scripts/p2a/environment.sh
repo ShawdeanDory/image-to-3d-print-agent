@@ -16,6 +16,8 @@ export MAX_JOBS=4
 export PIP_DISABLE_PIP_VERSION_CHECK=1
 export PIP_RETRIES=0
 export PYTHONUNBUFFERED=1
+export P2A_RUN_DIR="${P2A_RUN_DIR:-$PROJECT_ROOT/runs/p2a-20261020-03}"
 mkdir -p "$HF_HUB_CACHE" "$PIP_CACHE_DIR" "$CONDA_PKGS_DIRS" "$TMPDIR" "$TORCH_EXTENSIONS_DIR" "$PROJECT_ROOT/runtime/envs" "$PROJECT_ROOT/runtime/upstream"
+mkdir -p "$P2A_RUN_DIR"
 source /root/miniconda3/etc/profile.d/conda.sh
 cd "$PROJECT_ROOT"
