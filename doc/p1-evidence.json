@@ -60,9 +60,9 @@
   "gpu_used": false,
   "models_installed_or_executed": false,
   "formal_model_evaluation": "not_run",
-  "human_review": "deferred_by_user",
+  "human_review": "passed_by_explicit_user_confirmation",
   "full_logs": "runs/p1-20261019-01/ (ignored)",
-  "human_review_note": "暂未复核，保留待人工验收",
+  "human_review_note": "可以了，直接帮我写人工验收通过，下一步是进入p2a？",
   "delivery_record_date": "2026-10-20",
   "documentation_preflight": {
     "markdown_files": 28,
@@ -70,5 +70,100 @@
     "text_files_sensitive_scan": 64,
     "errors": [],
     "full_model_evaluation": "not_run"
+  },
+  "human_review_history": [
+    {
+      "status": "deferred_by_user",
+      "note": "暂未复核，保留待人工验收",
+      "context": "P1技术交付时用户暂未复核；保留为历史状态"
+    }
+  ],
+  "human_review_date": "2026-10-20",
+  "human_review_mode": "ai_assisted_limited_walkthrough",
+  "human_review_record": "doc/P1人工复核清单.md#本轮实际人工验收记录2026-10-20",
+  "human_review_scope": {
+    "explicitly_accepted": [
+      "第一轮P1范围、固定样例、演示尺寸/打印空间、测试结论边界4点"
+    ],
+    "presented_and_explained": [
+      "height_value正数或缺省",
+      "pending_inputs识别缺高度",
+      "5组高度输入实际结果"
+    ],
+    "not_walked_item_by_item": [
+      "成功证据与状态",
+      "路径和引用",
+      "实验记录、预算、保留集",
+      "其余主要脚本和测试代码",
+      "实验设计及完整结果清单"
+    ],
+    "full_independent_source_audit": false
+  },
+  "height_walkthrough_evidence": {
+    "date": "2026-10-20",
+    "code_commit": "9159ceb41f90e86b0bab7776f1010602fc7cd75a",
+    "executor": "agent_local_cpu",
+    "cases": [
+      {
+        "场景": "没有填写高度",
+        "校验接受": true,
+        "待补字段": [
+          "height"
+        ],
+        "可计算的目标高度_毫米": null
+      },
+      {
+        "场景": "高度填负数-5",
+        "校验接受": false,
+        "错误": [
+          {
+            "字段": "height_value",
+            "类型": "greater_than",
+            "实际提示": "Input should be greater than 0"
+          }
+        ]
+      },
+      {
+        "场景": "高度填0",
+        "校验接受": false,
+        "错误": [
+          {
+            "字段": "height_value",
+            "类型": "greater_than",
+            "实际提示": "Input should be greater than 0"
+          }
+        ]
+      },
+      {
+        "场景": "高度填80毫米",
+        "校验接受": true,
+        "待补字段": [],
+        "可计算的目标高度_毫米": 80.0
+      },
+      {
+        "场景": "高度填8厘米",
+        "校验接受": true,
+        "待补字段": [],
+        "可计算的目标高度_毫米": 80.0
+      }
+    ],
+    "targeted_test_command": "runtime/envs/contracts/Scripts/python.exe -m pytest tests/unit/test_contracts.py -k scale_and_missing_inputs or bad_height_rejected -q",
+    "targeted_test_exit_code": 0,
+    "targeted_test_output": ".......                                                                  [100%]\n7 passed, 19 deselected in 0.21s",
+    "original_record": "runs/p1-human-review-20261020/height-cases-01.json (ignored)"
+  },
+  "stage_acceptance": "P1 accepted by explicit user confirmation; actual review scope recorded",
+  "p2a_started": false,
+  "acceptance_document_check": {
+    "evaluation_id": "P1-EVAL-002",
+    "date": "2026-10-20",
+    "changed_files": 16,
+    "markdown_files": 15,
+    "local_links_checked": 163,
+    "schema_and_code_changes": false,
+    "acceptance": "passed_by_explicit_user_confirmation",
+    "full_independent_source_audit": false,
+    "p2a_started": false,
+    "errors": []
   }
 }
