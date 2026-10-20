@@ -144,6 +144,14 @@
 - 修订计划：使用6顶点、8三角面的显式八面体，重新CPU生成图片和蒙版/清单；不运行模型或评价保留集生成质量。
 - 回归：已改为6顶点/8面显式构造；Blender CPU重新生成16图及蒙版/清单退出码0，见fixture_render_final.txt；静态检查及最终57项通过，不代表模型质量通过。
 
+## P2A-BUG-001：非交互SSH未载入基础Python路径
+
+- 日期/分类：2026-10-20，P2-A安装准备；工具类、SSH环境子类。
+- 实际基线：用户添加专用公钥后SSH认证成功，首次只读采集执行python -返回127，stderr为“python: command not found”；原始输出在runs/p2a-20261020-01/ssh_preflight_stdout.json与ssh_preflight_stderr.txt。
+- 预期与原因：交互终端可用的conda/Python路径不能当作非交互SSH已初始化。当前只是PATH未解析成功，尚未运行采集主体或安装/模型操作，不能标环境验证通过。
+- 修订计划：先只读定位基础解释器和conda实际路径，再用明确解释器执行采集；安装时显式初始化conda并使用项目独立前缀，不修改全局默认Python。
+- 回归：使用/root/miniconda3/bin/python -执行scripts/p2a/collect_environment.py，实际退出码0、壁钟5.422秒；conda/nvcc/磁盘/GPU查询均为0，torch导入成功。日志为ssh_preflight_explicit_python_stdout.json与同名stderr.txt，位于原运行目录；不涉及模型或CUDA张量计算。
+
 ## 后续Bug记录模板
 
 - Bug编号、发现日期、来源、关联任务和严重程度。

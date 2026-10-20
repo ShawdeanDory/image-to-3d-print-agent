@@ -6,5 +6,5 @@
   "max_retries": null,
   "cost_limit_cny": null,
   "confirmed_by": null,
-  "reason": "P2未授权；费用上限与真实配额待确认，不可执行"
+  "reason": "P2-A云端安装已获授权、实际配额已只读核对；最长准备时间和费用上限仍待用户确认，不能启动安装下载或模型执行"
 }

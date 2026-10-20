@@ -1,0 +1,30 @@
+{
+  "plan_id": "p2a-20261020-01",
+  "state": "planned_not_installed",
+  "purpose": "源码与权重来源计划，不是已验证的Linux依赖锁定",
+  "environments": {
+    "triposr": {"python": "3.11", "torch": "2.5.1", "torchvision": "0.20.1", "torch_index": "https://download.pytorch.org/whl/cu124"},
+    "trellis2": {"python": "3.10", "torch": "2.6.0", "torchvision": "0.21.0", "torch_index": "https://download.pytorch.org/whl/cu124"}
+  },
+  "sources": [
+    {"name": "TripoSR", "url": "https://github.com/VAST-AI-Research/TripoSR.git", "revision": "107cefdc244c39106fa830359024f6a2f1c78871"},
+    {"name": "torchmcubes", "url": "https://github.com/tatsy/torchmcubes.git", "revision": "879926d0ef58e6ce0ac2630fdecb5e53af7ed3ff"},
+    {"name": "TRELLIS.2", "url": "https://github.com/microsoft/TRELLIS.2.git", "revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd"},
+    {"name": "utils3d", "url": "https://github.com/EasternJournalist/utils3d.git", "revision": "9a4eb15e4021b67b12c460c7057d642626897ec8"},
+    {"name": "nvdiffrast", "url": "https://github.com/NVlabs/nvdiffrast.git", "revision": "253ac4fcea7de5f396371124af597e6cc957bfae"},
+    {"name": "nvdiffrec", "url": "https://github.com/JeffreyXiang/nvdiffrec.git", "revision": "b296927cc7fd01c2ac1087c8065c4d7248f72da4"},
+    {"name": "CuMesh", "url": "https://github.com/JeffreyXiang/CuMesh.git", "revision": "12289e1062f0603f2f0d0771b02e1395d247f26f"},
+    {"name": "FlexGEMM", "url": "https://github.com/JeffreyXiang/FlexGEMM.git", "revision": "6dd94a859c26ee8246888502eada3dd8ad85532e"}
+  ],
+  "models": [
+    {"repo": "stabilityai/TripoSR", "revision": "5b521936b01fbe1890f6f9baed0254ab6351c04a", "allow_patterns": ["config.yaml", "model.ckpt"], "local_dir": "weights/TripoSR", "access": "public"},
+    {"repo": "facebook/dino-vitb16", "revision": "f205d5d8e640a89a2b8ef0369670dfc37cc07fc2", "allow_patterns": ["config.json"], "local_dir": null, "access": "public_config_only"},
+    {"repo": "microsoft/TRELLIS.2-4B", "revision": "af44b45f2e35a493886929c6d786e563ec68364d", "allow_patterns": ["pipeline.json", "ckpts/*.json", "ckpts/*.safetensors"], "ignore_patterns": ["ckpts/*enc*"], "local_dir": null, "access": "public"},
+    {"repo": "microsoft/TRELLIS-image-large", "revision": "25e0d31ffbebe4b5a97464dd851910efc3002d96", "allow_patterns": ["ckpts/ss_dec_conv3d_16l8_fp16.json", "ckpts/ss_dec_conv3d_16l8_fp16.safetensors"], "local_dir": null, "access": "public"},
+    {"repo": "facebook/dinov3-vitl16-pretrain-lvd1689m", "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51", "allow_patterns": ["config.json", "preprocessor_config.json", "model.safetensors"], "local_dir": null, "access": "gated_manual"},
+    {"repo": "briaai/RMBG-2.0", "revision": "5df4c9c76d8170882c34f6986e848ee07fd0ba43", "allow_patterns": ["*.py", "config.json", "preprocessor_config.json", "model.safetensors"], "local_dir": null, "access": "gated_auto"}
+  ],
+  "submodules": "各仓库在指定提交后执行submodule update --init --recursive，实际revision另行归档",
+  "dependency_freeze": null,
+  "cloud_model_validation": "not_run"
+}

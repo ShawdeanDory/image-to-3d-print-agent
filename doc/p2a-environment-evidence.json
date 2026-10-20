@@ -1,0 +1,80 @@
+{
+  "record_id": "cloud_env_002",
+  "recorded_at_client": "2026-10-20T10:51:38.606972+08:00",
+  "evidence_origin": "agent_executed",
+  "kind": "read_only_preinstallation",
+  "execution_alias": "cloud-autodl-01",
+  "project_baseline": "24f2eaa63de2dff894c80a85c9a44b4500df9350",
+  "collector_ref": "scripts/p2a/collect_environment.py",
+  "ssh_authentication": "public_key_succeeded",
+  "initial_attempt": {
+    "exit_code": 127,
+    "reason": "python not in noninteractive PATH",
+    "bug_id": "P2A-BUG-001"
+  },
+  "corrected_attempt": {
+    "interpreter": "/root/miniconda3/bin/python",
+    "exit_code": 0,
+    "elapsed_s": 5.422,
+    "stderr": ""
+  },
+  "environment": {
+    "kind": "read_only_preinstallation",
+    "python": "3.12.3 | packaged by Anaconda, Inc. | (main, May  6 2024, 19:46:43) [GCC 11.2.0]",
+    "python_executable": "/root/miniconda3/bin/python",
+    "platform": "Linux-5.15.0-94-generic-x86_64-with-glibc2.35",
+    "conda": {
+      "exit_code": 0,
+      "stdout": "conda 24.4.0",
+      "stderr": ""
+    },
+    "nvcc_path": "/usr/local/cuda/bin/nvcc",
+    "nvcc": {
+      "exit_code": 0,
+      "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2024 NVIDIA Corporation\nBuilt on Thu_Mar_28_02:18:24_PDT_2024\nCuda compilation tools, release 12.4, V12.4.131\nBuild cuda_12.4.r12.4/compiler.34097967_0",
+      "stderr": ""
+    },
+    "cpu_affinity": 192,
+    "system": "PRETTY_NAME=\"Ubuntu 22.04.4 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"22.04\"\nVERSION=\"22.04.4 LTS (Jammy Jellyfish)\"\nVERSION_CODENAME=jammy\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=jammy\n",
+    "disk": {
+      "exit_code": 0,
+      "stdout": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          30G   53M   30G   1% /\n/dev/md0        100G   48K  100G   1% /root/autodl-tmp",
+      "stderr": ""
+    },
+    "gpu": {
+      "exit_code": 0,
+      "stdout": "NVIDIA GeForce RTX 4090 D, 24564 MiB, 0 MiB, 580.76.05",
+      "stderr": ""
+    },
+    "tools": {
+      "git": "/usr/bin/git",
+      "screen": "/usr/bin/screen",
+      "gcc": "/usr/bin/gcc",
+      "g++": "/usr/bin/g++"
+    },
+    "cgroup": {
+      "memory.max": "85899345920",
+      "memory.current": "379310080",
+      "cpu.max": "1600000 100000"
+    },
+    "torch": {
+      "version": "2.5.1+cu124",
+      "cuda": "12.4",
+      "gpu_available": true
+    }
+  },
+  "quota_interpretation": {
+    "cpu_quota_cores": 16,
+    "memory_limit_gib": 80,
+    "cpu_affinity_is_quota": false
+  },
+  "budget_state": "draft_pending_user",
+  "remote_dependency_installation": "not_run",
+  "cuda_tensor_validation": "not_run",
+  "native_extension_validation": "not_run",
+  "cloud_model_loading": "not_run",
+  "cloud_model_inference": "not_run",
+  "p2a_acceptance": "not_run",
+  "human_review": "not_recorded_for_this_change",
+  "raw_evidence_ref": "runs/p2a-20261020-01/ssh_preflight_explicit_python_stdout.json"
+}

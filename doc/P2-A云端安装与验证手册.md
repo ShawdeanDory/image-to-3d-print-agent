@@ -1,0 +1,227 @@
+# P2-A云端安装与验证手册
+
+- 日期：2026-10-20；对应[当前任务](../spec/当前开发任务.md)。这是预训练模型的推理环境安装，不训练模型。
+- 已实际验证：SSH公钥登录、[只读采集脚本](../scripts/p2a/collect_environment.py)；RTX4090D24564MiB、16核、80GiB内存、100G数据盘，详细证据见[云端检查](云端环境检查记录.md#5cloud-env-002ssh只读复查2026-10-20)。
+- 安装状态：以下安装、下载、CUDA张量和模型命令尚未云端执行；预算仍待用户确认，不能把本手册当成安装成功记录。每段实际完成后记录返回码、日志及版本，再更新状态。
+- 来源计划：[p2a-source-plan.json](../locks/p2a-source-plan.json)。源码/权重revision已列明，Linux传递依赖锁定须在实际安装验证后生成。
+
+## 1.执行前与目录
+
+安装授权已具备；还需最长准备时间与GPU计算费上限。由本机现有Pydantic的BudgetPlan.require_ready()校验已确认配置，另存p2a_confirmed.json；[draft](../evals/budgets/p2a_draft.json)保留未确认状态，不靠手工把state改成confirmed放行。单次验证和重试次数也必须明确。
+
+准备时间从开始实际安装计时。每步只使用总预算剩余时间，长任务放screen中运行，并对整个安装作业设置timeout；不能每段都重新获得完整总预算。到上限停止进程并归档，GPU计费仍需在控制台关机或定时关机才能停止，数据盘固定费用另计。
+
+云端统一布局如下；首次将项目代码克隆到数据盘，并记录实际项目提交。后续已有目录先检查Git状态再同步，不覆盖他人修改。
+
+```bash
+cd /root/autodl-tmp
+git clone https://github.com/ShawdeanDory/image-to-3d-print-agent.git image-to-3d-print-agent
+git -C image-to-3d-print-agent rev-parse HEAD
+```
+
+```text
+/root/autodl-tmp/image-to-3d-print-agent/
+├── scripts/p0/、scripts/p2a/、fixtures/p0/、locks/   Git代码与小样例
+├── runtime/envs/triposr/                          Python3.11隔离环境
+├── runtime/envs/trellis2/                         Python3.10隔离环境
+├── runtime/envs/probe/                           独立网格读回环境
+├── runtime/upstream/                             固定源码与子模块
+├── runtime/cache/                                conda、pip、HF缓存
+├── runtime/tmp/、runtime/torch_extensions/         临时与编译产物
+├── weights/TripoSR/                              TripoSR本地权重
+└── runs/p2a-20261020-01/                          原始日志与结果
+```
+
+连接命令、私钥只在本机runtime/ssh/保存。本机使用专用配置连接p2a-autodl别名，真实地址不写入公开仓库。非交互SSH的默认PATH未包含Python，已验证基础解释器为/root/miniconda3/bin/python。
+
+## 2.云端公共环境变量
+
+以下Bash命令仅在预算确认后执行；需在每个新的screen/SSH会话加载相同设置。
+
+```bash
+set -euo pipefail
+export PROJECT_ROOT=/root/autodl-tmp/image-to-3d-print-agent
+cd "$PROJECT_ROOT"
+export HF_HOME="$PROJECT_ROOT/runtime/cache/huggingface"
+export HF_HUB_CACHE="$HF_HOME/hub"
+export PIP_CACHE_DIR="$PROJECT_ROOT/runtime/cache/pip"
+export CONDA_PKGS_DIRS="$PROJECT_ROOT/runtime/cache/conda"
+export TMPDIR="$PROJECT_ROOT/runtime/tmp"
+export TORCH_EXTENSIONS_DIR="$PROJECT_ROOT/runtime/torch_extensions"
+export CUDA_HOME=/usr/local/cuda
+export PATH="$CUDA_HOME/bin:$PATH"
+export LD_LIBRARY_PATH="$CUDA_HOME/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export TORCH_CUDA_ARCH_LIST=8.9
+export MAX_JOBS=4
+mkdir -p "$HF_HUB_CACHE" "$PIP_CACHE_DIR" "$CONDA_PKGS_DIRS" "$TMPDIR" "$TORCH_EXTENSIONS_DIR" runtime/envs runtime/upstream runs/p2a-20261020-01
+source /root/miniconda3/etc/profile.d/conda.sh
+```
+
+已存在的screen会话用screen -ls查询、screen -r会话名恢复；Ctrl+A后按D离开。screen只能防SSH断开，关机后进程仍会停止。安装的stdout/stderr保存至runs，不用终端滚屏作为唯一记录。
+
+## 3.获取固定官方源码
+
+在公共环境变量已加载的终端运行。以下按计划检出完整提交并初始化该提交的子模块；目标目录已存在时主动停止，先核对已有HEAD和状态，再决定复用，不自动删除或重置。
+
+```bash
+/root/miniconda3/bin/python - <<'PY'
+import json, os, pathlib, subprocess
+root = pathlib.Path(os.environ['PROJECT_ROOT'])
+plan = json.loads((root / 'locks/p2a-source-plan.json').read_text())
+for item in plan['sources']:
+    target = root / 'runtime/upstream' / item['name']
+    if target.exists():
+        raise SystemExit(f'目录已存在，请先核对而非覆盖：{target}')
+    subprocess.run(['git', 'clone', '--no-checkout', item['url'], str(target)], check=True)
+    subprocess.run(['git', '-C', str(target), 'checkout', '--detach', item['revision']], check=True)
+    subprocess.run(['git', '-C', str(target), 'submodule', 'update', '--init', '--recursive'], check=True)
+    subprocess.run(['git', '-C', str(target), 'rev-parse', 'HEAD'], check=True)
+    subprocess.run(['git', '-C', str(target), 'submodule', 'status', '--recursive'], check=True)
+PY
+```
+
+实际执行可以先只获取TripoSR和torchmcubes，再处理TRELLIS.2，避免候选依赖阻碍已有基线。记录完整源码/子模块版本，不把分支名当作固定版本。
+
+## 4.TripoSR独立环境
+
+依赖选择沿用已验证P0版本，CUDA轮子改为cu124以匹配本机nvcc12.4；属于新的Linux组合，仍需实际验证。下面不直接安装上游浮动Git依赖，torchmcubes使用第3节固定源码。
+
+```bash
+conda create -y -p "$PROJECT_ROOT/runtime/envs/triposr" python=3.11 pip
+conda activate "$PROJECT_ROOT/runtime/envs/triposr"
+python -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
+python -m pip install numpy==1.26.4 omegaconf==2.3.0 Pillow==10.1.0 einops==0.7.0 transformers==4.35.0 trimesh==4.0.5 rembg==2.0.57 huggingface-hub==0.17.3 onnxruntime==1.18.1 xatlas==0.0.9 moderngl==5.10.0 'imageio[ffmpeg]' setuptools==69.5.1 cmake==3.29.6 pybind11==3.1.0 ninja
+python -m pip install --no-build-isolation "$PROJECT_ROOT/runtime/upstream/torchmcubes"
+python -m pip check
+python -c "import torch, torchmcubes; print(torch.__version__, torch.version.cuda, torch.cuda.is_available(), torchmcubes.HAS_CUDA)"
+```
+
+检查点：CUDA可见、torchmcubes.HAS_CUDA为True，实际CUDA张量及扩展调用通过。若构建失败，先保留日志并更新Bug，不悄悄改成P0的CPU表面提取。本轮不启动Gradio界面。
+
+权重下载在此环境完成，使用第6节代码并选择MODEL_GROUP=triposr。读取来源计划的固定revision，将config.yaml/model.ckpt复制至weights/TripoSR；facebook/dino-vitb16只下载config.json到HF缓存，不另下DINO模型。不要从Windows复制虚拟环境或CUDA二进制。
+
+## 5.TRELLIS.2独立环境与原生扩展
+
+此环境和TripoSR分离。安装顺序根据[官方setup.sh](https://github.com/microsoft/TRELLIS.2/blob/75fbf0183001ed9876c8dbb35de6b68552ee08bd/setup.sh)整理；原脚本包含系统目录临时构建和sudo，不直接把整体返回码当作每步都成功。项目缓存/构建使用数据盘，每条命令出错即停止。
+
+```bash
+conda create -y -p "$PROJECT_ROOT/runtime/envs/trellis2" python=3.10 pip
+conda activate "$PROJECT_ROOT/runtime/envs/trellis2"
+python -m pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
+python -m pip install imageio imageio-ffmpeg tqdm easydict opencv-python-headless ninja trimesh transformers gradio==6.0.1 tensorboard pandas lpips zstandard kornia timm packaging psutil wheel
+python -m pip install "$PROJECT_ROOT/runtime/upstream/utils3d"
+```
+
+Pillow-SIMD需要libjpeg开发头文件。先用dpkg-query核对libjpeg-dev；确有缺失再安装系统头文件并记录影响，本实例以root运行，不依赖sudo。随后按官方依赖安装pillow-simd。浮动Python包在安装成功后以实际freeze锁定；此处不是已验收锁定。
+
+```bash
+python -m pip install pillow-simd
+python -m pip install flash-attn==2.7.3 --no-build-isolation
+python -m pip install --no-build-isolation "$PROJECT_ROOT/runtime/upstream/nvdiffrast"
+python -m pip install --no-build-isolation "$PROJECT_ROOT/runtime/upstream/nvdiffrec"
+python -m pip install --no-build-isolation "$PROJECT_ROOT/runtime/upstream/CuMesh"
+python -m pip install --no-build-isolation "$PROJECT_ROOT/runtime/upstream/FlexGEMM"
+python -m pip install --no-build-isolation "$PROJECT_ROOT/runtime/upstream/TRELLIS.2/o-voxel"
+python -m pip check
+python -c "import torch, flash_attn, nvdiffrast.torch, cumesh, flex_gemm, o_voxel; print(torch.__version__, torch.version.cuda)"
+```
+
+CUDA轮子安装、扩展编译、导入和真实算子分别记录。首次运行可能有JIT编译；不能只因import成功就声明扩展算子或模型通过。构建错误先分类定位，按剩余预算处理，不无限重试。
+
+## 6.下载模型与访问授权
+
+TRELLIS.2的完整推理依赖如下，revision和文件过滤在来源计划中统一维护：
+
+| 模型 | 用途 | 访问条件 |
+| --- | --- | --- |
+| microsoft/TRELLIS.2-4B | 主要生成模型与pipeline配置 | 公开 |
+| microsoft/TRELLIS-image-large | sparse_structure_decoder | 公开，只取所需decoder |
+| facebook/dinov3-vitl16-pretrain-lvd1689m | 图像条件编码 | 用户登录并申请访问 |
+| briaai/RMBG-2.0 | 官方去背景 | 用户登录并确认模型页条件 |
+
+用户先自行访问[DINOv3模型页](https://huggingface.co/facebook/dinov3-vitl16-pretrain-lvd1689m)和[RMBG模型页](https://huggingface.co/briaai/RMBG-2.0)，确认账号权限。AI不代签模型条件；未获访问时保留明确错误。
+
+在已激活trellis2且已加载公共缓存变量的云端终端执行下面命令，以交互隐藏输入方式填写只读令牌；不要把令牌粘贴到聊天、写入命令参数或提交Git。
+
+```bash
+python -c "from huggingface_hub import login; login(add_to_git_credential=False)"
+```
+
+下载使用huggingface_hub.snapshot_download(repo_id,revision=固定值,allow_patterns=计划过滤,ignore_patterns=可选过滤)。主模型仅取pipeline和推理checkpoint，旧TRELLIS仓库仅取decoder，RMBG只取一份safetensors及所需配置/官方Python代码，避免重复下载bin和ONNX格式。HF缓存统一在数据盘，不再复制一份完整TRELLIS权重。
+
+下面代码在对应独立环境执行。将MODEL_GROUP依次设为triposr、trellis_public或trellis_gated；先下载公开组，受限组只在账号获授权并登录后执行。下载异常直接停止，固定引用只在该snapshot下载成功后建立。
+
+```bash
+MODEL_GROUP=triposr python - <<'PY'
+import json, os, pathlib, shutil
+from huggingface_hub import snapshot_download
+root = pathlib.Path(os.environ['PROJECT_ROOT'])
+plan = json.loads((root / 'locks/p2a-source-plan.json').read_text())
+group = os.environ['MODEL_GROUP']
+groups = {
+    'triposr': {'stabilityai/TripoSR', 'facebook/dino-vitb16'},
+    'trellis_public': {'microsoft/TRELLIS.2-4B', 'microsoft/TRELLIS-image-large'},
+    'trellis_gated': {'facebook/dinov3-vitl16-pretrain-lvd1689m', 'briaai/RMBG-2.0'},
+}
+for item in plan['models']:
+    if item['repo'] not in groups[group]:
+        continue
+    snapshot = pathlib.Path(snapshot_download(
+        repo_id=item['repo'], revision=item['revision'],
+        allow_patterns=item['allow_patterns'], ignore_patterns=item.get('ignore_patterns'),
+        max_workers=2))
+    refs = snapshot.parent.parent / 'refs'
+    refs.mkdir(exist_ok=True)
+    (refs / 'main').write_text(item['revision'], encoding='utf-8')
+    if item['local_dir']:
+        target = root / item['local_dir']
+        target.mkdir(parents=True, exist_ok=True)
+        for filename in item['allow_patterns']:
+            destination = target / filename
+            if destination.exists():
+                raise SystemExit(f'目标已存在，请核对后复用：{destination}')
+            shutil.copy2(snapshot / filename, destination)
+    print(item['repo'], item['revision'], 'downloaded')
+PY
+```
+
+主权重按官方文件清单过滤后约14.8GB，另有约1.21GB的DINOv3、约0.885GB的RMBG及其他模型/环境；100G可作为首轮容量，但每段下载/编译前查df，不把权重大小当作全部磁盘需求。文件大小是公开元数据估算，不是本次下载或磁盘实测。
+
+加载时使用已固定的本地snapshot或固定缓存引用，并启用HF_HUB_OFFLINE=1，防止内部from_pretrained在验证时解析浮动main。RMBG会执行其仓库的模型代码，需对应已固定且已阅读的官方代码。权限未齐时可以先完成公开模型下载和环境构建，不能宣称TRELLIS.2已完整加载。
+
+## 7.验证顺序与验收
+
+1. 在每个独立环境验证小CUDA张量运算，记录框架/运行时、设备、返回码；TripoSR再实际调用CUDA表面提取扩展，TRELLIS.2分别记录原生扩展导入/算子和模型加载结果。
+2. 先使用P0原样脚本迁移TripoSR。固定chunk_size2048、mc_resolution128、float32、seed0，输入已有透明前景；只比较迁移可行性，不称官方默认配置或正式同机比较。
+3. TRELLIS.2使用固定源码内assets/example_image/T.png及官方pipeline配置，先加载，再在约定单次上限内验证。官方默认与任何低显存变体分别记录；本轮不自动修改官方参数重跑。
+4. 输出由独立probe环境读回，核对可解析、非空顶点/面、有限坐标与有效索引。生成有效网格不等于完成修复、定标、切片或可打印验收。
+
+TripoSR两张迁移样例的计划命令如下；每次必须用确认的单次超时包裹，并记录实际返回码、nvidia-smi及脚本产生的耗时/峰值显存。示例不直接无限运行。
+
+```bash
+conda activate "$PROJECT_ROOT/runtime/envs/triposr"
+python scripts/p0/reconstruct_case.py --root "$PROJECT_ROOT" --image "$PROJECT_ROOT/fixtures/p0/hamburger.png" --output "$PROJECT_ROOT/runs/p2a-20261020-01/triposr-hamburger"
+python scripts/p0/reconstruct_case.py --root "$PROJECT_ROOT" --image "$PROJECT_ROOT/fixtures/p0/robot.png" --output "$PROJECT_ROOT/runs/p2a-20261020-01/triposr-robot"
+```
+
+完整P2-A门槛保持为TripoSR两例2/2有效、新候选至少1例有效、独立读回及版本/原命令/资源/错误证据完整。若本轮只完成安装或加载，只归档对应子成果，P2-A继续进行，不进入P2-B。
+
+## 8.锁定、下载结果与恢复
+
+每个环境安装后保存python -m pip freeze、pip check、conda list --explicit，以及git rev-parse HEAD、git submodule status --recursive、模型revision/文件清单。日志与完整网格留在runs；Linux实际锁定与脱敏摘要经检查后入库，不改写P0历史锁定。
+
+在云端只打包本轮结果，不把环境、缓存、权重或令牌一起打包：
+
+```bash
+cd "$PROJECT_ROOT"
+tar -czf runs/p2a-20261020-01-results.tar.gz runs/p2a-20261020-01
+```
+
+在本机PowerShell使用专用SSH配置下载；将配置路径指向当前项目，p2a-autodl为本机别名：
+
+```powershell
+$p2aConfig = Join-Path $PWD 'runtime/ssh/p2a_config'
+scp -F $p2aConfig p2a-autodl:/root/autodl-tmp/image-to-3d-print-agent/runs/p2a-20261020-01-results.tar.gz runs/
+```
+
+恢复前先重新阅读工作前必读约定、当前任务、实际日志与预算剩余量；已完成步骤核对后复用，未完整下载使用官方缓存续传，不自动删除重下，不重新运行已经成功的模型。普通关机后的数据保留、GPU空闲限制和备份规则见[云端检查第4节](云端环境检查记录.md#4关机数据与交接)。

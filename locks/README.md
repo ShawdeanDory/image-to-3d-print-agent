@@ -1,5 +1,9 @@
 # 环境版本与交接
 
+## P2-A云端安装准备
+
+2026-10-20已授权在指定AutoDL实例通过SSH安装/验证，当前完成只读连接与环境核对，预算待确认。来源计划为[p2a-source-plan.json](p2a-source-plan.json)，详细命令见[云端安装手册](../doc/P2-A云端安装与验证手册.md)。该JSON是待安装的固定源码/权重计划，不是已经验证的Linux依赖锁；实际安装后另存两个环境的freeze和conda清单，不覆盖P0的Windows快照。
+
 ## P1本机CPU契约环境
 
 2026-10-19实际使用Windows、Python3.11.17、Pydantic2.12.5、pytest8.4.2、Pillow10.1.0；精确传递依赖见[p1-contracts.txt](p1-contracts.txt)。Pydantic用于输入/结果校验，pytest用于离线回归，Pillow只读取fixture格式和尺寸；没有torch、模型库或GPU需求，不改P0环境。
