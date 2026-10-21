@@ -1,0 +1,20 @@
+{
+  "root": "runtime/app",
+  "default_backend": "triposr",
+  "background_backend": null,
+  "operator_name": "local_operator",
+  "profile_files": ["fixtures/p1/printer_profile.json"],
+  "tools": {"backends": {}, "inspection": null, "view_mappings": {}},
+  "llm": {
+    "base_url": null,
+    "model": null,
+    "api_key_env": "I3D_LLM_API_KEY",
+    "timeout_s": 60,
+    "input_price_per_million": null,
+    "output_price_per_million": null
+  },
+  "api_token_env": "I3D_API_TOKEN",
+  "cors_origins": ["http://localhost:5173"],
+  "active_timeout_s": 900,
+  "max_tool_calls": 32
+}

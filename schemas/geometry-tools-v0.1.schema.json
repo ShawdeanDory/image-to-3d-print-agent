@@ -173,6 +173,12 @@
           "maximum": 300,
           "title": "Timeout S",
           "type": "number"
+        },
+        "trellis_output_variant": {
+          "const": "native_geometry",
+          "default": "native_geometry",
+          "title": "Trellis Output Variant",
+          "type": "string"
         }
       },
       "required": [
@@ -199,6 +205,10 @@
         },
         "origin": {
           "default": "human",
+          "enum": [
+            "human",
+            "test_fixture"
+          ],
           "title": "Origin",
           "type": "string"
         },
@@ -215,6 +225,50 @@
         "reviewer"
       ],
       "title": "BedReview",
+      "type": "object"
+    },
+    "ComponentReview": {
+      "additionalProperties": false,
+      "properties": {
+        "component_count": {
+          "minimum": 1,
+          "title": "Component Count",
+          "type": "integer"
+        },
+        "confirmed": {
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "origin": {
+          "default": "human",
+          "enum": [
+            "human",
+            "test_fixture"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "reviewer": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Reviewer",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mesh_version",
+        "component_count",
+        "confirmed",
+        "reviewer"
+      ],
+      "title": "ComponentReview",
       "type": "object"
     },
     "ConfirmCall": {
@@ -495,6 +549,17 @@
           ],
           "default": null
         },
+        "component_review": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ComponentReview"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "height_mm": {
           "anyOf": [
             {
@@ -567,6 +632,51 @@
       "type": "object"
     },
     "JsonValue": {},
+    "MeasureCall": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "enum": [
+            "triposr",
+            "trellis2_candidate"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "mask_path": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Mask Path",
+          "type": "string"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "operation": {
+          "const": "measure_view",
+          "title": "Operation",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "operation",
+        "mesh_version",
+        "mask_path",
+        "backend"
+      ],
+      "title": "MeasureCall",
+      "type": "object"
+    },
     "MeshCall": {
       "additionalProperties": false,
       "properties": {
@@ -580,7 +690,8 @@
         "operation": {
           "enum": [
             "clean",
-            "export"
+            "export",
+            "preview"
           ],
           "title": "Operation",
           "type": "string"
@@ -1191,6 +1302,21 @@
             }
           ],
           "default": null
+        },
+        "view_mappings": {
+          "additionalProperties": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "propertyNames": {
+            "enum": [
+              "triposr",
+              "trellis2_candidate"
+            ]
+          },
+          "title": "View Mappings",
+          "type": "object"
         }
       },
       "title": "ToolConfiguration",
@@ -1306,7 +1432,9 @@
           "export": "#/$defs/MeshCall",
           "import_image": "#/$defs/ImportCall",
           "inspect": "#/$defs/InspectCall",
+          "measure_view": "#/$defs/MeasureCall",
           "prepare_image": "#/$defs/PrepareCall",
+          "preview": "#/$defs/MeshCall",
           "propose": "#/$defs/ProposeCall",
           "reconstruct": "#/$defs/ReconstructCall",
           "scale": "#/$defs/ScaleCall"
@@ -1340,6 +1468,9 @@
         },
         {
           "$ref": "#/$defs/ApplyCall"
+        },
+        {
+          "$ref": "#/$defs/MeasureCall"
         }
       ]
     },

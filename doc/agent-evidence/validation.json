@@ -1,0 +1,1225 @@
+{
+  "date": "2026-10-21",
+  "package_version": "0.3.0",
+  "runtime_schema": "runtime-v1",
+  "public_schema": "1.0.0",
+  "execution_platform": "Windows",
+  "python": "3.11.17",
+  "tests": {
+    "total": 191,
+    "passed": 186,
+    "skipped": 5,
+    "failed": 0,
+    "seconds": 44.92,
+    "backend_cases": 32,
+    "cases": [
+      {
+        "name": "test_pass_check_cannot_contradict_value[watertight-False]",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_pass_check_cannot_contradict_value[normals-False]",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_pass_check_cannot_contradict_value[self_intersection-3]",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_pass_check_cannot_contradict_value[boundary_edges-1]",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_print_success_needs_human_slicer_evidence",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_holdout_execution_requires_frozen_release",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_boundary_http_mapping_is_separate_from_tool_failure",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_actual_artifact_paths_and_cross_experiment_references",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.026,
+        "status": "passed"
+      },
+      {
+        "name": "test_valid_asset_registry_and_geometry_manifest",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.002,
+        "status": "passed"
+      },
+      {
+        "name": "test_invalid_upload_does_not_alias_valid_registered_asset",
+        "class": "tests.contract.test_evidence_boundaries",
+        "seconds": 0.002,
+        "status": "passed"
+      },
+      {
+        "name": "test_exported_schema_matches_public_models",
+        "class": "tests.contract.test_exports",
+        "seconds": 0.019,
+        "status": "passed"
+      },
+      {
+        "name": "test_prepared_data_has_no_claimed_model_results",
+        "class": "tests.contract.test_exports",
+        "seconds": 0.106,
+        "status": "passed"
+      },
+      {
+        "name": "test_comparison_protocol_uses_evaluation_and_keeps_holdout_closed",
+        "class": "tests.contract.test_exports",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_valid_contract_snapshots_roundtrip",
+        "class": "tests.contract.test_records",
+        "seconds": 0.002,
+        "status": "passed"
+      },
+      {
+        "name": "test_success_requires_matching_evidence[missing_scale]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_success_requires_matching_evidence[missing_checks]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_success_requires_matching_evidence[unknown_space]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_success_requires_matching_evidence[missing_slicer]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_success_requires_matching_evidence[wrong_mesh]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_success_requires_matching_evidence[missing_artifact]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_success_requires_matching_evidence[cross_run]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_experiment_incomplete_or_failed_not_success[upstream_commit-None]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_experiment_incomplete_or_failed_not_success[weights_revision-main]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_experiment_incomplete_or_failed_not_success[exit_code-7]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_experiment_incomplete_or_failed_not_success[parameters-value3]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_experiment_incomplete_or_failed_not_success[evidence_ids-value4]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_experiment_incomplete_or_failed_not_success[seed--1]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_experiment_incomplete_or_failed_not_success[budget_ref-None]",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unknown_metrics_and_budget_gate",
+        "class": "tests.contract.test_records",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_dataset_is_complete_and_object_disjoint",
+        "class": "tests.contract.test_records",
+        "seconds": 0.097,
+        "status": "passed"
+      },
+      {
+        "name": "test_artifact_references_cannot_be_missing_files",
+        "class": "tests.contract.test_records",
+        "seconds": 0.006,
+        "status": "passed"
+      },
+      {
+        "name": "test_import_and_alpha",
+        "class": "tests.geometry.test_assets",
+        "seconds": 0.055,
+        "status": "passed"
+      },
+      {
+        "name": "test_reject_invalid[corrupt]",
+        "class": "tests.geometry.test_assets",
+        "seconds": 0.12,
+        "status": "passed"
+      },
+      {
+        "name": "test_reject_invalid[mismatched_format]",
+        "class": "tests.geometry.test_assets",
+        "seconds": 0.005,
+        "status": "passed"
+      },
+      {
+        "name": "test_reject_invalid[path_escape]",
+        "class": "tests.geometry.test_assets",
+        "seconds": 0.005,
+        "status": "passed"
+      },
+      {
+        "name": "test_reject_invalid[unsupported_suffix]",
+        "class": "tests.geometry.test_assets",
+        "seconds": 0.005,
+        "status": "passed"
+      },
+      {
+        "name": "test_reject_invalid[over_10mib]",
+        "class": "tests.geometry.test_assets",
+        "seconds": 0.005,
+        "status": "passed"
+      },
+      {
+        "name": "test_empty_and_oversize",
+        "class": "tests.geometry.test_assets",
+        "seconds": 0.039,
+        "status": "passed"
+      },
+      {
+        "name": "test_rgb_needs_config",
+        "class": "tests.geometry.test_assets",
+        "seconds": 0.037,
+        "status": "passed"
+      },
+      {
+        "name": "test_path_is_not_asset_id",
+        "class": "tests.geometry.test_assets",
+        "seconds": 0.007,
+        "status": "passed"
+      },
+      {
+        "name": "test_one_global_mapping_not_per_case",
+        "class": "tests.geometry.test_calibration",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_tied_or_failed_validation_stays_unknown",
+        "class": "tests.geometry.test_calibration",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_cli_import_and_prepare",
+        "class": "tests.geometry.test_commands",
+        "seconds": 2.16,
+        "status": "passed"
+      },
+      {
+        "name": "test_model_cannot_approve_structure",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.009,
+        "status": "passed"
+      },
+      {
+        "name": "test_unknown_asset_returns_public_error",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.013,
+        "status": "passed"
+      },
+      {
+        "name": "test_model_cannot_invent_confirmation[reconstruct]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.012,
+        "status": "passed"
+      },
+      {
+        "name": "test_model_cannot_invent_confirmation[scale]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.01,
+        "status": "passed"
+      },
+      {
+        "name": "test_model_cannot_invent_confirmation[bed_review]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.011,
+        "status": "passed"
+      },
+      {
+        "name": "test_model_cannot_invent_confirmation[component_review]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.01,
+        "status": "passed"
+      },
+      {
+        "name": "test_all_confirmed_up_axes[x]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.009,
+        "status": "passed"
+      },
+      {
+        "name": "test_all_confirmed_up_axes[y]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.008,
+        "status": "passed"
+      },
+      {
+        "name": "test_all_confirmed_up_axes[z]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.005,
+        "status": "passed"
+      },
+      {
+        "name": "test_all_confirmed_up_axes[-x]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.005,
+        "status": "passed"
+      },
+      {
+        "name": "test_all_confirmed_up_axes[-y]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.005,
+        "status": "passed"
+      },
+      {
+        "name": "test_all_confirmed_up_axes[-z]",
+        "class": "tests.geometry.test_commands",
+        "seconds": 0.004,
+        "status": "passed"
+      },
+      {
+        "name": "test_topology[cube_10mm.stl-watertight-True]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.003,
+        "status": "passed"
+      },
+      {
+        "name": "test_topology[open_cube.obj-boundary_edge_count-4]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.004,
+        "status": "passed"
+      },
+      {
+        "name": "test_topology[duplicate_face.obj-non_manifold_edge_count-3]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.003,
+        "status": "passed"
+      },
+      {
+        "name": "test_topology[non_manifold_vertex.obj-non_manifold_vertex_count-1]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.003,
+        "status": "passed"
+      },
+      {
+        "name": "test_topology[reversed_face.obj-normals_consistent-False]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.002,
+        "status": "passed"
+      },
+      {
+        "name": "test_topology[multiple_components.obj-component_count-2]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.003,
+        "status": "passed"
+      },
+      {
+        "name": "test_sparse_topology_matches_reference[cube_10mm.stl]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.003,
+        "status": "passed"
+      },
+      {
+        "name": "test_sparse_topology_matches_reference[open_cube.obj]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.004,
+        "status": "passed"
+      },
+      {
+        "name": "test_sparse_topology_matches_reference[non_manifold_vertex.obj]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.005,
+        "status": "passed"
+      },
+      {
+        "name": "test_sparse_topology_matches_reference[duplicate_face.obj]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.004,
+        "status": "passed"
+      },
+      {
+        "name": "test_sparse_topology_matches_reference[multiple_components.obj]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.008,
+        "status": "passed"
+      },
+      {
+        "name": "test_sparse_topology_matches_reference[reversed_face.obj]",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.005,
+        "status": "passed"
+      },
+      {
+        "name": "test_orientation_scale",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.003,
+        "status": "passed"
+      },
+      {
+        "name": "test_missing_constraints",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.002,
+        "status": "passed"
+      },
+      {
+        "name": "test_millimeter_conversion_overflow",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.002,
+        "status": "passed"
+      },
+      {
+        "name": "test_scale_rejects_other_image",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.043,
+        "status": "passed"
+      },
+      {
+        "name": "test_version_and_clean",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.071,
+        "status": "passed"
+      },
+      {
+        "name": "test_cross_run_and_modified_mesh",
+        "class": "tests.geometry.test_core",
+        "seconds": 0.034,
+        "status": "passed"
+      },
+      {
+        "name": "test_preview_never_fakes_missing_blender",
+        "class": "tests.geometry.test_preview",
+        "seconds": 0.038,
+        "status": "passed"
+      },
+      {
+        "name": "test_model_env_isolation",
+        "class": "tests.geometry.test_processes",
+        "seconds": 0.0,
+        "status": "skipped"
+      },
+      {
+        "name": "test_timeout_and_cancel_stop_child[False]",
+        "class": "tests.geometry.test_processes",
+        "seconds": 0.0,
+        "status": "skipped"
+      },
+      {
+        "name": "test_timeout_and_cancel_stop_child[True]",
+        "class": "tests.geometry.test_processes",
+        "seconds": 0.0,
+        "status": "skipped"
+      },
+      {
+        "name": "test_backend_configuration_cannot_switch",
+        "class": "tests.geometry.test_processes",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_command_rejects_unknown_and_paths",
+        "class": "tests.geometry.test_processes",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_interrupted_parent_reaps_process_group",
+        "class": "tests.geometry.test_processes",
+        "seconds": 0.0,
+        "status": "skipped"
+      },
+      {
+        "name": "test_additional_component_check_blocks_success[warn]",
+        "class": "tests.geometry.test_readiness",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_additional_component_check_blocks_success[fail]",
+        "class": "tests.geometry.test_readiness",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_additional_component_check_blocks_success[not_run]",
+        "class": "tests.geometry.test_readiness",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unconfirmed_mapping_never_gets_quality_score",
+        "class": "tests.geometry.test_registered_view",
+        "seconds": 0.085,
+        "status": "passed"
+      },
+      {
+        "name": "test_missing_mapping_is_explicit",
+        "class": "tests.geometry.test_registered_view",
+        "seconds": 0.012,
+        "status": "passed"
+      },
+      {
+        "name": "test_tools_importable",
+        "class": "tests.geometry.test_services",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_missing_checker_blocks",
+        "class": "tests.geometry.test_services",
+        "seconds": 0.047,
+        "status": "passed"
+      },
+      {
+        "name": "test_unknown_space_and_scale",
+        "class": "tests.geometry.test_services",
+        "seconds": 0.058,
+        "status": "passed"
+      },
+      {
+        "name": "test_export_mm_gltf_roundtrip",
+        "class": "tests.geometry.test_services",
+        "seconds": 0.072,
+        "status": "passed"
+      },
+      {
+        "name": "test_hole_confirmation_and_idempotency",
+        "class": "tests.geometry.test_services",
+        "seconds": 0.14,
+        "status": "passed"
+      },
+      {
+        "name": "test_rejected_and_changed_preview",
+        "class": "tests.geometry.test_services",
+        "seconds": 0.114,
+        "status": "passed"
+      },
+      {
+        "name": "test_explicit_component_removal",
+        "class": "tests.geometry.test_services",
+        "seconds": 0.073,
+        "status": "passed"
+      },
+      {
+        "name": "test_no_unnecessary_simplification",
+        "class": "tests.geometry.test_services",
+        "seconds": 0.032,
+        "status": "passed"
+      },
+      {
+        "name": "test_missing_model_config",
+        "class": "tests.geometry.test_services",
+        "seconds": 0.015,
+        "status": "passed"
+      },
+      {
+        "name": "test_known_iou_answers",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_empty_is_unknown_and_size_mismatch_rejected",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_normalization_preserves_aspect_and_centers",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_alpha_threshold_and_empty_normalization",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_asymmetric_triangle_projection_and_copy",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_axis_rotation_is_applied_once",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_trellis_glb_inverse_restores_known_axes",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_invalid_mesh_rejected[vertices0-faces0]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_invalid_mesh_rejected[vertices1-faces1]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_invalid_mesh_rejected[vertices2-faces2]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_invalid_mesh_rejected[vertices3-faces3]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes0]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes1]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes2]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes3]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes4]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes5]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_known_fixture_measurement_and_evidence",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.067,
+        "status": "passed"
+      },
+      {
+        "name": "test_unverified_backend_never_gets_score",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.041,
+        "status": "passed"
+      },
+      {
+        "name": "test_geometry_only_does_not_fabricate_input_mask",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.03,
+        "status": "passed"
+      },
+      {
+        "name": "test_scene_node_transform_is_preserved",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.049,
+        "status": "passed"
+      },
+      {
+        "name": "test_failure_report_is_explicit[missing]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.036,
+        "status": "passed"
+      },
+      {
+        "name": "test_failure_report_is_explicit[empty]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.034,
+        "status": "passed"
+      },
+      {
+        "name": "test_failure_report_is_explicit[corrupt]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.041,
+        "status": "passed"
+      },
+      {
+        "name": "test_failure_report_is_explicit[bad_mesh]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.033,
+        "status": "passed"
+      },
+      {
+        "name": "test_protocol_is_not_silently_replaced[missing]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.038,
+        "status": "passed"
+      },
+      {
+        "name": "test_protocol_is_not_silently_replaced[unsupported]",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.031,
+        "status": "passed"
+      },
+      {
+        "name": "test_output_escape_and_input_symlink_rejected",
+        "class": "tests.measurement.test_silhouette",
+        "seconds": 0.014,
+        "status": "skipped"
+      },
+      {
+        "name": "test_valid_partial_uses_range_and_verifies",
+        "class": "tests.p2a.test_cdn_resume",
+        "seconds": 0.015,
+        "status": "passed"
+      },
+      {
+        "name": "test_ignored_range_never_appends",
+        "class": "tests.p2a.test_cdn_resume",
+        "seconds": 0.011,
+        "status": "passed"
+      },
+      {
+        "name": "test_wrong_content_range_never_appends",
+        "class": "tests.p2a.test_cdn_resume",
+        "seconds": 0.008,
+        "status": "passed"
+      },
+      {
+        "name": "test_corrupt_partial_never_becomes_complete",
+        "class": "tests.p2a.test_cdn_resume",
+        "seconds": 0.011,
+        "status": "passed"
+      },
+      {
+        "name": "test_complete_existing_file_is_reused",
+        "class": "tests.p2a.test_cdn_resume",
+        "seconds": 0.015,
+        "status": "passed"
+      },
+      {
+        "name": "test_fresh_or_empty_partial_download[False]",
+        "class": "tests.p2a.test_cdn_resume",
+        "seconds": 0.008,
+        "status": "passed"
+      },
+      {
+        "name": "test_fresh_or_empty_partial_download[True]",
+        "class": "tests.p2a.test_cdn_resume",
+        "seconds": 0.01,
+        "status": "passed"
+      },
+      {
+        "name": "test_redirect_to_cdn_strips_authorization_preserves_range",
+        "class": "tests.p2a.test_hf_permissions",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_redirect_rejects_untrusted_host_and_plain_http",
+        "class": "tests.p2a.test_hf_permissions",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_ignored_range_rejects_before_reading_body",
+        "class": "tests.p2a.test_hf_permissions",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_valid_range_reads_only_one_kib",
+        "class": "tests.p2a.test_hf_permissions",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_scale_and_missing_inputs",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_bad_height_rejected[-1]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_bad_height_rejected[0]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_bad_height_rejected[nan]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_bad_height_rejected[inf]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_bad_height_rejected[True]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_bad_height_rejected[80]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes0]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes1]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes2]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes3]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes4]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_request_boundaries[changes5]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unknown_asset_and_profile_rejected",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_not_run_requires_unknown_value_and_reason",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unsafe_artifact_paths[../secret]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unsafe_artifact_paths[/etc/passwd]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unsafe_artifact_paths[C:/Windows/x]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unsafe_artifact_paths[a\\\\b]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unsafe_artifact_paths[a\\x08]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unsafe_artifact_paths[a/../b]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_unsafe_artifact_paths[a//b]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.002,
+        "status": "passed"
+      },
+      {
+        "name": "test_unsafe_artifact_paths[%2e%2e/x]",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.002,
+        "status": "passed"
+      },
+      {
+        "name": "test_resolver_requires_file_inside_root",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.012,
+        "status": "passed"
+      },
+      {
+        "name": "test_timezone_and_tool_outcome",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_state_and_transition_contract",
+        "class": "tests.unit.test_contracts",
+        "seconds": 0.001,
+        "status": "passed"
+      },
+      {
+        "name": "test_http_upload_create_query_events_and_cancel",
+        "class": "tests.workflow.test_api",
+        "seconds": 0.443,
+        "status": "passed"
+      },
+      {
+        "name": "test_file_command_and_credential_boundaries",
+        "class": "tests.workflow.test_api",
+        "seconds": 0.344,
+        "status": "passed"
+      },
+      {
+        "name": "test_wrapper_backend_and_missing_reference",
+        "class": "tests.workflow.test_api",
+        "seconds": 0.139,
+        "status": "passed"
+      },
+      {
+        "name": "test_incoherent_measurement_supplement_returns_422",
+        "class": "tests.workflow.test_api",
+        "seconds": 0.401,
+        "status": "passed"
+      },
+      {
+        "name": "test_runtime_modules_exist",
+        "class": "tests.workflow.test_baseline",
+        "seconds": 0.0,
+        "status": "passed"
+      },
+      {
+        "name": "test_real_adapter_with_marked_mock_transport_and_budgets",
+        "class": "tests.workflow.test_llm",
+        "seconds": 0.198,
+        "status": "passed"
+      },
+      {
+        "name": "test_reject_llm_tool_and_confirmation_fields",
+        "class": "tests.workflow.test_llm",
+        "seconds": 0.14,
+        "status": "passed"
+      },
+      {
+        "name": "test_missing_usage_blocks_future_calls",
+        "class": "tests.workflow.test_llm",
+        "seconds": 0.125,
+        "status": "passed"
+      },
+      {
+        "name": "test_prompt_budget_prevents_request",
+        "class": "tests.workflow.test_llm",
+        "seconds": 0.101,
+        "status": "passed"
+      },
+      {
+        "name": "test_timeout_is_not_retried_and_usage_unknown",
+        "class": "tests.workflow.test_llm",
+        "seconds": 0.122,
+        "status": "passed"
+      },
+      {
+        "name": "test_graph_explanation_uses_evidence_and_not_final_status",
+        "class": "tests.workflow.test_llm",
+        "seconds": 1.487,
+        "status": "passed"
+      },
+      {
+        "name": "test_missing_constraints_persist_and_resume",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 1.571,
+        "status": "passed"
+      },
+      {
+        "name": "test_success_requires_slice_preview_and_own_version",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 2.045,
+        "status": "passed"
+      },
+      {
+        "name": "test_structure_confirmation_is_separate_and_versioned",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 2.615,
+        "status": "passed"
+      },
+      {
+        "name": "test_reject_structure_does_not_apply",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 2.418,
+        "status": "passed"
+      },
+      {
+        "name": "test_thin_wall_blocks_export",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 1.263,
+        "status": "passed"
+      },
+      {
+        "name": "test_two_repair_rounds_stop",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 2.52,
+        "status": "passed"
+      },
+      {
+        "name": "test_create_and_input_idempotency",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 0.149,
+        "status": "passed"
+      },
+      {
+        "name": "test_stale_or_cross_task_input_rejected",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 1.496,
+        "status": "passed"
+      },
+      {
+        "name": "test_missing_llm_is_explicit_and_no_reconstruction",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 0.322,
+        "status": "passed"
+      },
+      {
+        "name": "test_tool_budget_and_missing_model",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 0.651,
+        "status": "passed"
+      },
+      {
+        "name": "test_checker_unavailable_not_passed",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 1.369,
+        "status": "passed"
+      },
+      {
+        "name": "test_llm_suggestions_need_explicit_human_constraints",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 0.894,
+        "status": "passed"
+      },
+      {
+        "name": "test_slicer_failure_keeps_mesh_and_stops",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 1.825,
+        "status": "passed"
+      },
+      {
+        "name": "test_missing_real_reconstruction_configuration",
+        "class": "tests.workflow.test_runtime",
+        "seconds": 0.685,
+        "status": "passed"
+      },
+      {
+        "name": "test_real_runner_waiting_releases_worker_and_two_tasks_serial",
+        "class": "tests.workflow.test_worker",
+        "seconds": 7.181,
+        "status": "passed"
+      },
+      {
+        "name": "test_single_worker_lock",
+        "class": "tests.workflow.test_worker",
+        "seconds": 0.075,
+        "status": "passed"
+      },
+      {
+        "name": "test_actual_runner_timeout_stops_and_preserves",
+        "class": "tests.workflow.test_worker",
+        "seconds": 0.266,
+        "status": "passed"
+      },
+      {
+        "name": "test_actual_running_cancel_kills_runner",
+        "class": "tests.workflow.test_worker",
+        "seconds": 0.323,
+        "status": "passed"
+      },
+      {
+        "name": "test_restart_marks_active_failed_and_leaves_waiting_queued",
+        "class": "tests.workflow.test_worker",
+        "seconds": 0.228,
+        "status": "passed"
+      },
+      {
+        "name": "test_process_tree_cleanup",
+        "class": "tests.workflow.test_worker",
+        "seconds": 0.175,
+        "status": "passed"
+      },
+      {
+        "name": "test_abrupt_worker_death_reaps_runner_and_never_replays_llm",
+        "class": "tests.workflow.test_worker",
+        "seconds": 6.231,
+        "status": "passed"
+      }
+    ]
+  },
+  "static_checks": [
+    {
+      "command": "python scripts/p1/export_schemas.py --check",
+      "exit_code": 0,
+      "stdout": "JSONSchema与20个公共模型一致。"
+    },
+    {
+      "command": "python scripts/tools/export_tool_schemas.py --check",
+      "exit_code": 0,
+      "stdout": "geometry tool schema consistent"
+    },
+    {
+      "command": "python scripts/tools/export_runtime_schemas.py --check",
+      "exit_code": 0,
+      "stdout": "runtime-v1扩展Schema一致"
+    },
+    {
+      "command": "python scripts/p1/check_prepared_data.py",
+      "exit_code": 0,
+      "stdout": "{\r\n  \"check_kind\": \"static_preparation_only\",\r\n  \"schema_version\": \"1.0.0\",\r\n  \"dataset_version\": \"1.0.0\",\r\n  \"cases\": 30,\r\n  \"splits\": {\r\n    \"development\": 10,\r\n    \"evaluation\": 10,\r\n    \"holdout\": 10\r\n  },\r\n  \"categories\": {\r\n    \"normal\": 18,\r\n    \"boundary\": 12\r\n  },\r\n  \"registered_images\": 21,\r\n  \"geometry_files\": 12,\r\n  \"all_case_results\": \"not_run\",\r\n  \"holdout_model_execution\": \"not_run\",\r\n  \"contract_examples\": \"validated_synthetic_fixtures\",\r\n  \"gpu_used\": false,\r\n  \"model_installed_or_executed\": false,\r\n  \"p2_budget_blocked\": true\r\n}"
+    },
+    {
+      "command": "python -m pip check",
+      "exit_code": 0,
+      "stdout": "No broken requirements found."
+    }
+  ],
+  "local_http": {
+    "evidence_origin": "local_http_fixture_automation",
+    "model_execution": "not_run",
+    "llm_execution": "not_run",
+    "human_acceptance": "not_run",
+    "passed": true,
+    "seconds": 17.57807290001074,
+    "create_0_seconds": 0.02905700000701472,
+    "create_1_seconds": 0.02357829999527894,
+    "service_processes_stopped": true,
+    "event_counts": [
+      8,
+      3
+    ],
+    "final_states": [
+      "cancelled",
+      "cancelled"
+    ],
+    "tool_calls": [
+      1,
+      0
+    ]
+  },
+  "service_process_count_at_delivery": 0,
+  "real_llm": {
+    "status": "not_run",
+    "reason": "missing_provider_configuration"
+  },
+  "cloud_agent_chain": {
+    "status": "not_run",
+    "reason": "not_executed_in_this_local_backend_round"
+  },
+  "human_review": "pending",
+  "physical_printing": "not_run"
+}

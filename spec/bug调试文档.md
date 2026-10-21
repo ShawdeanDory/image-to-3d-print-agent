@@ -351,8 +351,29 @@
 - 分类/基线：接口/权限。confirm已有human_action保护，但reconstruct的InputReview、scale的已确认姿态及inspect的底面/组件确认可由同一默认模型门面直接传入。真实操作者身份须由服务端提供，不能只相信JSON里的confirmed。
 - 预期：默认调用保留模型可用的准备、提案、诊断和候选导出；需要已接受图片、已确认姿态或肯定底面/组件复核时，必须由服务端核对已保存人工输入后显式human_action=True。底层固定fixture直调保持test_fixture标识。先增加门面拒绝回归再修订。
 
-## 后续Bug记录模板
+## AGENT-BUG-003：worker被强制结束时活动区间与LLM用量不能伪装完整
 
+- 状态/资源类，代码检查发现父worker结束前才累加当前活动秒数；强制结束会丢失本段精确时长，供应商请求若已发出但未返回usage也不能记为完整用量。
+- 预期：runner监视父进程并退出；重启明确WORKER_RESTARTED，不重放LLM/重建；报告将该活动总时长标未知，保留已知区间并将LLM用量标不完整。新增真实本机进程/回环HTTP延迟fixture，供应商响应为测试服务，不是真实LLM。
+
+## AGENT-BUG-002：历史超大fixture的自动测试ID超过Windows环境变量上限
+
+- 本机全量首次178通过/5跳过/2个setup与teardown错误；不是资产校验失败。历史test_assets参数化将10MiB字节自动展开为测试ID，pytest写入PYTEST_CURRENT_TEST时超过Windows32767字符限制，日志因此膨胀。
+- 预期及最小修订：为参数场景提供短描述ID，原输入及预期不变，保留超大文件安全测试；不跳过该用例、不放宽上传上限。原始失败保存在runs/mid-agent-20261021-01/full-tests-01.txt，后续全量回归单列。
+
+## AGENT-BUG-001：历史离线保护拦截后端测试依赖与Windows事件循环
+
+- 2026-10-21，工具/测试环境。原tests/conftest.py在收集阶段禁止FastAPI/LangGraph导入；后端首轮为1失败/57通过。移除已授权的服务库禁令后，HTTP测试又在Windows的asyncio内部socketpair建立回环连接时被全局断网拦截，实际3失败/22通过。
+- 预期：原P1测试继续禁止网络/模型/GPU；后端测试允许本机回环连接用于事件循环和本地HTTP，公网连接仍禁止。不关闭全部网络保护，不把环境拦截当作业务接口失败。
+- 修订及回归：按tests/workflow范围仅允许localhost/127.0.0.1/::1，后续结果见本轮报告。几何修复测试曾误把OBJ字节命名为STL，修正fixture副本扩展名后11项工作流测试通过；没有修改网格实现来迁就错误测试。
+
+
+## AGENT-BUG-004：既有工具Schema快照落后于已提交工具源码
+
+- 接口/归档类。交付静态核验实际发现export_tool_schemas.py --check非0；不是本轮改了工具命令。0a32f1e中的源码已有preview、measure_view、ComponentReview和view_mappings，但旧JSONSchema没有同步。
+- 预期及修订：使用既有导出脚本重新生成，不手改Schema，不删源码字段迁就旧快照，不改变公共contracts-v1。保留此次失败并检查生成差异，随后重跑三套Schema及静态清单；本轮实现回归结果不因快照失败而改写。
+
+## 后续Bug记录模板
 
 - Bug编号、发现日期、来源、关联任务和严重程度。
 - 主分类、子类、固定输入/版本、复现命令或步骤。

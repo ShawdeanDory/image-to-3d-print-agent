@@ -1,0 +1,1896 @@
+{
+  "$defs": {
+    "ArtifactRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "derived_from": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z][a-z0-9_-]*$",
+            "type": "string"
+          },
+          "title": "Derived From",
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "input_image",
+            "foreground_image",
+            "raw_mesh",
+            "repaired_mesh",
+            "candidate_stl",
+            "quality_report",
+            "inspection_report",
+            "slicer_preview",
+            "slicer_confirmation",
+            "log"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mesh Version"
+        },
+        "relative_path": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Relative Path",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "enum": [
+                "mm",
+                "unitless"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "run_id",
+        "kind",
+        "relative_path",
+        "created_at"
+      ],
+      "title": "ArtifactRecord",
+      "type": "object"
+    },
+    "CheckResult": {
+      "additionalProperties": false,
+      "properties": {
+        "details": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Details",
+          "type": "object"
+        },
+        "evidence_artifact_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Artifact Id"
+        },
+        "name": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Name",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "fail",
+            "warn",
+            "not_run"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "threshold": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "tool_version": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Version"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "status"
+      ],
+      "title": "CheckResult",
+      "type": "object"
+    },
+    "ConstraintsInput": {
+      "additionalProperties": false,
+      "properties": {
+        "accept_suggestions": {
+          "default": false,
+          "title": "Accept Suggestions",
+          "type": "boolean"
+        },
+        "height_unit": {
+          "anyOf": [
+            {
+              "enum": [
+                "mm",
+                "cm"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Height Unit"
+        },
+        "height_value": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Height Value"
+        },
+        "kind": {
+          "const": "constraints",
+          "title": "Kind",
+          "type": "string"
+        },
+        "mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mesh Version"
+        },
+        "orientation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Orientation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pending_input_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Pending Input Id",
+          "type": "string"
+        },
+        "scale_evidence_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scale Evidence Id"
+        },
+        "scale_source": {
+          "anyOf": [
+            {
+              "enum": [
+                "user_target",
+                "measured_object"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scale Source"
+        },
+        "submission_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Submission Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "submission_id",
+        "pending_input_id",
+        "kind"
+      ],
+      "title": "ConstraintsInput",
+      "type": "object"
+    },
+    "CreateTask": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "anyOf": [
+            {
+              "enum": [
+                "triposr",
+                "trellis2_candidate"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Backend"
+        },
+        "request": {
+          "$ref": "#/$defs/ModelTaskRequest"
+        }
+      },
+      "required": [
+        "request"
+      ],
+      "title": "CreateTask",
+      "type": "object"
+    },
+    "ErrorInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "INVALID_IMAGE",
+            "INVALID_ARGUMENT",
+            "MODEL_NOT_CONFIGURED",
+            "TOOL_UNAVAILABLE",
+            "GPU_OUT_OF_MEMORY",
+            "TOOL_TIMEOUT",
+            "MESH_NOT_PRINTABLE",
+            "REPAIR_LIMIT_REACHED",
+            "SLICER_VALIDATION_FAILED",
+            "WORKER_RESTARTED",
+            "REFERENCE_NOT_FOUND",
+            "STATE_CONFLICT",
+            "BUDGET_NOT_CONFIGURED"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Details",
+          "type": "object"
+        },
+        "message": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "ErrorInfo",
+      "type": "object"
+    },
+    "EventsPage": {
+      "additionalProperties": false,
+      "properties": {
+        "events": {
+          "items": {
+            "$ref": "#/$defs/RuntimeEvent"
+          },
+          "title": "Events",
+          "type": "array"
+        },
+        "next_after": {
+          "title": "Next After",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "runtime-v1",
+          "default": "runtime-v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "events",
+        "next_after"
+      ],
+      "title": "EventsPage",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "evidence_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "locator": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mesh Version"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "source_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_type": {
+          "enum": [
+            "input",
+            "tool",
+            "measurement",
+            "human"
+          ],
+          "title": "Source Type",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_type",
+        "source_id",
+        "run_id",
+        "artifact_id",
+        "locator",
+        "created_at",
+        "summary"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "ImageReviewInput": {
+      "additionalProperties": false,
+      "properties": {
+        "complete_subject": {
+          "title": "Complete Subject",
+          "type": "boolean"
+        },
+        "decision": {
+          "enum": [
+            "accepted",
+            "replace_image",
+            "uncertain"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "foreground_artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Foreground Artifact Id",
+          "type": "string"
+        },
+        "foreground_correct": {
+          "title": "Foreground Correct",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "input_review",
+          "title": "Kind",
+          "type": "string"
+        },
+        "mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mesh Version"
+        },
+        "pending_input_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Pending Input Id",
+          "type": "string"
+        },
+        "simple_nonfunctional_ornament": {
+          "title": "Simple Nonfunctional Ornament",
+          "type": "boolean"
+        },
+        "submission_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Submission Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "submission_id",
+        "pending_input_id",
+        "kind",
+        "foreground_artifact_id",
+        "decision",
+        "complete_subject",
+        "simple_nonfunctional_ornament",
+        "foreground_correct"
+      ],
+      "title": "ImageReviewInput",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "MeshInspection": {
+      "additionalProperties": false,
+      "properties": {
+        "boundary_edge_count": {
+          "minimum": 0,
+          "title": "Boundary Edge Count",
+          "type": "integer"
+        },
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/CheckResult"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "component_count": {
+          "minimum": 0,
+          "title": "Component Count",
+          "type": "integer"
+        },
+        "dimensions_mm": {
+          "anyOf": [
+            {
+              "items": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "maxItems": 3,
+              "minItems": 3,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dimensions Mm"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "non_manifold_edge_count": {
+          "minimum": 0,
+          "title": "Non Manifold Edge Count",
+          "type": "integer"
+        },
+        "non_manifold_vertex_count": {
+          "minimum": 0,
+          "title": "Non Manifold Vertex Count",
+          "type": "integer"
+        },
+        "normals_consistent": {
+          "title": "Normals Consistent",
+          "type": "boolean"
+        },
+        "unit": {
+          "enum": [
+            "mm",
+            "unitless"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "volume_mm3": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Volume Mm3"
+        },
+        "volume_reason": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Volume Reason"
+        },
+        "watertight": {
+          "title": "Watertight",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mesh_version",
+        "unit",
+        "component_count",
+        "watertight",
+        "normals_consistent",
+        "boundary_edge_count",
+        "non_manifold_edge_count",
+        "non_manifold_vertex_count"
+      ],
+      "title": "MeshInspection",
+      "type": "object"
+    },
+    "ModelTaskRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Description",
+          "type": "string"
+        },
+        "height_unit": {
+          "anyOf": [
+            {
+              "enum": [
+                "mm",
+                "cm"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Height Unit"
+        },
+        "height_value": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Height Value"
+        },
+        "image_asset_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Image Asset Id",
+          "type": "string"
+        },
+        "orientation": {
+          "$ref": "#/$defs/Orientation"
+        },
+        "printer_profile_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Printer Profile Id",
+          "type": "string"
+        },
+        "scale_evidence_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scale Evidence Id"
+        },
+        "scale_source": {
+          "anyOf": [
+            {
+              "enum": [
+                "user_target",
+                "measured_object"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scale Source"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "image_asset_id",
+        "printer_profile_id"
+      ],
+      "title": "ModelTaskRequest",
+      "type": "object"
+    },
+    "ModelTaskResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRecord"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "data": {
+          "$ref": "#/$defs/TaskData"
+        },
+        "datasets": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Datasets",
+          "type": "array"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorInfo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "events": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Events",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRecord"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "request_id": {
+          "format": "uuid",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "waiting_for_input",
+            "cancel_requested",
+            "succeeded",
+            "failed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "task_id": {
+          "const": "image_to_3d_print",
+          "default": "image_to_3d_print",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "request_id",
+        "run_id",
+        "status",
+        "data"
+      ],
+      "title": "ModelTaskResponse",
+      "type": "object"
+    },
+    "Orientation": {
+      "additionalProperties": false,
+      "properties": {
+        "confirmed": {
+          "default": false,
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "up_axis": {
+          "anyOf": [
+            {
+              "enum": [
+                "x",
+                "y",
+                "z",
+                "-x",
+                "-y",
+                "-z"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Up Axis"
+        }
+      },
+      "title": "Orientation",
+      "type": "object"
+    },
+    "ParsedRequirements": {
+      "additionalProperties": false,
+      "properties": {
+        "explanation": {
+          "default": "",
+          "maxLength": 3000,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "height_unit": {
+          "anyOf": [
+            {
+              "enum": [
+                "mm",
+                "cm"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Height Unit"
+        },
+        "height_value": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Height Value"
+        },
+        "questions": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Questions",
+          "type": "array"
+        },
+        "scale_source": {
+          "anyOf": [
+            {
+              "enum": [
+                "user_target",
+                "measured_object"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scale Source"
+        },
+        "up_axis": {
+          "anyOf": [
+            {
+              "enum": [
+                "x",
+                "y",
+                "z",
+                "-x",
+                "-y",
+                "-z"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Up Axis"
+        }
+      },
+      "title": "ParsedRequirements",
+      "type": "object"
+    },
+    "PendingInput": {
+      "additionalProperties": false,
+      "properties": {
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "kind": {
+          "enum": [
+            "constraints",
+            "input_review",
+            "print_review",
+            "repair_request",
+            "repair_confirmation",
+            "slicer"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mesh Version"
+        },
+        "pending_input_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Pending Input Id",
+          "type": "string"
+        },
+        "questions": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Questions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "pending_input_id",
+        "kind"
+      ],
+      "title": "PendingInput",
+      "type": "object"
+    },
+    "PrintReviewInput": {
+      "additionalProperties": false,
+      "properties": {
+        "bed_confirmed": {
+          "title": "Bed Confirmed",
+          "type": "boolean"
+        },
+        "component_count": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Component Count"
+        },
+        "components_confirmed": {
+          "default": false,
+          "title": "Components Confirmed",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "print_review",
+          "title": "Kind",
+          "type": "string"
+        },
+        "mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mesh Version"
+        },
+        "pending_input_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Pending Input Id",
+          "type": "string"
+        },
+        "preview_artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Preview Artifact Id",
+          "type": "string"
+        },
+        "submission_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Submission Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "submission_id",
+        "pending_input_id",
+        "kind",
+        "preview_artifact_id",
+        "bed_confirmed"
+      ],
+      "title": "PrintReviewInput",
+      "type": "object"
+    },
+    "PrinterProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "build_volume_mm": {
+          "anyOf": [
+            {
+              "items": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "maxItems": 3,
+              "minItems": 3,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Build Volume Mm"
+        },
+        "layer_height_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Layer Height Mm",
+          "type": "number"
+        },
+        "material": {
+          "const": "PLA",
+          "title": "Material",
+          "type": "string"
+        },
+        "min_wall_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Min Wall Mm",
+          "type": "number"
+        },
+        "nozzle_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Nozzle Mm",
+          "type": "number"
+        },
+        "process": {
+          "const": "FDM",
+          "title": "Process",
+          "type": "string"
+        },
+        "profile_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "profile_kind": {
+          "enum": [
+            "demo",
+            "verified_device"
+          ],
+          "title": "Profile Kind",
+          "type": "string"
+        },
+        "slicer_version": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Slicer Version",
+          "type": "string"
+        },
+        "supports_policy": {
+          "const": "human_review",
+          "title": "Supports Policy",
+          "type": "string"
+        },
+        "version": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile_id",
+        "version",
+        "profile_kind",
+        "process",
+        "material",
+        "nozzle_mm",
+        "layer_height_mm",
+        "min_wall_mm",
+        "slicer_version",
+        "supports_policy"
+      ],
+      "title": "PrinterProfile",
+      "type": "object"
+    },
+    "RepairConfirmInput": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted": {
+          "title": "Accepted",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "repair_confirmation",
+          "title": "Kind",
+          "type": "string"
+        },
+        "mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mesh Version"
+        },
+        "pending_input_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Pending Input Id",
+          "type": "string"
+        },
+        "proposal_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Proposal Id",
+          "type": "string"
+        },
+        "submission_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Submission Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "submission_id",
+        "pending_input_id",
+        "kind",
+        "proposal_id",
+        "accepted"
+      ],
+      "title": "RepairConfirmInput",
+      "type": "object"
+    },
+    "RepairRequestInput": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "repair_request",
+          "title": "Kind",
+          "type": "string"
+        },
+        "mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mesh Version"
+        },
+        "pending_input_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Pending Input Id",
+          "type": "string"
+        },
+        "request": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StructureRequest"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "stop": {
+          "default": false,
+          "title": "Stop",
+          "type": "boolean"
+        },
+        "submission_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Submission Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "submission_id",
+        "pending_input_id",
+        "kind"
+      ],
+      "title": "RepairRequestInput",
+      "type": "object"
+    },
+    "RuntimeEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Created At",
+          "type": "string"
+        },
+        "data": {
+          "additionalProperties": true,
+          "title": "Data",
+          "type": "object"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "integer"
+        },
+        "kind": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "input",
+            "preprocess",
+            "scale",
+            "reconstruct",
+            "repair",
+            "inspect",
+            "export",
+            "slicer",
+            "complete"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "waiting_for_input",
+            "cancel_requested",
+            "succeeded",
+            "failed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "event_id",
+        "run_id",
+        "kind",
+        "stage",
+        "status",
+        "created_at"
+      ],
+      "title": "RuntimeEvent",
+      "type": "object"
+    },
+    "RuntimeTask": {
+      "additionalProperties": false,
+      "description": "只用于扩展查询；普通查询仍返回原ModelTaskResponse。",
+      "properties": {
+        "pending": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PendingInput"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "resources": {
+          "additionalProperties": true,
+          "title": "Resources",
+          "type": "object"
+        },
+        "response": {
+          "$ref": "#/$defs/ModelTaskResponse"
+        }
+      },
+      "required": [
+        "response"
+      ],
+      "title": "RuntimeTask",
+      "type": "object"
+    },
+    "SlicerConfirmation": {
+      "additionalProperties": false,
+      "properties": {
+        "confirmation_artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Confirmation Artifact Id",
+          "type": "string"
+        },
+        "dimensions_mm": {
+          "items": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "title": "Dimensions Mm",
+          "type": "array"
+        },
+        "layer_preview_asset_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Layer Preview Asset Id",
+          "type": "string"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "pending_input_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Pending Input Id",
+          "type": "string"
+        },
+        "printer_profile_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Printer Profile Id",
+          "type": "string"
+        },
+        "result": {
+          "enum": [
+            "pass",
+            "fail"
+          ],
+          "title": "Result",
+          "type": "string"
+        },
+        "slicer_version": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Slicer Version",
+          "type": "string"
+        },
+        "supports_enabled": {
+          "title": "Supports Enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "pending_input_id",
+        "mesh_version",
+        "result",
+        "slicer_version",
+        "printer_profile_id",
+        "dimensions_mm",
+        "supports_enabled",
+        "layer_preview_asset_id",
+        "confirmation_artifact_id"
+      ],
+      "title": "SlicerConfirmation",
+      "type": "object"
+    },
+    "SlicerInput": {
+      "additionalProperties": false,
+      "properties": {
+        "bed_confirmed": {
+          "title": "Bed Confirmed",
+          "type": "boolean"
+        },
+        "dimensions_mm": {
+          "items": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "title": "Dimensions Mm",
+          "type": "array"
+        },
+        "kind": {
+          "const": "slicer",
+          "title": "Kind",
+          "type": "string"
+        },
+        "layer_preview_asset_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Layer Preview Asset Id",
+          "type": "string"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "model_preview_confirmed": {
+          "title": "Model Preview Confirmed",
+          "type": "boolean"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "pending_input_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Pending Input Id",
+          "type": "string"
+        },
+        "printer_profile_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Printer Profile Id",
+          "type": "string"
+        },
+        "result": {
+          "enum": [
+            "pass",
+            "fail"
+          ],
+          "title": "Result",
+          "type": "string"
+        },
+        "slicer_version": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Slicer Version",
+          "type": "string"
+        },
+        "submission_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Submission Id",
+          "type": "string"
+        },
+        "support_reviewed": {
+          "title": "Support Reviewed",
+          "type": "boolean"
+        },
+        "supports_enabled": {
+          "title": "Supports Enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "submission_id",
+        "pending_input_id",
+        "mesh_version",
+        "kind",
+        "result",
+        "slicer_version",
+        "printer_profile_id",
+        "dimensions_mm",
+        "supports_enabled",
+        "layer_preview_asset_id",
+        "model_preview_confirmed",
+        "bed_confirmed",
+        "support_reviewed"
+      ],
+      "title": "SlicerInput",
+      "type": "object"
+    },
+    "StructureRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "max_perimeter_mm": {
+          "default": 40,
+          "exclusiveMinimum": 0,
+          "maximum": 40,
+          "title": "Max Perimeter Mm",
+          "type": "number"
+        },
+        "min_wall_mm": {
+          "default": 1.2,
+          "exclusiveMinimum": 0,
+          "title": "Min Wall Mm",
+          "type": "number"
+        },
+        "operation": {
+          "enum": [
+            "fill_small_holes",
+            "remove_components",
+            "simplify"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "remove_components": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Remove Components",
+          "type": "array"
+        },
+        "target_faces": {
+          "default": 100000,
+          "maximum": 500000,
+          "minimum": 100,
+          "title": "Target Faces",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "title": "StructureRequest",
+      "type": "object"
+    },
+    "TaskData": {
+      "additionalProperties": false,
+      "properties": {
+        "inspection": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MeshInspection"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "printer_profile": {
+          "$ref": "#/$defs/PrinterProfile"
+        },
+        "request": {
+          "$ref": "#/$defs/ModelTaskRequest"
+        },
+        "slicer_confirmation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SlicerConfirmation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "state": {
+          "$ref": "#/$defs/WorkflowState"
+        }
+      },
+      "required": [
+        "request",
+        "state",
+        "printer_profile"
+      ],
+      "title": "TaskData",
+      "type": "object"
+    },
+    "WorkflowState": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z][a-z0-9_-]*$",
+            "type": "string"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/CheckResult"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorInfo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mesh Version"
+        },
+        "pending_input_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pending Input Id"
+        },
+        "pending_input_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "height",
+                "height_unit",
+                "scale_source",
+                "orientation",
+                "replacement_image",
+                "repair_confirmation",
+                "slicer_confirmation"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pending Input Type"
+        },
+        "repair_round": {
+          "default": 0,
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Repair Round",
+          "type": "integer"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "input",
+            "preprocess",
+            "scale",
+            "reconstruct",
+            "repair",
+            "inspect",
+            "export",
+            "slicer",
+            "complete"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "waiting_for_input",
+            "cancel_requested",
+            "succeeded",
+            "failed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "run_id",
+        "stage",
+        "status"
+      ],
+      "title": "WorkflowState",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent运行时扩展",
+  "x-public-contract-version": "1.0.0",
+  "x-runtime-models": [
+    "CreateTask",
+    "ConstraintsInput",
+    "ImageReviewInput",
+    "PrintReviewInput",
+    "RepairRequestInput",
+    "RepairConfirmInput",
+    "SlicerInput",
+    "EventsPage",
+    "RuntimeTask",
+    "ParsedRequirements"
+  ],
+  "x-runtime-version": "runtime-v1"
+}

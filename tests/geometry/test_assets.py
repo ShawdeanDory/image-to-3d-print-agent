@@ -24,7 +24,7 @@ def test_import_and_alpha(tmp_path):
     assert outcome.tool.data['review_required'] is True
     assert {a.kind for a in outcome.artifacts}>={'input_image','foreground_image'}
 
-@pytest.mark.parametrize('payload,name',[(b'bad','x.png'),(picture(),'x.jpg'),(picture(),'../x.png'),(picture(),'x.svg'),(b'a'*10485761,'x.png')])
+@pytest.mark.parametrize('payload,name',[(b'bad','x.png'),(picture(),'x.jpg'),(picture(),'../x.png'),(picture(),'x.svg'),(b'a'*10485761,'x.png')],ids=['corrupt','mismatched_format','path_escape','unsupported_suffix','over_10mib'])
 def test_reject_invalid(tmp_path,payload,name):
     with pytest.raises(ToolFailure): AssetStore(tmp_path).save(payload,name)
 
