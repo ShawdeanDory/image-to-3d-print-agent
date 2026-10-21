@@ -1,0 +1,15 @@
+{
+  "source": "本轮真实浏览器工具标准输出保留；并非重新运行",
+  "test_fixture": false,
+  "model_real": true,
+  "run_id": "363a7e0f-8202-4586-a61f-f87e4510a9d1",
+  "downloads_before_click": 0,
+  "refresh_same_task": true,
+  "downloads_after_refresh": 0,
+  "downloads_after_click": 1,
+  "posts": [
+    "/api/v1/assets",
+    "/api/v1/model-tasks"
+  ],
+  "passed": true
+}

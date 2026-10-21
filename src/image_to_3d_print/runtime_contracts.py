@@ -110,9 +110,49 @@ class PendingInput(ContractModel):
     details: dict = Field(default_factory=dict)
 
 
+class GenerationDelivery(ContractModel):
+    artifact_id: Id
+    mesh_version: Id
+    independent_readback: Literal[True]
+    print_check: Literal['passed','failed','not_run']
+    print_certified: Literal[False] = False
+    repair_attempts: Annotated[StrictInt, Field(ge=0,le=2)] = 0
+    dimensions_mm: Dimensions
+    warnings: list[Text] = Field(default_factory=list)
+
+
+class GenerationTaskResponse(ModelTaskResponse):
+    """GLB完成语义与公共1.0.0的打印成功语义分开。"""
+    schema_version: Literal['generation-v1'] = 'generation-v1'
+    delivery: GenerationDelivery | None = None
+    orientation_source: Literal['user_parameter','backend_z_up'] = 'backend_z_up'
+
+    def _require_complete(self, artifacts):
+        delivery=self.delivery
+        if delivery is None or delivery.mesh_version!=self.data.state.mesh_version:
+            raise ValueError('GLB完成必须绑定实际交付版本')
+        artifact=artifacts.get(delivery.artifact_id)
+        if artifact is None or artifact.mesh_version!=delivery.mesh_version or not artifact.relative_path.endswith('.glb'):
+            raise ValueError('GLB交付必须引用本任务实际GLB')
+        if not any(a.kind=='quality_report' and a.mesh_version==delivery.mesh_version for a in artifacts.values()):
+            raise ValueError('GLB完成必须附带同版本质量报告')
+        inspection=self.data.inspection
+        actual=print_check_for(inspection)
+        if inspection is not None and inspection.mesh_version!=delivery.mesh_version:raise ValueError('GLB检查版本不匹配')
+        if delivery.print_check!=actual:raise ValueError('打印检查标签与实际证据不符')
+        if self.data.slicer_confirmation is not None:raise ValueError('自动GLB交付不能声称实际切片确认')
+
+
+def print_check_for(inspection):
+    if inspection is None:return 'not_run'
+    if any(c.status=='fail' for c in inspection.checks):return 'failed'
+    if any(c.status=='not_run' for c in inspection.checks):return 'not_run'
+    return 'passed' if inspection.ready_for_print else 'failed'
+
+
 class RuntimeTask(ContractModel):
-    """只用于扩展查询；普通查询仍返回原ModelTaskResponse。"""
-    response: ModelTaskResponse
+    """扩展查询；response依任务快照返回打印契约或generation-v1。"""
+    response: ModelTaskResponse | GenerationTaskResponse
     pending: PendingInput | None = None
     resources: dict = Field(default_factory=dict)
     artifact_frames: dict[Id, Literal['z_up', 'y_up']] = Field(default_factory=dict)

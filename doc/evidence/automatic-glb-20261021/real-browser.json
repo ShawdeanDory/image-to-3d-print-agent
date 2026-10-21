@@ -1,0 +1,13 @@
+{
+  "test_fixture": false,
+  "model_real": true,
+  "confirmation_source": "automatic_policy",
+  "read_only_existing": true,
+  "run_id": "363a7e0f-8202-4586-a61f-f87e4510a9d1",
+  "downloads_before_click": 0,
+  "refresh_same_task": true,
+  "downloads_after_refresh": 0,
+  "downloads_after_click": 1,
+  "posts": [],
+  "passed": true
+}

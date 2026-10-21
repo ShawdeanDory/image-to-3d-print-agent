@@ -1,36 +1,37 @@
 import {test,expect} from '@playwright/test';
-import fs from 'node:fs';
 import path from 'node:path';
-
-test('固定界面数据：快速/官方选项按任务提交，TripoSR没有快速选项',async({page})=>{
-  const profile=JSON.parse(fs.readFileSync(path.resolve('../fixtures/p1/printer_profile.json'),'utf8'));
-  const submissions:Record<string,unknown>[]=[];
-  await page.route('**/api/v1/**',async route=>{
-    const url=new URL(route.request().url());
-    let body:unknown={error:{code:'FIXTURE_ONLY',message:'固定界面验证，不调用真实模型'}};let status=200;
-    if(url.pathname.endsWith('/configuration'))body={schema_version:'runtime-v1',default_backend:'triposr',configured_backends:['triposr','trellis2_candidate'],llm_configured:false,confirmation_origin:'test_fixture',backend_profiles:{triposr:['official'],trellis2_candidate:['official','course_fast']}};
-    else if(url.pathname.endsWith('/printer-profiles'))body=[profile];
-    else if(url.pathname.endsWith('/assets'))body={asset_id:'fixture_duck',relative_path:'assets/fixture.png',content_type:'image/png',byte_count:100,width:64,height:64};
-    else if(url.pathname.endsWith('/model-tasks')){submissions.push(route.request().postDataJSON());status=422;}
-    else status=404;
-    await route.fulfill({status,contentType:'application/json',body:JSON.stringify(body)});
-  });
+test('真实API/CPU几何fixture：一次提交、自动修复、刷新不下载、点击才下载',async({page})=>{
+  const posts:string[]=[];const downloads:string[]=[];
+  page.on('request',r=>{if(r.method()==='POST')posts.push(new URL(r.url()).pathname);});
+  page.on('download',d=>downloads.push(d.suggestedFilename()));
   await page.goto('/');await page.evaluate(()=>localStorage.clear());await page.reload();
-  await expect(page.getByText('已连接计算服务')).toBeVisible();
+  await expect(page.getByText('固定验证服务：',{exact:false})).toBeVisible();
   await expect(page.locator('[name=reconstruction_profile]')).toHaveCount(0);
-  await page.locator('[name=backend]').selectOption('trellis2_candidate');
-  await expect(page.locator('[name=reconstruction_profile]')).toHaveValue('official');
-  await page.locator('[name=reconstruction_profile]').selectOption('official');
+  await expect(page.locator('[name=orientation_confirmed]')).toHaveCount(0);
   await page.getByLabel('输入图片').setInputFiles(path.resolve('../fixtures/p1/procedural/block.png'));
-  await page.getByRole('button',{name:'创建建模任务'}).click();
-  await expect.poll(()=>submissions.at(-1)?.reconstruction_profile).toBe('official');
-  expect(submissions.at(-1)?.backend).toBe('trellis2_candidate');
-  await page.locator('[name=reconstruction_profile]').selectOption('course_fast');
-  await page.getByRole('button',{name:'创建建模任务'}).click();
-  await expect.poll(()=>submissions.at(-1)?.reconstruction_profile).toBe('course_fast');
-  await page.locator('[name=backend]').selectOption('triposr');
-  await expect(page.locator('[name=reconstruction_profile]')).toHaveCount(0);
-  await page.getByRole('button',{name:'创建建模任务'}).click();
-  await expect.poll(()=>submissions.at(-1)?.backend).toBe('triposr');
-  expect(submissions.at(-1)).not.toHaveProperty('reconstruction_profile');
+  await page.getByLabel('目标高度',{exact:true}).fill('10');
+  await page.getByRole('button',{name:'创建建模任务'}).dblclick();
+  await expect(page.getByRole('heading',{name:'GLB生成完成'})).toBeVisible({timeout:30000});
+  expect(posts.filter(p=>p.endsWith('/model-tasks'))).toHaveLength(1);
+  expect(posts.some(p=>/\/(inputs|slicer-confirmation)$/.test(p))).toBe(false);
+  await expect(page.locator('.confirmation')).toHaveCount(0);
+  await expect(page.getByText('自动修复尝试1轮。',{exact:false})).toBeVisible();
+  await expect(page.locator('.viewer-caption').first()).toContainText('拖动旋转');
+  expect(downloads).toHaveLength(0);
+  const url=page.url();await page.reload();
+  await expect(page.getByRole('heading',{name:'GLB生成完成'})).toBeVisible();
+  expect(page.url()).toBe(url);expect(downloads).toHaveLength(0);
+  const next=page.waitForEvent('download');await page.getByRole('button',{name:'下载GLB',exact:true}).click();
+  const downloaded=await next;expect(downloaded.suggestedFilename()).toMatch(/\.glb$/);
+  expect(downloads).toHaveLength(1);
+  await page.screenshot({path:path.join(process.env.I3D_BROWSER_EVIDENCE_DIR!,'automatic-fixture.png'),fullPage:true});
+  await page.goto('about:blank');
+});
+test('首屏拒绝缺高度和负高度，不先创建任务',async({page})=>{
+  let creates=0;page.on('request',r=>{if(r.method()==='POST'&&r.url().endsWith('/model-tasks'))creates++;});
+  await page.goto('/');await page.evaluate(()=>localStorage.clear());await page.reload();
+  await page.getByLabel('输入图片').setInputFiles(path.resolve('../fixtures/p1/procedural/block.png'));
+  await page.getByRole('button',{name:'创建建模任务'}).click();expect(creates).toBe(0);
+  await page.getByLabel('目标高度',{exact:true}).fill('-1');
+  await page.getByRole('button',{name:'创建建模任务'}).click();expect(creates).toBe(0);
 });

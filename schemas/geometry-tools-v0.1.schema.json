@@ -765,6 +765,7 @@
           "enum": [
             "clean",
             "export",
+            "export_glb",
             "preview"
           ],
           "title": "Operation",
@@ -1537,6 +1538,7 @@
           "clean": "#/$defs/MeshCall",
           "confirm": "#/$defs/ConfirmCall",
           "export": "#/$defs/MeshCall",
+          "export_glb": "#/$defs/MeshCall",
           "import_image": "#/$defs/ImportCall",
           "inspect": "#/$defs/InspectCall",
           "measure_view": "#/$defs/MeasureCall",

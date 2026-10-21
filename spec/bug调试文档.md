@@ -1,5 +1,24 @@
 # Bug与约定问题记录
 
+## AUTO-BUG-001：GLB交付被后续人工等待和打印成功口径阻断
+
+- 2026-10-21，规则/状态/接口。用户要求一次提交自动完成，旧流程仍等待图片/姿态/结构/切片，公共succeeded仅代表可打印STL。直接删除成功校验会把打印失败包装通过；预期新增明确generation-v1完成口径，打印与生成独立，自动策略不冒充human，最多2轮且任何有效GLB均可交付。
+- 先固定4项新回归，首次4失败（缺自动策略配置），日志runs/automatic-glb-20261021-01/failing-baseline.txt；随后按版本化响应、自动图和固定前端逐项实现。
+
+## AUTO-BUG-002：可读报告只写succeeded容易误读为打印合格
+
+- 规则/接口。新JSON已有delivery_target和print_check，但原Markdown模板仅写状态和所选版本修复轮数，不能明确GLB完成口径及总尝试次数。固定2轮无改善样例新增断言，实际1失败/13未选，保存markdown-failure.txt；预期可读报告明确GLB完成、打印检查失败/未完整及真实修复尝试总数，不称实际打印通过。
+- 云端准备首次使用未配置的shell裸python失败，未执行准备/模型；改用既有backend/bin/python后通过，无新增安装。
+
+## AUTO-BUG-003：独立验证部署漏带Blender锁文件
+
+- 工具/部署。首次真实鸭子已快速重建/GLB交付/按钮下载，但inspect因deployments目录缺locks/linux-geometry-tools.json失败；打印标记not_run，未冒称通过。直接调用同版本检查取得FileNotFoundError，原报告保存result-before-inspection-fix.json。
+- 预期补齐原有锁文件和最新报告模板，在隔离验证任务的已有scale检查点接续检查/有限修复/交付，不重新生成或改写首次失败证据。固定和真实页面重读/下载分别复核；不把该部署错误归因于模型质量。
+
+## AUTO-BUG-004：跨任务回归错误修改冻结模型
+
+- 测试/接口。新增跨任务工具结果回归实际1失败/239通过/6跳过；初步怀疑结果归类，进一步核对发现替身直接给frozen=True的ToolResult赋值，尚未返回就抛出ValidationError，不是跨任务检测失效。保留foreign-result-failure.txt，按冻结契约用model_copy构造异任务结果，分别覆盖reconstruct和inspect的真实归属拒绝；生产归属检查代码保持原实现，不为错误测试新增业务兜底。
+
 ## FAST-BUG-001：纹理读回和简化后的外观丢失
 
 - 2026-10-21，工具/接口。原始TRELLIS.2的GLB有PBR纹理，但几何读回仅复制显式顶点色，Blender简化只返回顶点/面；处理PLY因而没有RGB。诊断预览还统一覆盖蓝色。预期原GLB完整保留，处理版采样底色并明确顶点色近似，不修改形状或伪造未提供的颜色。

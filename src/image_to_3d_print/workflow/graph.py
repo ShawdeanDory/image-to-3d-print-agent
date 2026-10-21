@@ -27,6 +27,9 @@ QUESTIONS = {'height': '目标高度是多少？', 'height_unit': '高度单位�
 
 
 def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_model=None):
+    if settings.workflow_policy=='automatic_glb':
+        from .automatic import build_generation_graph
+        return build_generation_graph(settings,store,checkpointer,tool_dispatch,language_model)
     llm = language_model or LanguageModel(settings.llm)
     root = store.root
     started = time.perf_counter()

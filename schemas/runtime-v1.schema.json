@@ -503,6 +503,204 @@
       "title": "EvidenceRecord",
       "type": "object"
     },
+    "GenerationDelivery": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "dimensions_mm": {
+          "items": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "title": "Dimensions Mm",
+          "type": "array"
+        },
+        "independent_readback": {
+          "const": true,
+          "title": "Independent Readback",
+          "type": "boolean"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "print_certified": {
+          "const": false,
+          "default": false,
+          "title": "Print Certified",
+          "type": "boolean"
+        },
+        "print_check": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_run"
+          ],
+          "title": "Print Check",
+          "type": "string"
+        },
+        "repair_attempts": {
+          "default": 0,
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Repair Attempts",
+          "type": "integer"
+        },
+        "warnings": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "mesh_version",
+        "independent_readback",
+        "print_check",
+        "dimensions_mm"
+      ],
+      "title": "GenerationDelivery",
+      "type": "object"
+    },
+    "GenerationTaskResponse": {
+      "additionalProperties": false,
+      "description": "GLB完成语义与公共1.0.0的打印成功语义分开。",
+      "properties": {
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRecord"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "data": {
+          "$ref": "#/$defs/TaskData"
+        },
+        "datasets": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Datasets",
+          "type": "array"
+        },
+        "delivery": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GenerationDelivery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorInfo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "events": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Events",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRecord"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "orientation_source": {
+          "default": "backend_z_up",
+          "enum": [
+            "user_parameter",
+            "backend_z_up"
+          ],
+          "title": "Orientation Source",
+          "type": "string"
+        },
+        "request_id": {
+          "format": "uuid",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "generation-v1",
+          "default": "generation-v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "waiting_for_input",
+            "cancel_requested",
+            "succeeded",
+            "failed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "task_id": {
+          "const": "image_to_3d_print",
+          "default": "image_to_3d_print",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "request_id",
+        "run_id",
+        "status",
+        "data"
+      ],
+      "title": "GenerationTaskResponse",
+      "type": "object"
+    },
     "ImageReviewInput": {
       "additionalProperties": false,
       "properties": {
@@ -1441,7 +1639,7 @@
     },
     "RuntimeTask": {
       "additionalProperties": false,
-      "description": "只用于扩展查询；普通查询仍返回原ModelTaskResponse。",
+      "description": "扩展查询；response依任务快照返回打印契约或generation-v1。",
       "properties": {
         "artifact_frames": {
           "patternProperties": {
@@ -1477,7 +1675,15 @@
           "type": "object"
         },
         "response": {
-          "$ref": "#/$defs/ModelTaskResponse"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ModelTaskResponse"
+            },
+            {
+              "$ref": "#/$defs/GenerationTaskResponse"
+            }
+          ],
+          "title": "Response"
         }
       },
       "required": [

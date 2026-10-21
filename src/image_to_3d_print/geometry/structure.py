@@ -142,7 +142,7 @@ def propose(root,run,version,request:StructureRequest,config=None):
     return record
 
 def confirm(root,run,proposal_id,reviewer,accepted,origin='human'):
-    if not reviewer or not isinstance(accepted,bool) or origin not in {'human','test_fixture'}:
+    if not reviewer or not isinstance(accepted,bool) or origin not in {'human','test_fixture','automatic_policy'}:
         raise ToolFailure('INVALID_ARGUMENT','必须提供实际复核人、布尔决定及来源')
     folder,record=_proposal(root,run,proposal_id)
     confirmation={'run_id':str(run),'proposal_id':proposal_id,'source_version':record.source_version,'reviewer':reviewer,

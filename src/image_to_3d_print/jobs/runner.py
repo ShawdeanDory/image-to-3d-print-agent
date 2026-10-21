@@ -33,7 +33,7 @@ def run_task(settings, run, parent_pid=None, parent_birth=None):
         ctx = row['context']
         config = {'configurable': {'thread_id': str(run)}, 'recursion_limit': 160}
         with SqliteSaver.from_conn_string(str(store.root / 'checkpoints.sqlite3')) as saver:
-            graph = build_graph(settings, store, saver)
+            graph = build_graph(settings.model_copy(update={'workflow_policy':ctx.get('workflow_policy','guided')}), store, saver)
             if ctx['status'] == 'waiting_for_input':
                 answer = store.pending_submission(run, ctx['pending']['pending_input_id'])
                 if answer is None and settings.input_review_policy=='automatic' and ctx['pending']['kind']=='input_review':

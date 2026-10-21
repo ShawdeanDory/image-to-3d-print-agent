@@ -32,6 +32,7 @@ class Settings(ContractModel):
     operator_name: Text = 'local_operator'
     confirmation_origin: Literal['human', 'test_fixture'] = 'human'
     input_review_policy: Literal['automatic', 'manual'] = 'automatic'
+    workflow_policy: Literal['guided','automatic_glb'] = 'guided'
     api_token_env: str = 'I3D_API_TOKEN'
     cors_origins: list[str] = Field(default_factory=list)
     llm: LLMConfig = Field(default_factory=LLMConfig)

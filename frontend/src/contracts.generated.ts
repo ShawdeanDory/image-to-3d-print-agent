@@ -149,6 +149,34 @@ export type ExperimentRecord = {
   "weights_revision"?: (string | null);
 };
 
+export type GenerationDelivery = {
+  "artifact_id": string;
+  "dimensions_mm": Array<number>;
+  "independent_readback": true;
+  "mesh_version": string;
+  "print_certified"?: false;
+  "print_check": "passed" | "failed" | "not_run";
+  "repair_attempts"?: number;
+  "warnings"?: Array<string>;
+};
+
+export type GenerationTaskResponse = {
+  "artifacts"?: Array<ArtifactRecord>;
+  "data": TaskData;
+  "datasets"?: Array<string>;
+  "delivery"?: (GenerationDelivery | null);
+  "error"?: (ErrorInfo | null);
+  "events"?: Array<string>;
+  "evidence"?: Array<EvidenceRecord>;
+  "orientation_source"?: "user_parameter" | "backend_z_up";
+  "request_id": string;
+  "run_id": string;
+  "schema_version"?: "generation-v1";
+  "status": "queued" | "running" | "waiting_for_input" | "cancel_requested" | "succeeded" | "failed" | "cancelled";
+  "task_id"?: "image_to_3d_print";
+  "warnings"?: Array<string>;
+};
+
 export type ImageReviewInput = {
   "complete_subject": boolean;
   "decision": "accepted" | "replace_image" | "uncertain";
@@ -292,7 +320,7 @@ export type RuntimeTask = {
   "artifact_frames"?: Record<string, "z_up" | "y_up">;
   "pending"?: (PendingInput | null);
   "resources"?: Record<string, unknown>;
-  "response": ModelTaskResponse;
+  "response": (ModelTaskResponse | GenerationTaskResponse);
 };
 
 export type SlicerConfirmation = {

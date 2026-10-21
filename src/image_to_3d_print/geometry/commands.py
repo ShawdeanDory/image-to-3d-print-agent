@@ -11,7 +11,7 @@ from ..tools import ToolSession,ToolFailure,ToolOutcome
 from ..image.assets import AssetStore,InputReview,AutomaticInputAcceptance
 from ..adapters.reconstruction import BackendConfig,ReconstructionAdapter
 from ..inspection.service import InspectionConfig,BedReview,ComponentReview,inspect_mesh,preview_mesh
-from ..artifacts.export import export_mesh
+from ..artifacts.export import export_mesh,export_preview
 from .core import MeshStore
 from .structure import StructureRequest,propose,confirm,apply_proposal
 from .view import measure_view
@@ -32,7 +32,7 @@ class ReconstructCall(Call):
     review:InputReview|AutomaticInputAcceptance
     reconstruction_profile:Literal['official','course_fast']|None=None
 class MeshCall(Call):
-    operation:Literal['clean','export','preview']
+    operation:Literal['clean','export','export_glb','preview']
     mesh_version:Id
 class ScaleCall(Call):
     operation:Literal['scale']
@@ -76,23 +76,23 @@ class ToolConfiguration(ContractModel):
         if any(key!=value.backend for key,value in self.backends.items()):raise ValueError('后端注册键与实际配置不一致，不能静默换模型')
         return self
 
-def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human',automatic_input=False):
+def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human',automatic_input=False,automatic_action=False):
     root=Path(root).resolve();command=COMMANDS.validate_python(command)
     store=MeshStore(root);assets=AssetStore(root);op=command.operation;run=command.run_id
-    tool_name={'import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
+    tool_name={'import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
     # 包装只有原子返回值的资产/提案接口；已有ToolOutcome直接返回。
     session=None
     try:
-        if confirmation_origin not in {'human','test_fixture'}:
+        if confirmation_origin not in {'human','test_fixture','automatic_policy'} or (confirmation_origin=='automatic_policy' and not automatic_action):
             raise ToolFailure('INVALID_ARGUMENT','服务端确认来源无效')
-        if op=='confirm' and human_action is not True:
+        if op=='confirm' and human_action is not True and not (automatic_action and confirmation_origin=='automatic_policy'):
             raise ToolFailure('STATE_CONFLICT','结构修改确认只能由已核对当前等待项的人工接口提交，不能由模型工具自行批准')
         if op=='reconstruct' and isinstance(command.review,AutomaticInputAcceptance) and automatic_input is not True:
             raise ToolFailure('STATE_CONFLICT','自动图片继续仅允许服务端已启用的政策调用')
         needs_confirmation=(op=='reconstruct' and isinstance(command.review,InputReview) and command.review.decision=='accepted' or
             op=='scale' and not command.request.pending_inputs or
             op=='inspect' and any(review is not None and review.confirmed for review in [command.bed_review,command.component_review]))
-        if needs_confirmation and human_action is not True:
+        if needs_confirmation and human_action is not True and not (automatic_action and confirmation_origin=='automatic_policy'):
             raise ToolFailure('STATE_CONFLICT','图片、姿态或打印复核须由服务端核对实际人工输入后调用，模型不能自行声明已确认')
         if op=='import_image':
             session=ToolSession(root,run,tool_name)
@@ -109,10 +109,11 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
                 if config is None:raise ToolFailure('MODEL_NOT_CONFIGURED','所选后端没有配置，不自动换模型')
                 config=BackendConfig.model_validate({**config.model_dump(),'inference_profile':command.reconstruction_profile})
             return ReconstructionAdapter(root,config).reconstruct(run,prepared,command.review,cancel_event,automatic_input=automatic_input)
-        if op=='clean':return store.clean(run,command.mesh_version)
-        if op=='scale':return store.scale(run,command.mesh_version,command.request)
-        if op=='inspect':return inspect_mesh(root,run,command.mesh_version,command.profile,command.height_mm,command.bed_review,configuration.inspection,command.component_review)
+        if op=='clean':return store.clean(run,command.mesh_version,count_repair_round=not automatic_action)
+        if op=='scale':return store.scale(run,command.mesh_version,command.request,automatic_orientation=automatic_action)
+        if op=='inspect':return inspect_mesh(root,run,command.mesh_version,command.profile,command.height_mm,command.bed_review,configuration.inspection,command.component_review,automatic_bed=automatic_action)
         if op=='export':return export_mesh(root,run,command.mesh_version)
+        if op=='export_glb':return export_preview(root,run,command.mesh_version)
         if op=='preview':return preview_mesh(root,run,command.mesh_version,configuration.inspection)
         if op=='measure_view':return measure_view(root,run,command.mesh_version,command.mask_path,command.backend,configuration.view_mappings.get(command.backend))
         if op=='apply':return apply_proposal(root,run,command.proposal_id)

@@ -112,8 +112,9 @@ def _large_topology(mesh):
         'non_manifold_edge_count':int(np.sum(counts>2)),'non_manifold_vertex_count':len(bad),'non_manifold_vertices':bad.tolist(),
         'dimensions':mesh.extents.tolist(),'volume':float(volumes.sum()) if watertight and normals else None}
 
-def orient_and_scale(mesh,request:ModelTaskRequest):
-    if request.pending_inputs:
+def orient_and_scale(mesh,request:ModelTaskRequest,*,automatic_orientation=False):
+    pending=[p for p in request.pending_inputs if not (p=='orientation' and automatic_orientation)]
+    if pending:
         raise ToolFailure('INVALID_ARGUMENT','先确认高度、单位、尺度来源和朝上方向：'+','.join(request.pending_inputs))
     axis=request.orientation.up_axis
     source=np.zeros(3);source['xyz'.index(axis[-1])]=-1 if axis.startswith('-') else 1
@@ -167,7 +168,7 @@ class MeshStore:
             return record
         except (OSError,ValueError) as exc:raise ToolFailure('STATE_CONFLICT','版本不存在、归属不符或原始文件被修改') from exc
 
-    def clean(self,run,version):
+    def clean(self,run,version,*,count_repair_round=True):
         session=ToolSession(self.root,run,'repair',version)
         try:
             source=self.get(run,version)
@@ -178,14 +179,15 @@ class MeshStore:
             if not len(mesh.faces):raise ToolFailure('INVALID_ARGUMENT','清理后为空网格')
             trimesh.repair.fix_normals(mesh,multibody=True)
             result=self._write(run,mesh,source.unit,'basic_clean',version,
-                {'duplicate_and_degenerate_faces_removed':before['face_count']-len(mesh.faces),'normals_repaired':True},source.repair_round+1)
+                {'duplicate_and_degenerate_faces_removed':before['face_count']-len(mesh.faces),'normals_repaired':True,
+                 'scope':'repair' if count_repair_round else 'preprocessing'},source.repair_round+int(count_repair_round))
             session.mesh_version=result.mesh_version
             artifact=session.add('mesh',self.root/result.relative_path,'repaired_mesh',source.unit)
             return session.finish({'mesh_version':result.mesh_version,'parent':version,'before':before,'after':topology(mesh),
                 'version_record':result.model_dump(mode='json'),'mesh_artifact_id':artifact.artifact_id})
         except ToolFailure as exc:return session.fail(exc.code,str(exc))
 
-    def scale(self,run,version,request:ModelTaskRequest):
+    def scale(self,run,version,request:ModelTaskRequest,*,automatic_orientation=False):
         session=ToolSession(self.root,run,'repair',version)
         try:
             source=self.get(run,version);mesh=load_mesh(self.root/source.relative_path)
@@ -193,10 +195,11 @@ class MeshStore:
             while original.parent is not None:original=self.get(run,original.parent)
             asset_id=original.parameters.get('input_asset_id')
             if asset_id is not None and request.image_asset_id!=asset_id:raise ToolFailure('STATE_CONFLICT','定标约束不属于本次重建图片')
-            output,matrix=orient_and_scale(mesh,request)
+            output,matrix=orient_and_scale(mesh,request,automatic_orientation=automatic_orientation)
             result=self._write(run,output,'mm','orient_scale_place',version,
                 {'matrix':matrix,'height_mm':request.height_mm,'scale_source':request.scale_source,
                  'scale_evidence_id':request.scale_evidence_id,'orientation':request.orientation.model_dump(),
+                 'orientation_policy':'automatic_policy' if automatic_orientation else 'confirmed_input',
                  'printer_profile_id':request.printer_profile_id},source.repair_round)
             session.mesh_version=result.mesh_version
             session.add('mesh',self.root/result.relative_path,'repaired_mesh','mm')

@@ -60,7 +60,7 @@ def blender_call(config,operation,mesh,directory,parameters=None):
         return result
     except (OSError,ValueError,KeyError) as exc:raise ToolFailure('TOOL_UNAVAILABLE','Blender返回缺失或无效证据') from exc
 
-def inspect_mesh(root,run,version,profile:PrinterProfile,height_mm=None,bed_review:BedReview|None=None,config=None,component_review:ComponentReview|None=None):
+def inspect_mesh(root,run,version,profile:PrinterProfile,height_mm=None,bed_review:BedReview|None=None,config=None,component_review:ComponentReview|None=None,*,automatic_bed=False):
     session=ToolSession(root,run,'inspect',version)
     try:
         source=MeshStore(root).get(run,version);mesh=load_mesh(Path(root)/source.relative_path);facts=topology(mesh)
@@ -113,9 +113,10 @@ def inspect_mesh(root,run,version,profile:PrinterProfile,height_mm=None,bed_revi
             area=float(mesh.area_faces[touch].sum())
             positioned=abs(low)<=.01 and area>1e-6
             human=bed_review is not None and bed_review.mesh_version==version and bed_review.confirmed
-            check('bed_contact','pass' if positioned and human else 'warn' if positioned else 'fail',positioned,.01,'mm',
+            check('bed_contact','pass' if positioned and (human or automatic_bed) else 'warn' if positioned else 'fail',positioned,.01,'mm',
                 {'contact_area_mm2':area,'minimum_z_mm':low,'human_review':bed_review.model_dump() if bed_review else None,
-                 'reason':'接触面积不等同稳定；需用户复核底面和支撑'})
+                 'origin':'automatic_policy' if automatic_bed else 'guided',
+                 'reason':'自动几何触地检测；未执行实际切片/打印稳定性验证' if automatic_bed else '接触面积不等同稳定；需用户复核底面和支撑'})
         volume=facts['volume'] if source.unit=='mm' and external is not None and not external['self_intersection_faces'] else None
         inspection=MeshInspection(mesh_version=version,unit=source.unit,dimensions_mm=dimensions,
             volume_mm3=volume,volume_reason=None if volume is not None else '缺有效毫米实体、自交检查或方向证据',

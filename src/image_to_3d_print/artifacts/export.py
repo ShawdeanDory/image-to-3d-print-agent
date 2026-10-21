@@ -30,3 +30,23 @@ def export_mesh(root,run,version):
             'task_success':False})
     except ToolFailure as exc:return session.fail(exc.code,str(exc))
     except (OSError,ValueError) as exc:return session.fail('INVALID_ARGUMENT','导出失败：'+str(exc)[:200])
+
+
+def export_preview(root,run,version):
+    """有效几何始终可以交付GLB；不生成或认证可打印STL。"""
+    session=ToolSession(root,run,'export',version)
+    try:
+        source=MeshStore(root).get(run,version);mesh=load_mesh(Path(root)/source.relative_path)
+        if source.unit!='mm':raise ToolFailure('INVALID_ARGUMENT','GLB交付需要明确的毫米尺度')
+        rotation=np.array([[1,0,0],[0,0,1],[0,-1,0]])
+        visual=mesh.copy();visual.vertices=(visual.vertices@rotation.T)*.001
+        glb=session.directory/'model.glb';visual.export(glb)
+        reread=load_mesh(glb);reread.vertices=(reread.vertices*1000)@rotation
+        if not np.allclose(mesh.extents,reread.extents,atol=max(.01,float(mesh.extents.max())*1e-5),rtol=0):
+            raise ToolFailure('INVALID_ARGUMENT','GLB独立重读尺寸不一致')
+        artifact=session.add('glb',glb,'repaired_mesh')
+        return session.finish({'mesh_version':version,'artifact_id':artifact.artifact_id,'independent_readback':True,
+            'dimensions_mm':mesh.extents.tolist(),'artifact_frames':{artifact.artifact_id:'y_up'},
+            'source_sha256':source.sha256,'print_certified':False})
+    except ToolFailure as exc:return session.fail(exc.code,str(exc))
+    except (OSError,ValueError) as exc:return session.fail('INVALID_ARGUMENT','GLB导出或读回失败')

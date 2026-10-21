@@ -1,10 +1,11 @@
 {
   "root": "/root/autodl-tmp/image-to-3d-print-agent/runs/agent-application",
-  "default_backend": "triposr",
+  "default_backend": "trellis2_candidate",
   "background_backend": "trellis2_candidate",
   "operator_name": "course_operator",
   "confirmation_origin": "human",
   "input_review_policy": "automatic",
+  "workflow_policy": "automatic_glb",
   "profile_files": ["/root/autodl-tmp/image-to-3d-print-agent/deployments/official-20261021-01/fixtures/p1/printer_profile.json"],
   "tools": {
     "backends": {

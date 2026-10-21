@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from ..jobs.config import Settings
 from ..jobs.service import TaskService, INPUTS
-from ..runtime_contracts import CreateTask, Submission, RuntimeTask, PendingInput, EventsPage
+from ..runtime_contracts import CreateTask, Submission, RuntimeTask, PendingInput, EventsPage, GenerationTaskResponse
 from ..schemas.task import ModelTaskRequest, ModelTaskResponse
 from ..schemas.common import Id
 from ..schemas.validation import resolve_artifact_path
@@ -40,7 +40,8 @@ def create_app(settings=None):
             'llm_configured': settings.llm.configured, 'llm_model': settings.llm.model,
             'confirmation_origin': settings.confirmation_origin,
             'input_review_policy': settings.input_review_policy,
-            'backend_profiles':{name:['official','course_fast'] if name=='trellis2_candidate' else ['official'] for name in settings.tools.backends},
+            'workflow_policy':settings.workflow_policy,
+            'backend_profiles':{name:['course_fast'] if name=='trellis2_candidate' and settings.workflow_policy=='automatic_glb' else ['official','course_fast'] if name=='trellis2_candidate' else ['official'] for name in settings.tools.backends},
             'worker_concurrency': 1, 'active_timeout_s': settings.active_timeout_s,
             'max_tool_calls': settings.max_tool_calls, 'max_llm_calls': 4, 'max_llm_tokens': 12000}
 
@@ -60,12 +61,12 @@ def create_app(settings=None):
             return service.assets.save(payload, file.filename)
         finally: await file.close()
 
-    @app.post('/api/v1/model-tasks', status_code=202, response_model=ModelTaskResponse)
+    @app.post('/api/v1/model-tasks', status_code=202, response_model=ModelTaskResponse|GenerationTaskResponse)
     def create(body: CreateTask | ModelTaskRequest,
             idempotency_key: Annotated[str | None, Header(min_length=1, max_length=128)] = None):
         return service.create(body, idempotency_key)
 
-    @app.get('/api/v1/model-tasks/{run_id}', response_model=ModelTaskResponse)
+    @app.get('/api/v1/model-tasks/{run_id}', response_model=ModelTaskResponse|GenerationTaskResponse)
     def get(run_id: UUID): return service.store.row(run_id)['response']
 
     @app.get('/api/v1/model-tasks/{run_id}/runtime', response_model=RuntimeTask)
@@ -86,17 +87,17 @@ def create_app(settings=None):
         entries = service.store.events(run_id, after, limit)
         return {'events': entries, 'next_after': entries[-1]['event_id'] if entries else after}
 
-    @app.post('/api/v1/model-tasks/{run_id}/inputs', status_code=202, response_model=ModelTaskResponse)
+    @app.post('/api/v1/model-tasks/{run_id}/inputs', status_code=202, response_model=ModelTaskResponse|GenerationTaskResponse)
     def inputs(run_id: UUID, body: Submission):
         if body.kind == 'slicer': raise ToolFailure('INVALID_ARGUMENT', '切片结果请使用专用确认接口')
         return service.submit(run_id, body)
 
-    @app.post('/api/v1/model-tasks/{run_id}/slicer-confirmation', status_code=202, response_model=ModelTaskResponse)
+    @app.post('/api/v1/model-tasks/{run_id}/slicer-confirmation', status_code=202, response_model=ModelTaskResponse|GenerationTaskResponse)
     def slicer(run_id: UUID, body: Submission):
         if body.kind != 'slicer': raise ToolFailure('INVALID_ARGUMENT', '此接口仅接收切片确认')
         return service.submit(run_id, body)
 
-    @app.post('/api/v1/model-tasks/{run_id}/cancel', response_model=ModelTaskResponse)
+    @app.post('/api/v1/model-tasks/{run_id}/cancel', response_model=ModelTaskResponse|GenerationTaskResponse)
     def cancel(run_id: UUID): return service.cancel(run_id)
 
     @app.get('/api/v1/model-tasks/{run_id}/artifacts/{artifact_id}')

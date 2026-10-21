@@ -1,5 +1,11 @@
 # 造物工坊前端
 
+## 当前默认交互
+
+云端配置workflow_policy=automatic_glb，默认TRELLIS.2课程快速。图片与正高度/单位/来源一次提交，无生成模式选择、方向复核勾选或中途确认。后台最多2轮受控修复；打印检查未通过仍可完成GLB生成，实际结论单列。生成后显示“下载GLB”，仅点击时下载，完成/刷新不自动下载。
+
+最新固定浏览器回归使用tests/frontend/serve_fixture.py --workflow-policy automatic_glb，运行tests/fast-profile.spec.ts；真实API/CPU几何与显式模型/Blender替身分开。历史guided页面和回归仅用于旧任务，不能作为新用户路径验收。新真实模型页面验证入口tests/automatic-real.mjs需显式I3D_AUTO_REAL_BROWSER=1且使用隔离云端存储，见[当前报告](../doc/一次提交自动生成与GLB交付.md)。
+
 React/TypeScript/Vite与Three.js。默认连接真实API，不内置模拟进度或演示模型。模型、报告和确认均引用同一任务登记的产物。
 
 ## 启动
@@ -33,7 +39,7 @@ npm.cmd run test:browser
 浏览器回归使用本机Edge和Playwright配套FFmpeg。先在根目录启动固定服务：
 
 ```powershell
-runtime/envs/backend/Scripts/python.exe tests/frontend/serve_fixture.py --root runs/新的浏览器验证目录
+runtime/envs/backend/Scripts/python.exe tests/frontend/serve_fixture.py --root runs/新的浏览器验证目录 --workflow-policy automatic_glb
 ```
 
 另一个终端启动前端，目标设为该测试API：

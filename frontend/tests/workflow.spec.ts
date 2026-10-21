@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const root=path.resolve('..');const image=path.join(root,'fixtures/p1/procedural/block.png');
 const evidence=path.resolve(process.env.I3D_BROWSER_EVIDENCE_DIR||path.join(root,'runs/mid-frontend-20261021-01'));
+test.skip(process.env.I3D_GUIDED_BROWSER!=='1','历史人工流程仅对guided配置执行；当前默认路径由fast-profile.spec.ts验证');
 test.beforeEach(async({page})=>{await page.goto('/');await page.evaluate(()=>localStorage.clear());await page.reload();});
 test.afterEach(async({page})=>{await page.goto('about:blank');});
 test('真实API与CPU工具fixture：缺尺度、刷新、确认、修复预览、下载和切片失败',async({page})=>{

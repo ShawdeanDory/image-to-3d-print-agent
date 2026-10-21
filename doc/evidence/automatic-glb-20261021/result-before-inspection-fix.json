@@ -1,0 +1,111 @@
+{
+  "run_id": "363a7e0f-8202-4586-a61f-f87e4510a9d1",
+  "status": "succeeded",
+  "response_schema": "generation-v1",
+  "workflow_policy": "automatic_glb",
+  "input_sha256": "1d6ac093c18648fc9568f58e310db3d1666d942cb0a2ea36b21be8384993f4ff",
+  "active_seconds": 183.5182005316019,
+  "delivery": {
+    "artifact_id": "t_7f63ba56c10848aa_glb",
+    "mesh_version": "m_f5a64fa37bf64f81af3f1abd",
+    "independent_readback": true,
+    "print_check": "not_run",
+    "print_certified": false,
+    "repair_attempts": 0,
+    "dimensions_mm": [
+      125.95899963378906,
+      99.70716094970703,
+      100.0
+    ],
+    "warnings": [
+      "打印检查未完整执行：工具输入或文件引用无效",
+      "GLB已生成；打印检查未通过或未完整执行，不能作为打印合格证明。"
+    ]
+  },
+  "pending": null,
+  "human_reviews": [],
+  "submitted_confirmations": 0,
+  "repair_log": [],
+  "operations": [
+    "prepare_image",
+    "reconstruct",
+    "clean",
+    "scale",
+    "inspect",
+    "export_glb"
+  ],
+  "model": {
+    "additional_downsampling": false,
+    "appearance": {
+      "original": "pbr_glb",
+      "processed": "vertex_base_color_approximation"
+    },
+    "backend": "trellis2_candidate",
+    "cuda_runtime": "12.4",
+    "device": "NVIDIA GeForce RTX 4090 D",
+    "face_count": 98994,
+    "geometry_frame": "z_up",
+    "geometry_source": "fast_export_readback",
+    "inference_profile": "course_fast",
+    "input_dimensions": [
+      910,
+      609
+    ],
+    "input_file": "original.jpg",
+    "mode": "reconstruct",
+    "official_entry": null,
+    "official_export_frame": "y_up",
+    "parameters": {
+      "decimation_target": 100000,
+      "official_pbr_video": false,
+      "pipeline_type": "1024_cascade",
+      "remesh": true,
+      "remesh_band": 1,
+      "remesh_project": 0,
+      "seed": 42,
+      "texture_size": 2048
+    },
+    "peak_allocated_mib": 5302.650390625,
+    "peak_reserved_mib": 5928.0,
+    "seconds": {
+      "geometry_uv_texture_export": 25.678070414811373,
+      "independent_readback": 0.2734593003988266,
+      "inference": 43.532667368650436,
+      "load_and_prepare": 98.54327992349863,
+      "native_export": 0.9458535686135292,
+      "preprocess": 1.1794769018888474,
+      "total": 170.15280747786164
+    },
+    "seed": 42,
+    "timing_scope": "CUDA synchronized, disjoint stages; UV/remesh/baking combined inside upstream to_glb; no video; process startup separately recorded",
+    "torch": "2.6.0+cu124",
+    "upstream_library": "trellis2.pipelines + o_voxel.postprocess.to_glb",
+    "vertex_count": 56465
+  },
+  "geometry": {
+    "vertex_count": 49504,
+    "face_count": 98994,
+    "component_count": 2,
+    "watertight": false,
+    "normals_consistent": true,
+    "boundary_edge_count": 18,
+    "non_manifold_edge_count": 0,
+    "non_manifold_vertex_count": 0,
+    "non_manifold_vertices": [],
+    "dimensions": [
+      0.12595900148153305,
+      0.10000000149011612,
+      0.09970716014504433
+    ],
+    "volume": null
+  },
+  "visual_kind": "vertex",
+  "color_range": [
+    251,
+    233,
+    215
+  ],
+  "inspection": null,
+  "llm_calls": 0,
+  "independent_glb_bytes": 1980988
+}

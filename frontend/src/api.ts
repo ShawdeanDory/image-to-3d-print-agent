@@ -1,4 +1,4 @@
-import type { RuntimeTask, EventsPage, ModelTaskResponse, ModelTaskRequest, AssetRecord, PrinterProfile } from './contracts.generated';
+import type { RuntimeTask, EventsPage, ModelTaskResponse, GenerationTaskResponse, ModelTaskRequest, AssetRecord, PrinterProfile } from './contracts.generated';
 
 export interface Capabilities {
   schema_version: 'runtime-v1'; default_backend: string | null; configured_backends: string[];
@@ -6,6 +6,7 @@ export interface Capabilities {
   confirmation_origin: 'human' | 'test_fixture'; worker_concurrency: number;
   input_review_policy?: 'automatic' | 'manual';
   backend_profiles?: Record<string, ('official'|'course_fast')[]>;
+  workflow_policy?: 'guided'|'automatic_glb';
 }
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) { super(message); }
@@ -33,11 +34,11 @@ export const api = {
   profiles: () => request<PrinterProfile[]>(`${base}/printer-profiles`),
   runtime: (id: string) => request<RuntimeTask>(`${taskUrl(id)}/runtime`),
   events: (id: string, after: number) => request<EventsPage>(`${taskUrl(id)}/events?after=${after}&limit=200`),
-  create: (body: ModelTaskRequest, backend: string, key: string, profile?: string) => request<ModelTaskResponse>(`${base}/model-tasks`, {
+  create: (body: ModelTaskRequest, backend: string, key: string, profile?: string) => request<ModelTaskResponse|GenerationTaskResponse>(`${base}/model-tasks`, {
     method: 'POST', headers: {'Content-Type':'application/json', 'Idempotency-Key':key}, body: JSON.stringify({request:body, backend,...(profile?{reconstruction_profile:profile}:{})}) }),
-  input: (id: string, body: Record<string, unknown>, slicer = false) => request<ModelTaskResponse>(`${taskUrl(id)}/${slicer ? 'slicer-confirmation' : 'inputs'}`, {
+  input: (id: string, body: Record<string, unknown>, slicer = false) => request<ModelTaskResponse|GenerationTaskResponse>(`${taskUrl(id)}/${slicer ? 'slicer-confirmation' : 'inputs'}`, {
     method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) }),
-  cancel: (id: string) => request<ModelTaskResponse>(`${taskUrl(id)}/cancel`, {method:'POST'}),
+  cancel: (id: string) => request<ModelTaskResponse|GenerationTaskResponse>(`${taskUrl(id)}/cancel`, {method:'POST'}),
   upload: async (file: File, query = '') => {
     const data = new FormData(); data.append('file',file);
     return request<AssetRecord | {asset:AssetRecord;artifact:{artifact_id:string}}>(`${base}/assets${query}`, {method:'POST',body:data});

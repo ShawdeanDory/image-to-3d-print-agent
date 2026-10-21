@@ -13,8 +13,13 @@ def response_for(ctx):
         'artifacts': [a['artifact_id'] for a in ctx['artifacts']],
         'checks': (ctx.get('inspection') or {}).get('checks', []),
         'warnings': ctx.get('warnings', []), 'error': ctx.get('error')}
-    result = ModelTaskResponse.model_validate({
-        'request_id': ctx['run_id'], 'run_id': ctx['run_id'], 'status': ctx['status'],
+    automatic=ctx.get('workflow_policy')=='automatic_glb'
+    if automatic:
+        from ..runtime_contracts import GenerationTaskResponse
+    cls=GenerationTaskResponse if automatic else ModelTaskResponse
+    extra={'schema_version':'generation-v1','delivery':ctx.get('delivery'),'orientation_source':ctx.get('orientation_source','backend_z_up')} if automatic else {}
+    result = cls.model_validate({
+        **extra,'request_id': ctx['run_id'], 'run_id': ctx['run_id'], 'status': ctx['status'],
         'data': {'request': ctx['request'], 'state': state, 'printer_profile': ctx['profile'],
             'inspection': ctx.get('inspection'), 'slicer_confirmation': ctx.get('slicer_confirmation')},
         'artifacts': ctx['artifacts'], 'evidence': ctx['evidence'],

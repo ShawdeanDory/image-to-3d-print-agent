@@ -19,8 +19,9 @@ from image_to_3d_print.jobs.service import TaskService
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--root',type=Path,required=True);parser.add_argument('--port',type=int,default=8001)
     parser.add_argument('--input-policy',choices=['manual','automatic'],default='manual')
+    parser.add_argument('--workflow-policy',choices=['guided','automatic_glb'],default='guided')
     args=parser.parse_args()
-    settings=Settings(root=args.root.resolve(),default_backend='triposr',confirmation_origin='test_fixture',input_review_policy=args.input_policy,
+    settings=Settings(root=args.root.resolve(),default_backend='triposr',confirmation_origin='test_fixture',input_review_policy=args.input_policy,workflow_policy=args.workflow_policy,
         operator_name='browser_test_fixture',profile_files=[ROOT/'fixtures/p1/printer_profile.json'])
     app=create_app(settings);service=app.state.service;patch=MonkeyPatch();tools=FixtureTools(patch,mesh='open_cube.obj')
     def worker():

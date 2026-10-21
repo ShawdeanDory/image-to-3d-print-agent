@@ -40,6 +40,14 @@ class TaskService:
     def create(self, body, key=None):
         create = body if isinstance(body, CreateTask) else CreateTask(request=body)
         req = create.request
+        automatic=self.settings.workflow_policy=='automatic_glb'
+        if automatic and any(k!='orientation' for k in req.pending_inputs):
+            raise ToolFailure('INVALID_ARGUMENT','首次提交请填完整高度、单位和尺度来源')
+        if automatic and create.reconstruction_profile=='official' and (create.backend or self.settings.default_backend)=='trellis2_candidate':
+            raise ToolFailure('INVALID_ARGUMENT','新任务仅使用快速生成，不再提供模式选择')
+        orientation_source='user_parameter' if req.orientation.up_axis is not None else 'backend_z_up'
+        if automatic and req.orientation.up_axis is None:
+            req=ModelTaskRequest.model_validate({**req.model_dump(),'orientation':{'up_axis':'z','confirmed':False}})
         self.assets.get(req.image_asset_id)
         measurements = set()
         if req.scale_source == 'measured_object':
@@ -51,6 +59,9 @@ class TaskService:
         ctx = initial_context(uuid4(), req.model_dump(mode='json'), profile.model_dump(mode='json'),
             create.backend or self.settings.default_backend)
         ctx['reconstruction_profile']=create.reconstruction_profile
+        ctx['workflow_policy']=self.settings.workflow_policy
+        ctx['orientation_source']=orientation_source
+        if automatic and ctx['backend']=='trellis2_candidate':ctx['reconstruction_profile']='course_fast'
         ctx['evidence_origin'] = 'test_fixture' if self.settings.confirmation_origin == 'test_fixture' else 'runtime'
         if measurements: self.measurement(ctx, req.scale_evidence_id)
         create_body=create.model_dump(mode='json')

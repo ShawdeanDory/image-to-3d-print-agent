@@ -1,0 +1,36 @@
+{
+  "download_matches_registered_sha256": true,
+  "downloaded_dimensions_mm_z_up": [
+    125.95900148153305,
+    99.70716014504433,
+    100.00000149011612
+  ],
+  "vertex_colors": "vertex",
+  "production_configuration": {
+    "schema_version": "runtime-v1",
+    "default_backend": "trellis2_candidate",
+    "configured_backends": [
+      "triposr",
+      "trellis2_candidate"
+    ],
+    "inspection_configured": true,
+    "llm_configured": true,
+    "llm_model": "deepseek-flash",
+    "confirmation_origin": "human",
+    "input_review_policy": "automatic",
+    "workflow_policy": "automatic_glb",
+    "backend_profiles": {
+      "triposr": [
+        "official"
+      ],
+      "trellis2_candidate": [
+        "course_fast"
+      ]
+    },
+    "worker_concurrency": 1,
+    "active_timeout_s": 1800.0,
+    "max_tool_calls": 32,
+    "max_llm_calls": 4,
+    "max_llm_tokens": 12000
+  }
+}
