@@ -1,0 +1,291 @@
+{
+  "kind": "cpu_measurement_validation",
+  "python": "3.11.17",
+  "platform": "Linux",
+  "runtime": {
+    "numpy": "1.26.4",
+    "trimesh": "4.0.5",
+    "Pillow": "10.1.0",
+    "pydantic": "2.12.5",
+    "pytest": "8.4.2"
+  },
+  "cases": [
+    {
+      "case": "cube",
+      "metric": {
+        "name": "silhouette_iou",
+        "status": "measured",
+        "value": 1.0,
+        "unit": "ratio",
+        "reason": null
+      },
+      "geometry": {
+        "vertex_count": 36,
+        "face_count": 12,
+        "original_extents": [
+          10.0,
+          10.0,
+          10.0
+        ],
+        "center_after_rotation": [
+          0.0,
+          0.0,
+          5.0
+        ],
+        "isotropic_scale": 0.2,
+        "rotation": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "unit": "unitless",
+        "rasterizer": "Pillow_integer_triangle_union",
+        "scene_transforms": "applied_by_trimesh"
+      },
+      "seconds": 0.23017413541674614,
+      "source_sha256": "77f5bfec19d7d7871c2c98f960d5e9d35d0d3ec445b67bb500f6326354793cf1",
+      "source_unchanged": true,
+      "root_kind": "staged",
+      "report": "results-final/cube/report.json",
+      "role": "fixture_or_existing_diagnostic"
+    },
+    {
+      "case": "components",
+      "metric": {
+        "name": "silhouette_iou",
+        "status": "measured",
+        "value": 1.0,
+        "unit": "ratio",
+        "reason": null
+      },
+      "geometry": {
+        "vertex_count": 16,
+        "face_count": 24,
+        "original_extents": [
+          30.0,
+          10.0,
+          10.0
+        ],
+        "center_after_rotation": [
+          15.0,
+          5.0,
+          5.0
+        ],
+        "isotropic_scale": 0.06666666666666667,
+        "rotation": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "unit": "unitless",
+        "rasterizer": "Pillow_integer_triangle_union",
+        "scene_transforms": "applied_by_trimesh"
+      },
+      "seconds": 0.013879884034395218,
+      "source_sha256": "3a3008929738d0a2cf1486ed3ba0349dd468848ef67a6b637c006ce6eb4f5d0d",
+      "source_unchanged": true,
+      "root_kind": "staged",
+      "report": "results-final/components/report.json",
+      "role": "fixture_or_existing_diagnostic"
+    },
+    {
+      "case": "hamburger",
+      "metric": {
+        "name": "silhouette_iou",
+        "status": "not_run",
+        "value": null,
+        "unit": "ratio",
+        "reason": "backend_to_input_mapping_unverified"
+      },
+      "geometry": {
+        "vertex_count": 13404,
+        "face_count": 26699,
+        "original_extents": [
+          0.9084474742412567,
+          0.9155091643333435,
+          0.49039310216903687
+        ],
+        "center_after_rotation": [
+          -0.0022547096014022827,
+          -0.0014193952083587646,
+          0.021840959787368774
+        ],
+        "isotropic_scale": 2.1845767119724706,
+        "rotation": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "unit": "unitless",
+        "rasterizer": "Pillow_integer_triangle_union",
+        "scene_transforms": "applied_by_trimesh"
+      },
+      "seconds": 0.37135976925492287,
+      "source_sha256": "d094110ac091a8d341213463bd85ad285b0a1f61a1724951a587ad088dca26ea",
+      "source_unchanged": true,
+      "root_kind": "existing_project",
+      "report": "runs/cpu-measurement-20261021-01/results-final/hamburger/report.json",
+      "role": "fixture_or_existing_diagnostic"
+    },
+    {
+      "case": "robot",
+      "metric": {
+        "name": "silhouette_iou",
+        "status": "not_run",
+        "value": null,
+        "unit": "ratio",
+        "reason": "backend_to_input_mapping_unverified"
+      },
+      "geometry": {
+        "vertex_count": 19111,
+        "face_count": 38049,
+        "original_extents": [
+          0.7118135690689087,
+          0.9704296588897705,
+          0.9965932965278625
+        ],
+        "center_after_rotation": [
+          0.02007979154586792,
+          0.0010364055633544922,
+          -0.001383453607559204
+        ],
+        "isotropic_scale": 2.006836697545541,
+        "rotation": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "unit": "unitless",
+        "rasterizer": "Pillow_integer_triangle_union",
+        "scene_transforms": "applied_by_trimesh"
+      },
+      "seconds": 0.49520451575517654,
+      "source_sha256": "18bf3ccc244a42cf7dcdb11b549fbbfd84095e8be251cf33c101a86fec97637c",
+      "source_unchanged": true,
+      "root_kind": "existing_project",
+      "report": "runs/cpu-measurement-20261021-01/results-final/robot/report.json",
+      "role": "fixture_or_existing_diagnostic"
+    },
+    {
+      "case": "official_t",
+      "metric": {
+        "name": "silhouette_iou",
+        "status": "not_run",
+        "value": null,
+        "unit": "ratio",
+        "reason": "input_mask_unavailable_and_mapping_unverified"
+      },
+      "geometry": {
+        "vertex_count": 801210,
+        "face_count": 965545,
+        "original_extents": [
+          1.0019636750221252,
+          0.3809928297996521,
+          0.919523686170578
+        ],
+        "center_after_rotation": [
+          4.380941390991211e-06,
+          0.0018844902515411377,
+          0.008918985724449158
+        ],
+        "isotropic_scale": 1.9960803468806754,
+        "rotation": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "unit": "unitless",
+        "rasterizer": "Pillow_integer_triangle_union",
+        "scene_transforms": "applied_by_trimesh"
+      },
+      "seconds": 9.976260665804148,
+      "source_sha256": "c9e9ae6cf21e6ba431f2585035e729b6153e145eaa235500e449c9b7edfd78f2",
+      "source_unchanged": true,
+      "root_kind": "existing_project",
+      "report": "runs/cpu-measurement-20261021-01/results-final/official_t/report.json",
+      "role": "environment_only"
+    }
+  ],
+  "source_fixture_camera": {
+    "location": [
+      3,
+      -4,
+      3
+    ],
+    "target": [
+      0,
+      0,
+      0
+    ],
+    "orthographic_scale": 3.6
+  },
+  "backend_mapping_status": "unverified_requires_development_calibration",
+  "cuda_visible_devices": "",
+  "torch_imported": false,
+  "model_generated": false,
+  "evaluation_executed": false,
+  "holdout_executed": false,
+  "peak_rss_kib": 1018344,
+  "seconds": 11.320024274289608,
+  "gpu_at_end": "0 MiB"
+}

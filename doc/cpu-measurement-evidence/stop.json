@@ -1,0 +1,6 @@
+{
+  "cpu_max": "1600000 100000",
+  "memory_max": "85899345920",
+  "active_measurement_pids": [],
+  "gpu": "0 MiB"
+}

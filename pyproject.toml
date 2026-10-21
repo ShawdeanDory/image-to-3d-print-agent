@@ -11,6 +11,7 @@ dependencies = ["pydantic==2.12.5", "Pillow==10.1.0"]
 
 [project.optional-dependencies]
 test = ["pytest==8.4.2"]
+measurement = ["numpy==1.26.4", "trimesh==4.0.5"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
