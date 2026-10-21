@@ -34,3 +34,6 @@ dist/
 # 系统文件
 Thumbs.db
 .DS_Store
+
+# 可由源码重建的本机桌面入口
+/启动造物工坊.exe

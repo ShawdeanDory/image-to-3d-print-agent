@@ -1,0 +1,8 @@
+{
+  "ssh_config": "runtime/ssh/p2a_config",
+  "ssh_alias": "p2a-autodl",
+  "remote_project": "/root/autodl-tmp/image-to-3d-print-agent",
+  "deployment": "deployments/official-20261021-01",
+  "tunnel_port": 9000,
+  "ui_port": 5173
+}

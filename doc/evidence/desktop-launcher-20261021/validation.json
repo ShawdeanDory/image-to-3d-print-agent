@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-21",
+  "baseline": "ff2c611",
+  "windows_exe": {
+    "filename": "启动造物工坊.exe",
+    "bytes": 23552,
+    "compiler": "Windows .NET Framework64 v4.0.30319 csc",
+    "new_dependency_installed": false
+  },
+  "python": {
+    "passed": 217,
+    "skipped": 6,
+    "warnings": 2,
+    "seconds": 52.64
+  },
+  "new_contract_tests": {
+    "passed": 10,
+    "initial_failed": 2,
+    "initial_passed": 8
+  },
+  "windows_runtime_fixture": {
+    "passed": 14,
+    "checks": [
+      "normal_config",
+      "invalid_config",
+      "invalid_config",
+      "invalid_config",
+      "invalid_config",
+      "quoted_argument_roundtrip",
+      "quoted_argument_roundtrip",
+      "quoted_argument_roundtrip",
+      "quoted_argument_roundtrip",
+      "quoted_argument_roundtrip",
+      "real_http_fixture",
+      "real_http_fixture",
+      "connection_refused",
+      "dispose_only_owned_process"
+    ],
+    "cloud_called": false,
+    "model_called": false
+  },
+  "live_checks": {
+    "repeat_reuses_live_connection": {
+      "kind": "desktop_launcher",
+      "status": "succeeded",
+      "phase": "ready",
+      "page_url": "http://127.0.0.1:5173/",
+      "error": null,
+      "model_submitted": false
+    },
+    "occupied_foreign_port_rejected_without_killing_original": {
+      "kind": "desktop_launcher",
+      "status": "failed",
+      "phase": "smoke",
+      "page_url": null,
+      "error": {
+        "code": "TOOL_UNAVAILABLE",
+        "message": "本机61982网页端口已被其他服务/错误代理占用，请先关闭旧网页服务；不会强杀其他进程",
+        "details": {}
+      },
+      "model_submitted": false
+    },
+    "restored": {
+      "kind": "desktop_launcher",
+      "status": "succeeded",
+      "phase": "ready",
+      "page_url": "http://127.0.0.1:5173/",
+      "error": null,
+      "model_submitted": false
+    },
+    "model_called": false
+  },
+  "schema_check": "passed",
+  "browser": "visible_connected_and_old_task_restored",
+  "model_submitted": false,
+  "llm_called": false,
+  "new_manual_review": "passed_by_user_2026-10-21",
+  "instance_power_changed": false,
+  "cloud_final": {
+    "tasks": [
+      {
+        "run_id": "499708f0-596a-408a-ae5b-ec95bb763e0f",
+        "status": "waiting_for_input"
+      },
+      {
+        "run_id": "32733dc1-6626-46cd-b9dc-c9db5b2678b7",
+        "status": "cancelled"
+      },
+      {
+        "run_id": "43d395d8-aed2-49e8-8c1f-1bda3fcceda1",
+        "status": "cancelled"
+      },
+      {
+        "run_id": "e71621a8-c661-4534-b29b-1c88518d0dda",
+        "status": "waiting_for_input"
+      },
+      {
+        "run_id": "0a1eccbb-2d8b-47a2-9d7f-db8d49e767df",
+        "status": "waiting_for_input"
+      },
+      {
+        "run_id": "cbaa070f-b814-4428-8a95-c04445ee6e96",
+        "status": "cancelled"
+      },
+      {
+        "run_id": "f86b05ac-9b58-4303-a113-61857ceddad2",
+        "status": "running"
+      }
+    ],
+    "services": {
+      "image_to_3d_print.api": [
+        "1678"
+      ],
+      "image_to_3d_print.jobs.worker": [
+        "1818"
+      ]
+    },
+    "gpu": "377 MiB, 0 %"
+  }
+}

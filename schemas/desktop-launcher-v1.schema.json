@@ -1,0 +1,161 @@
+{
+  "$defs": {
+    "ErrorInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "INVALID_IMAGE",
+            "INVALID_ARGUMENT",
+            "MODEL_NOT_CONFIGURED",
+            "TOOL_UNAVAILABLE",
+            "GPU_OUT_OF_MEMORY",
+            "TOOL_TIMEOUT",
+            "MESH_NOT_PRINTABLE",
+            "REPAIR_LIMIT_REACHED",
+            "SLICER_VALIDATION_FAILED",
+            "WORKER_RESTARTED",
+            "REFERENCE_NOT_FOUND",
+            "STATE_CONFLICT",
+            "BUDGET_NOT_CONFIGURED"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Details",
+          "type": "object"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "ErrorInfo",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "LauncherConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "ssh_config": {
+          "default": "runtime/ssh/p2a_config",
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Ssh Config",
+          "type": "string"
+        },
+        "ssh_alias": {
+          "default": "p2a-autodl",
+          "pattern": "^[A-Za-z0-9_.-]+$",
+          "title": "Ssh Alias",
+          "type": "string"
+        },
+        "remote_project": {
+          "default": "/root/autodl-tmp/image-to-3d-print-agent",
+          "pattern": "^/[A-Za-z0-9_./-]+$",
+          "title": "Remote Project",
+          "type": "string"
+        },
+        "deployment": {
+          "default": "deployments/official-20261021-01",
+          "pattern": "^deployments/[A-Za-z0-9_./-]+$",
+          "title": "Deployment",
+          "type": "string"
+        },
+        "tunnel_port": {
+          "default": 9000,
+          "maximum": 65535,
+          "minimum": 1024,
+          "title": "Tunnel Port",
+          "type": "integer"
+        },
+        "ui_port": {
+          "default": 5173,
+          "maximum": 65535,
+          "minimum": 1024,
+          "title": "Ui Port",
+          "type": "integer"
+        }
+      },
+      "title": "LauncherConfig",
+      "type": "object"
+    },
+    "LauncherResult": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "desktop_launcher",
+          "default": "desktop_launcher",
+          "title": "Kind",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "succeeded",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "phase": {
+          "title": "Phase",
+          "type": "string"
+        },
+        "page_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page Url"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorInfo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "model_submitted": {
+          "const": false,
+          "default": false,
+          "title": "Model Submitted",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status",
+        "phase"
+      ],
+      "title": "LauncherResult",
+      "type": "object"
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/LauncherConfig"
+    },
+    {
+      "$ref": "#/$defs/LauncherResult"
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
