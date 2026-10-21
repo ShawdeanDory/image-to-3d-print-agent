@@ -1,0 +1,23 @@
+{
+  "check_kind": "static_preparation_only",
+  "schema_version": "1.0.0",
+  "dataset_version": "1.0.0",
+  "cases": 30,
+  "splits": {
+    "development": 10,
+    "evaluation": 10,
+    "holdout": 10
+  },
+  "categories": {
+    "normal": 18,
+    "boundary": 12
+  },
+  "registered_images": 21,
+  "geometry_files": 12,
+  "all_case_results": "not_run",
+  "holdout_model_execution": "not_run",
+  "contract_examples": "validated_synthetic_fixtures",
+  "gpu_used": false,
+  "model_installed_or_executed": false,
+  "p2_budget_blocked": true
+}

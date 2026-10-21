@@ -1,0 +1,13 @@
+# 实际合并CPU工具环境，不是两个GPU模型环境
+# Python 3.11.17
+numpy==1.26.4
+trimesh==4.0.5
+networkx==3.5
+scipy==1.14.1
+pydantic==2.12.5
+pydantic-core==2.41.5
+Pillow==10.1.0
+pytest==8.4.2
+typing-extensions==4.16.0
+typing-inspection==0.4.4
+annotated-types==0.8.0

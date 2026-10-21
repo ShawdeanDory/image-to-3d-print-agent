@@ -1,0 +1,14 @@
+{
+  "blender": {
+    "version": "4.5.14",
+    "build": "62c1db4208e8",
+    "linux_sha256": "9ba871ff2ecd36526b77432745980b7e6664ecd0c7ca11c48849073dcfe06da3",
+    "download_source": "https://mirrors.dotsrc.org/blender/blender-release/Blender4.5/"
+  },
+  "print_toolbox": {
+    "repo": "https://github.com/blender/blender-addons",
+    "revision": "b42d68627734cb18af0e6f41537063984313a284",
+    "file": "object_print3d_utils/mesh_helpers.py",
+    "sha256": "f48634371693a92b75ae61ac7dcd0d59d9c3ff7646fe8314e3a59d313177b5db"
+  }
+}

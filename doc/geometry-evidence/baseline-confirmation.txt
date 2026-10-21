@@ -1,0 +1,34 @@
+F...                                                                     [100%]
+=================================== FAILURES ===================================
+______________ test_model_cannot_invent_confirmation[reconstruct] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-12/test_model_cannot_invent_confi0')
+operation = 'reconstruct'
+
+    @pytest.mark.parametrize('operation',['reconstruct','scale','bed_review','component_review'])
+    def test_model_cannot_invent_confirmation(tmp_path,operation):
+        run=str(uuid4());call={'run_id':run,'operation':operation,'mesh_version':'missing_mesh'}
+        if operation=='reconstruct':
+            call.pop('mesh_version');call.update(backend='triposr',prepared_outcome='missing.json',review={
+                'asset_id':'asset','foreground_artifact_id':'fg','decision':'accepted','reviewer':'invented',
+                'origin':'human','complete_subject':True,'simple_nonfunctional_ornament':True,'foreground_correct':True})
+        elif operation=='scale':
+            call['request']={'image_asset_id':'asset','printer_profile_id':'demo_v1','height_value':80.,'height_unit':'mm',
+                'scale_source':'user_target','orientation':{'up_axis':'z','confirmed':True}}
+        else:
+            call['operation']='inspect';call['profile']=json.loads((Path(__file__).resolve().parents[2]/'fixtures/p1/printer_profile.json').read_text())
+            call[operation]={'mesh_version':'missing_mesh','confirmed':True,'reviewer':'invented','origin':'human'}
+            if operation=='component_review':call[operation]['component_count']=2
+        outcome=dispatch(tmp_path,call,ToolConfiguration())
+>       assert not outcome.tool.succeeded and outcome.tool.error.code=='STATE_CONFLICT'
+E       AssertionError: assert (not False and 'INVALID_ARGUMENT' == 'STATE_CONFLICT'
+E        +  where False = ToolResult(run_id=UUID('326e9275-0969-41e6-a594-947d4213a6b6'), tool_name='reconstruct', succeeded=False, artifact_ids..., data={'seconds': 0.0003821328282356262}, error=ErrorInfo(code='INVALID_ARGUMENT', message='工具输入或文件引用无效', details={})).succeeded
+E        +    where ToolResult(run_id=UUID('326e9275-0969-41e6-a594-947d4213a6b6'), tool_name='reconstruct', succeeded=False, artifact_ids..., data={'seconds': 0.0003821328282356262}, error=ErrorInfo(code='INVALID_ARGUMENT', message='工具输入或文件引用无效', details={})) = ToolOutcome(tool=ToolResult(run_id=UUID('326e9275-0969-41e6-a594-947d4213a6b6'), tool_name='reconstruct', succeeded=Fa...at=datetime.datetime(2026, 10, 21, 8, 46, 58, 469122, tzinfo=datetime.timezone.utc), summary='实际工具执行记录；不替代最终预览和切片确认')]).tool
+E
+E         - STATE_CONFLICT
+E         + INVALID_ARGUMENT)
+
+tests/geometry/test_commands.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED tests/geometry/test_commands.py::test_model_cannot_invent_confirmation[reconstruct]
+1 failed, 3 passed, 9 deselected in 0.97s

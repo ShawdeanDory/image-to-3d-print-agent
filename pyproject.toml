@@ -4,14 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "image-to-3d-print-agent"
-version = "0.1.0"
-description = "单图到3D打印工作流的公共契约与离线实验清单"
+version = "0.2.0"
+description = "单图到3D打印的公共契约、重建与几何工具"
 requires-python = ">=3.11"
 dependencies = ["pydantic==2.12.5", "Pillow==10.1.0"]
 
 [project.optional-dependencies]
 test = ["pytest==8.4.2"]
 measurement = ["numpy==1.26.4", "trimesh==4.0.5"]
+geometry = ["numpy==1.26.4", "trimesh==4.0.5", "networkx==3.5", "scipy==1.14.1"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

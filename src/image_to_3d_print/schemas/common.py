@@ -160,7 +160,7 @@ class MeshInspection(ContractModel):
                 and self.normals_consistent and self.component_count > 0
                 and self.boundary_edge_count == self.non_manifold_edge_count == self.non_manifold_vertex_count == 0
                 and REQUIRED_CHECKS <= checks.keys()
-                and all(checks[name].status == "pass" or (name == "overhang" and checks[name].status == "warn") for name in REQUIRED_CHECKS))
+                and all(check.status == "pass" or (name == "overhang" and check.status == "warn") for name, check in checks.items()))
 
 
 class SlicerConfirmation(ContractModel):
