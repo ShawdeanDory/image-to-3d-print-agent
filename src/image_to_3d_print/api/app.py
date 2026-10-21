@@ -38,6 +38,7 @@ def create_app(settings=None):
         return {'schema_version': 'runtime-v1', 'default_backend': settings.default_backend,
             'configured_backends': list(settings.tools.backends), 'inspection_configured': settings.tools.inspection is not None,
             'llm_configured': settings.llm.configured, 'llm_model': settings.llm.model,
+            'confirmation_origin': settings.confirmation_origin,
             'worker_concurrency': 1, 'active_timeout_s': settings.active_timeout_s,
             'max_tool_calls': settings.max_tool_calls, 'max_llm_calls': 4, 'max_llm_tokens': 12000}
 

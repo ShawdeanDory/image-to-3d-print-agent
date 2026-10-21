@@ -1,0 +1,28 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_______________ test_fixture_confirmation_is_not_human_evidence _______________
+tests\workflow\test_cloud_contracts.py:13: in test_fixture_confirmation_is_not_human_evidence
+    settings=Settings.model_validate(settings.model_dump() | {'confirmation_origin':'test_fixture'})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+E   confirmation_origin
+E     Extra inputs are not permitted [type=extra_forbidden, input_value='test_fixture', input_type=str]
+E       For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+_______________ test_deepseek_thinking_option_and_json_example ________________
+tests\workflow\test_cloud_contracts.py:27: in test_deepseek_thinking_option_and_json_example
+    cfg=LLMConfig(base_url='https://fixture.invalid',model='TEST_FIXTURE',thinking_mode='disabled')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 1 validation error for LLMConfig
+E   thinking_mode
+E     Extra inputs are not permitted [type=extra_forbidden, input_value='disabled', input_type=str]
+E       For further information visit https://errors.pydantic.dev/2.12/v/extra_forbidden
+============================== warnings summary ===============================
+runtime\envs\backend\Lib\site-packages\langgraph\checkpoint\base\__init__.py:18
+  C:\Users\Lenovo\Desktop\大数据实训\runtime\envs\backend\Lib\site-packages\langgraph\checkpoint\base\__init__.py:18: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+    from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/workflow/test_cloud_contracts.py::test_fixture_confirmation_is_not_human_evidence
+FAILED tests/workflow/test_cloud_contracts.py::test_deepseek_thinking_option_and_json_example
+2 failed, 1 warning in 1.55s

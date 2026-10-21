@@ -373,6 +373,28 @@
 - 接口/归档类。交付静态核验实际发现export_tool_schemas.py --check非0；不是本轮改了工具命令。0a32f1e中的源码已有preview、measure_view、ComponentReview和view_mappings，但旧JSONSchema没有同步。
 - 预期及修订：使用既有导出脚本重新生成，不手改Schema，不删源码字段迁就旧快照，不改变公共contracts-v1。保留此次失败并检查生成差异，随后重跑三套Schema及静态清单；本轮实现回归结果不因快照失败而改写。
 
+## AGENT-CLOUD-BUG-001：自动化确认来源与DeepSeek调用选项未明确
+
+- 基线/分类：接口/证据。现有工作流将所有HTTP表单确认写origin=human；若云端固定验证脚本提交表单，会把自动化确认误记为人工。独立服务配置尚不能声明test_fixture来源。新增回归必须先失败，再增加仅服务端可设的来源标识，默认真实人工行为保持兼容。
+- 同轮适配核对：DeepSeek官方当前JSON文档要求明确JSON格式示例，当前模型默认开启thinking。为本项目受限JSON解析明确服务端thinking_mode=disabled选项，默认不向其他供应商发送该扩展字段；不读取或归档思维内容。固定HTTP替身验证请求参数，再执行真实API。
+- 预期：固定验证的任务报告/确认文件及证据来源明确标记test_fixture，不能批准真实结构提案或实际切片。公共请求、状态及质量阈值不变；DeepSeek真实用量与测试响应分别归档。
+
+## AGENT-CLOUD-BUG-002：新JSON示例的空说明与模型字段不一致
+
+- 接口/提示词。准备实际DeepSeek调用时核对ParsedRequirements发现explanation须为字符串，新加入的JSON示例却填null。先补“提示词示例必须通过真实Pydantic模型”的失败回归，再将示例改为空字符串，并明确该字段规则；不放宽字段来接受错误示例，不消耗API去复现已确定的本地错误。
+
+## AGENT-CLOUD-BUG-003：验证脚本在runner尚未退出时重启worker
+
+- 工具/验收脚本。首次真实DeepSeek解析成功（344输入/75输出token），真实TripoSR重建/预览到print_review；验证脚本见waiting后立即停止worker，但runner尚在提交检查点，触发既有WORKER_RESTARTED正确停止，随后脚本错误读取空pending。33秒失败证据保留，GPU已释放，不改原失败任务为通过。
+- 预期/修订：验证“等待释放与重启恢复”须先确认当前runner_pid为空，再停止服务；空等待项先明确报状态错误，不直接下标读取。新目录重新验证，原首次任务及模型/LLM计数保持；不将该脚本时序问题认定为模型生成失败。
+
+### AGENT-CLOUD-BUG-001～003实际回归与复核
+
+- 001：两条新增配置/来源回归先失败、修订后通过；最终Linux193项全部通过。真实固定验证的确认文件/任务/报告保留test_fixture来源，实际人工服务独立配置human。
+- 002：提示词JSON示例按ParsedRequirements验证，先1项失败、修为空字符串后通过；未放宽公共模型。
+- 003：保留首次WORKER_RESTARTED失败任务；新验证先等待runner退出，47.109515秒完成真实链，重启后的pending_input_id/mesh_version保持，重建1次。网格质量失败与验证器修复分别记录。
+- 状态：上述修订技术回归完成；2026-10-21用户按云端报告核对主要代码差异和结果后明确本轮人工复核通过。命令与精简失败/成功证据见[云端报告](../doc/Agent云端部署与联调验收.md)，不以修复完成推断网格可打印。
+
 ## 后续Bug记录模板
 
 - Bug编号、发现日期、来源、关联任务和严重程度。

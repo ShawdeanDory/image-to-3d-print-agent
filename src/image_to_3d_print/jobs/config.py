@@ -2,6 +2,7 @@
 import json
 import os
 from pathlib import Path
+from typing import Literal
 from pydantic import Field
 from ..schemas.common import ContractModel, Text
 from ..geometry.commands import ToolConfiguration
@@ -13,6 +14,7 @@ class LLMConfig(ContractModel):
     model: str | None = None
     api_key_env: str = 'I3D_LLM_API_KEY'
     timeout_s: float = Field(default=60, gt=0, le=60)
+    thinking_mode: Literal['enabled', 'disabled'] | None = None
     input_price_per_million: float | None = Field(default=None, ge=0)
     output_price_per_million: float | None = Field(default=None, ge=0)
 
@@ -28,6 +30,7 @@ class Settings(ContractModel):
     background_backend: Backend | None = None
     profile_files: list[Path] = Field(default_factory=list)
     operator_name: Text = 'local_operator'
+    confirmation_origin: Literal['human', 'test_fixture'] = 'human'
     api_token_env: str = 'I3D_API_TOKEN'
     cors_origins: list[str] = Field(default_factory=list)
     llm: LLMConfig = Field(default_factory=LLMConfig)

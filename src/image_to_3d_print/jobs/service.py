@@ -50,6 +50,7 @@ class TaskService:
         profile = self.profiles[req.printer_profile_id]
         ctx = initial_context(uuid4(), req.model_dump(mode='json'), profile.model_dump(mode='json'),
             create.backend or self.settings.default_backend)
+        ctx['evidence_origin'] = 'test_fixture' if self.settings.confirmation_origin == 'test_fixture' else 'runtime'
         if measurements: self.measurement(ctx, req.scale_evidence_id)
         return self.store.create(ctx, response_for(ctx), create.model_dump(mode='json'), key)['response']
 

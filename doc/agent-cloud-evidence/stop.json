@@ -1,0 +1,21 @@
+{
+  "observed_at": "2026-10-21T10:43:45.366651+00:00",
+  "active_calculation_processes": [],
+  "idle_application_services": [
+    {
+      "pid": 33137,
+      "entries": [
+        "image_to_3d_print.api"
+      ]
+    },
+    {
+      "pid": 33139,
+      "entries": [
+        "image_to_3d_print.jobs.worker"
+      ]
+    }
+  ],
+  "gpu": "NVIDIA GeForce RTX 4090 D, 0 MiB, 0 %",
+  "instance_shutdown": "user_managed",
+  "public_port_opened": false
+}

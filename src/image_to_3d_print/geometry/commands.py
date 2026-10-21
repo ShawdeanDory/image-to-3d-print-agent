@@ -74,13 +74,15 @@ class ToolConfiguration(ContractModel):
         if any(key!=value.backend for key,value in self.backends.items()):raise ValueError('后端注册键与实际配置不一致，不能静默换模型')
         return self
 
-def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False):
+def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human'):
     root=Path(root).resolve();command=COMMANDS.validate_python(command)
     store=MeshStore(root);assets=AssetStore(root);op=command.operation;run=command.run_id
     tool_name={'import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
     # 包装只有原子返回值的资产/提案接口；已有ToolOutcome直接返回。
     session=None
     try:
+        if confirmation_origin not in {'human','test_fixture'}:
+            raise ToolFailure('INVALID_ARGUMENT','服务端确认来源无效')
         if op=='confirm' and human_action is not True:
             raise ToolFailure('STATE_CONFLICT','结构修改确认只能由已核对当前等待项的人工接口提交，不能由模型工具自行批准')
         needs_confirmation=(op=='reconstruct' and command.review.decision=='accepted' or
@@ -112,7 +114,7 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
             session.add('preview',root/record.preview_path,'repaired_mesh')
             session.add('preview_glb',root/record.preview_glb_path,'repaired_mesh')
             return session.finish({'proposal':record.model_dump(mode='json'),'pending_input_type':'repair_confirmation'})
-        data=confirm(root,run,command.proposal_id,command.reviewer,command.accepted)
+        data=confirm(root,run,command.proposal_id,command.reviewer,command.accepted,origin=confirmation_origin)
         session.add('confirmation',root/f'runs/{run}/proposals/{command.proposal_id}/confirmation.json','inspection_report')
         return session.finish({'confirmation':data,'next_step':'apply' if command.accepted else 'stop_or_revise'})
     except ToolFailure as exc:

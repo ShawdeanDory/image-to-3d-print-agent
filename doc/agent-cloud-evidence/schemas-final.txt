@@ -1,0 +1,3 @@
+JSONSchema与20个公共模型一致。
+geometry tool schema consistent
+runtime-v1扩展Schema一致

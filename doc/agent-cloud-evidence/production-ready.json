@@ -1,0 +1,26 @@
+{
+  "configuration": {
+    "schema_version": "runtime-v1",
+    "default_backend": "triposr",
+    "configured_backends": [
+      "triposr",
+      "trellis2_candidate"
+    ],
+    "inspection_configured": true,
+    "llm_configured": true,
+    "llm_model": "deepseek-flash",
+    "confirmation_origin": "human",
+    "worker_concurrency": 1,
+    "active_timeout_s": 900.0,
+    "max_tool_calls": 32,
+    "max_llm_calls": 4,
+    "max_llm_tokens": 12000
+  },
+  "loopback_url": "http://127.0.0.1:8000",
+  "screen_api": "i3d-backend-api",
+  "screen_worker": "i3d-backend-worker",
+  "persistent_idle_services": true,
+  "api_and_worker_sessions_present": true,
+  "public_port_opened": false,
+  "instance_shutdown": "user_managed"
+}

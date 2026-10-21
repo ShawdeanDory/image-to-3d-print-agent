@@ -135,14 +135,15 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
     def human_record(ctx, answer, kind):
         session = ToolSession(root, ctx['run_id'], 'slice' if kind == 'slicer' else 'preprocess', ctx['mesh_version'])
         path = session.directory / 'human.json'
-        payload = {**answer, 'run_id': ctx['run_id'], 'reviewer': settings.operator_name, 'origin': 'human'}
+        origin = settings.confirmation_origin
+        payload = {**answer, 'run_id': ctx['run_id'], 'reviewer': settings.operator_name, 'origin': origin}
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         artifact = session.add('human', path, 'slicer_confirmation' if kind == 'slicer' else 'inspection_report')
         ctx['artifacts'].append(artifact.model_dump(mode='json'))
-        ctx['evidence'].append(EvidenceRecord(evidence_id=session.prefix + '_human', source_type='human',
+        ctx['evidence'].append(EvidenceRecord(evidence_id=session.prefix + '_human', source_type='human' if origin == 'human' else 'tool',
             source_id=answer['submission_id'], run_id=ctx['run_id'], mesh_version=ctx['mesh_version'],
             artifact_id=artifact.artifact_id, locator='human.json', created_at=session.now,
-            summary='本任务当前等待项的实际人工提交').model_dump(mode='json'))
+            summary='本任务当前等待项的实际人工提交' if origin == 'human' else '固定样例自动提交，不作实际人工证据').model_dump(mode='json'))
         ctx.setdefault('human_reviews', []).append(payload)
         return artifact.artifact_id
 
@@ -167,7 +168,7 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
                 fail(ctx, 'INVALID_IMAGE', '输入未获适用性确认；更换图片须创建新任务')
             else:
                 ctx['input_review'] = {k: answer[k] for k in ['foreground_artifact_id', 'decision', 'complete_subject', 'simple_nonfunctional_ornament', 'foreground_correct']}
-                ctx['input_review'].update(asset_id=ctx['request']['image_asset_id'], reviewer=settings.operator_name, origin='human')
+                ctx['input_review'].update(asset_id=ctx['request']['image_asset_id'], reviewer=settings.operator_name, origin=settings.confirmation_origin)
                 ctx['step'] = 'reviewed'
         elif kind == 'print_review':
             if not answer['bed_confirmed']:
@@ -198,7 +199,7 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
         ctx['inflight'] = operation
         persist(ctx, 'tool_started', {'operation': operation, 'call': ctx['tool_calls']})
         outcome = ToolOutcome.model_validate(tool_dispatch(root, {'run_id': ctx['run_id'], 'operation': operation, **arguments},
-            settings.tools, human_action=True))
+            settings.tools, human_action=True, confirmation_origin=settings.confirmation_origin))
         if str(outcome.tool.run_id) != ctx['run_id'] or any(str(a.run_id) != ctx['run_id'] for a in outcome.artifacts):
             raise ToolFailure('STATE_CONFLICT', '工具返回了其他任务的产物')
         known_artifacts = {a['artifact_id'] for a in ctx['artifacts']} | {a.artifact_id for a in outcome.artifacts}
@@ -279,11 +280,11 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
                 elif name == 'inspect':
                     ctx['stage'] = 'inspect'
                     review = ctx['print_review']
-                    bed = {'mesh_version': ctx['mesh_version'], 'confirmed': review['bed_confirmed'], 'reviewer': settings.operator_name}
+                    bed = {'mesh_version': ctx['mesh_version'], 'confirmed': review['bed_confirmed'], 'reviewer': settings.operator_name, 'origin':settings.confirmation_origin}
                     component = None
                     if review['components_confirmed']:
                         component = {'mesh_version': ctx['mesh_version'], 'component_count': review['component_count'],
-                            'confirmed': True, 'reviewer': settings.operator_name}
+                            'confirmed': True, 'reviewer': settings.operator_name, 'origin':settings.confirmation_origin}
                     tool(ctx, name, mesh_version=ctx['mesh_version'], profile=ctx['profile'],
                         height_mm=ModelTaskRequest.model_validate(ctx['request']).height_mm, bed_review=bed, component_review=component)
                     ctx['step'] = 'inspected'

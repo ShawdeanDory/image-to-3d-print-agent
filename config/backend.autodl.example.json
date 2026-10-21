@@ -1,0 +1,40 @@
+{
+  "root": "/root/autodl-tmp/image-to-3d-print-agent/runs/agent-application",
+  "default_backend": "triposr",
+  "background_backend": "trellis2_candidate",
+  "operator_name": "course_operator",
+  "confirmation_origin": "human",
+  "profile_files": ["/root/autodl-tmp/image-to-3d-print-agent/deployments/backend-20261021-01/fixtures/p1/printer_profile.json"],
+  "tools": {
+    "backends": {
+      "triposr": {
+        "backend": "triposr",
+        "python": "/root/autodl-tmp/image-to-3d-print-agent/runtime/envs/triposr/bin/python",
+        "execution_root": "/root/autodl-tmp/image-to-3d-print-agent"
+      },
+      "trellis2_candidate": {
+        "backend": "trellis2_candidate",
+        "python": "/root/autodl-tmp/image-to-3d-print-agent/runtime/envs/trellis2/bin/python",
+        "execution_root": "/root/autodl-tmp/image-to-3d-print-agent"
+      }
+    },
+    "inspection": {
+      "blender": "/root/autodl-tmp/image-to-3d-print-agent/runtime/tools/blender-4.5.14-linux-x64/blender",
+      "addon_dir": "/root/autodl-tmp/image-to-3d-print-agent/runtime/upstream/blender-addons"
+    },
+    "view_mappings": {}
+  },
+  "llm": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-flash",
+    "api_key_env": "I3D_LLM_API_KEY",
+    "thinking_mode": "disabled",
+    "timeout_s": 60,
+    "input_price_per_million": null,
+    "output_price_per_million": null
+  },
+  "api_token_env": "I3D_API_TOKEN",
+  "cors_origins": ["http://localhost:5173"],
+  "active_timeout_s": 900,
+  "max_tool_calls": 32
+}

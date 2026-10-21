@@ -139,3 +139,20 @@ python scripts/tools/validate_backend.py --output runs/自选新的验证目录
 最后一条启动真实本机HTTP与独立worker，但输入和确认是自动化fixture，只验证排队/等待/恢复/幂等/取消及退出，不发起重建或LLM调用。tests/workflow中的重建、Blender和LLM替身仅在测试内注入；CPU几何、LangGraph、SQLite及导出重读实际执行。真实LLM和云端完整模型联调需具备实际配置，当前证据状态见[交付报告](Agent工作流与后端交付.md)。
 
 工作流持久化按[LangGraph官方中断说明](https://docs.langchain.com/oss/python/langgraph/interrupts)使用同一thread_id和Command(resume)，独立等待节点只含interrupt，重放不会触发重建。检查点数据库和任务数据库均在同一存储目录；原始产物不随报告覆盖。中断中的running任务重启后明确失败，不自动昂贵重跑。
+
+## 7.已验证的AutoDL部署与DeepSeek
+
+2026-10-21已在同一实例部署并验证，详见[云端验收报告](Agent云端部署与联调验收.md)。人工服务配置runtime/config/backend.json已生成，confirmation_origin=human；模型/工具解释器及路径见config/backend.autodl.example.json。自动化验证必须使用独立配置的test_fixture，任务报告/确认记录不得当人工；API能力查询也返回该来源标记，客户端不能覆盖服务端设置。
+
+DeepSeek配置base_url=https://api.deepseek.com、model=deepseek-flash、thinking_mode=disabled；后者是显式可选供应商字段，默认None不向其他服务发送。仍使用严格JSON、公共约束、固定预算及0重试。密钥已通过用户文本配置，启动器只从云端权限600文本加载到I3D_LLM_API_KEY，不写配置JSON或回显。
+
+当前API和worker已分别在screen的i3d-backend-api/i3d-backend-worker中空闲运行，不重复启动第二worker。需要停服务时进入对应screen，按Ctrl+C结束程序；重新启动可在两个云端终端分别执行：
+
+```bash
+cd /root/autodl-tmp/image-to-3d-print-agent/deployments/backend-20261021-01
+bash scripts/tools/start_cloud_backend.sh api
+# 另一个终端，同目录执行：
+bash scripts/tools/start_cloud_backend.sh worker
+```
+
+两进程使用同一持久存储，默认只监听127.0.0.1:8000；通过SSH隧道访问/docs或供前端连接，不修改AutoDL公网端口。关机后服务会停止，数据盘文件保留；再次启动后核对环境再启动上述两个进程，在途计算按原重启规则明确失败，不自动重跑。真实模型尚有打印缺陷，当前服务可供交互和失败路径演示，不能宣称已取得打印合格交付。

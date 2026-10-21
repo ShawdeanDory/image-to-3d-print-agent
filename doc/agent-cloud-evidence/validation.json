@@ -1,0 +1,3523 @@
+{
+  "live-first": {
+    "kind": "real_cloud_agent_http",
+    "confirmation_origin": "test_fixture",
+    "human_acceptance": false,
+    "model_execution": "succeeded",
+    "llm_execution": "succeeded",
+    "physical_printing": false,
+    "formal_model_comparison": false,
+    "cases": [
+      {
+        "kind": "natural_language",
+        "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+        "first": {
+          "response": {
+            "schema_version": "1.0.0",
+            "request_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "task_id": "image_to_3d_print",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "status": "waiting_for_input",
+            "data": {
+              "request": {
+                "schema_version": "1.0.0",
+                "image_asset_id": "a_44392447ad6f430b94682278718bf61b",
+                "height_value": null,
+                "height_unit": null,
+                "scale_source": null,
+                "scale_evidence_id": null,
+                "orientation": {
+                  "up_axis": null,
+                  "confirmed": false
+                },
+                "printer_profile_id": "demo_v1",
+                "description": "这是简单的方块摆件，目标高度8厘米。其他不明确的地方请追问，不要猜。"
+              },
+              "state": {
+                "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+                "stage": "input",
+                "status": "waiting_for_input",
+                "pending_input_id": "i_f8f63ecbbf9c4bada7bf531356f4be53",
+                "pending_input_type": "height",
+                "mesh_version": null,
+                "repair_round": 0,
+                "artifacts": [],
+                "checks": [],
+                "warnings": [],
+                "error": null
+              },
+              "printer_profile": {
+                "profile_id": "demo_v1",
+                "version": "1.0.0",
+                "profile_kind": "demo",
+                "process": "FDM",
+                "material": "PLA",
+                "nozzle_mm": 0.4,
+                "layer_height_mm": 0.2,
+                "min_wall_mm": 1.2,
+                "build_volume_mm": [
+                  220.0,
+                  220.0,
+                  250.0
+                ],
+                "slicer_version": "2.9.6",
+                "supports_policy": "human_review"
+              },
+              "inspection": null,
+              "slicer_confirmation": null
+            },
+            "evidence": [],
+            "datasets": [],
+            "artifacts": [],
+            "warnings": [],
+            "events": [
+              "目标高度是多少？",
+              "高度单位是毫米(mm)还是厘米(cm)？",
+              "这是设计目标高度，还是有测量依据的实物高度？",
+              "哪个轴朝上？请确认模型方向。",
+              "请核对语言模型提取的约束；姿态必须另行明确确认。",
+              "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。"
+            ],
+            "error": null
+          },
+          "pending": {
+            "pending_input_id": "i_f8f63ecbbf9c4bada7bf531356f4be53",
+            "kind": "constraints",
+            "mesh_version": null,
+            "questions": [
+              "目标高度是多少？",
+              "高度单位是毫米(mm)还是厘米(cm)？",
+              "这是设计目标高度，还是有测量依据的实物高度？",
+              "哪个轴朝上？请确认模型方向。",
+              "请核对语言模型提取的约束；姿态必须另行明确确认。",
+              "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。"
+            ],
+            "details": {
+              "missing": [
+                "height",
+                "height_unit",
+                "scale_source",
+                "orientation"
+              ],
+              "suggestions": {
+                "explanation": "用户明确目标高度为8厘米，因此高度值与单位可确定；但朝向未确认，需追问上方向。",
+                "height_unit": "cm",
+                "height_value": 8.0,
+                "questions": [
+                  "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。"
+                ],
+                "scale_source": "user_target",
+                "up_axis": null
+              }
+            }
+          },
+          "resources": {
+            "active_seconds": 0.0,
+            "known_completed_active_seconds": 0.0,
+            "tool_calls": 0,
+            "llm": {
+              "availability": "configured",
+              "calls": 1,
+              "cost": null,
+              "input_tokens": 344,
+              "output_tokens": 75,
+              "records": [
+                {
+                  "cost": null,
+                  "input_tokens": 344,
+                  "model": "deepseek-flash",
+                  "output_tokens": 75,
+                  "purpose": "parse",
+                  "reserved_upper_bound": 3819,
+                  "status": "succeeded"
+                }
+              ],
+              "reserved_tokens": 0,
+              "usage_complete": true
+            }
+          }
+        }
+      }
+    ],
+    "source_case": "development/block.png",
+    "configuration": {
+      "schema_version": "runtime-v1",
+      "default_backend": "triposr",
+      "configured_backends": [
+        "triposr",
+        "trellis2_candidate"
+      ],
+      "inspection_configured": true,
+      "llm_configured": true,
+      "llm_model": "deepseek-flash",
+      "confirmation_origin": "test_fixture",
+      "worker_concurrency": 1,
+      "active_timeout_s": 900.0,
+      "max_tool_calls": 32,
+      "max_llm_calls": 4,
+      "max_llm_tokens": 12000
+    },
+    "invalid_upload_http": 422,
+    "seconds": 32.9730974920094,
+    "second_waiting_task": {
+      "response": {
+        "schema_version": "1.0.0",
+        "request_id": "ec527968-5125-4c69-9408-741787d93dc1",
+        "task_id": "image_to_3d_print",
+        "run_id": "ec527968-5125-4c69-9408-741787d93dc1",
+        "status": "waiting_for_input",
+        "data": {
+          "request": {
+            "schema_version": "1.0.0",
+            "image_asset_id": "a_44392447ad6f430b94682278718bf61b",
+            "height_value": null,
+            "height_unit": null,
+            "scale_source": null,
+            "scale_evidence_id": null,
+            "orientation": {
+              "up_axis": null,
+              "confirmed": false
+            },
+            "printer_profile_id": "demo_v1",
+            "description": ""
+          },
+          "state": {
+            "run_id": "ec527968-5125-4c69-9408-741787d93dc1",
+            "stage": "input",
+            "status": "waiting_for_input",
+            "pending_input_id": "i_760d889f36a24f60a302278db66e1fb0",
+            "pending_input_type": "height",
+            "mesh_version": null,
+            "repair_round": 0,
+            "artifacts": [],
+            "checks": [],
+            "warnings": [],
+            "error": null
+          },
+          "printer_profile": {
+            "profile_id": "demo_v1",
+            "version": "1.0.0",
+            "profile_kind": "demo",
+            "process": "FDM",
+            "material": "PLA",
+            "nozzle_mm": 0.4,
+            "layer_height_mm": 0.2,
+            "min_wall_mm": 1.2,
+            "build_volume_mm": [
+              220.0,
+              220.0,
+              250.0
+            ],
+            "slicer_version": "2.9.6",
+            "supports_policy": "human_review"
+          },
+          "inspection": null,
+          "slicer_confirmation": null
+        },
+        "evidence": [],
+        "datasets": [],
+        "artifacts": [],
+        "warnings": [],
+        "events": [
+          "目标高度是多少？",
+          "高度单位是毫米(mm)还是厘米(cm)？",
+          "这是设计目标高度，还是有测量依据的实物高度？",
+          "哪个轴朝上？请确认模型方向。"
+        ],
+        "error": null
+      },
+      "pending": {
+        "pending_input_id": "i_760d889f36a24f60a302278db66e1fb0",
+        "kind": "constraints",
+        "mesh_version": null,
+        "questions": [
+          "目标高度是多少？",
+          "高度单位是毫米(mm)还是厘米(cm)？",
+          "这是设计目标高度，还是有测量依据的实物高度？",
+          "哪个轴朝上？请确认模型方向。"
+        ],
+        "details": {
+          "missing": [
+            "height",
+            "height_unit",
+            "scale_source",
+            "orientation"
+          ],
+          "suggestions": null
+        }
+      },
+      "resources": {
+        "active_seconds": 0.0,
+        "known_completed_active_seconds": 0.0,
+        "tool_calls": 0,
+        "llm": {
+          "availability": "configured_unused",
+          "calls": 0,
+          "cost": null,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "records": [],
+          "reserved_tokens": 0,
+          "usage_complete": true
+        }
+      }
+    },
+    "after_reconstruction": {
+      "response": {
+        "schema_version": "1.0.0",
+        "request_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+        "task_id": "image_to_3d_print",
+        "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+        "status": "waiting_for_input",
+        "data": {
+          "request": {
+            "schema_version": "1.0.0",
+            "image_asset_id": "a_44392447ad6f430b94682278718bf61b",
+            "height_value": 80.0,
+            "height_unit": "mm",
+            "scale_source": "user_target",
+            "scale_evidence_id": null,
+            "orientation": {
+              "up_axis": "z",
+              "confirmed": true
+            },
+            "printer_profile_id": "demo_v1",
+            "description": "这是简单的方块摆件，目标高度8厘米。其他不明确的地方请追问，不要猜。"
+          },
+          "state": {
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "stage": "scale",
+            "status": "waiting_for_input",
+            "pending_input_id": "i_6461b41a516542728425642720cedd15",
+            "pending_input_type": "orientation",
+            "mesh_version": "m_8febc9cbf06f4744b1a1af25",
+            "repair_round": 1,
+            "artifacts": [
+              "t_75498c6e0c9e4676_human",
+              "t_5d6d575a82a845b2_original",
+              "t_5d6d575a82a845b2_foreground",
+              "t_5d6d575a82a845b2_mask",
+              "t_5d6d575a82a845b2_report",
+              "t_087e600b682347af_human",
+              "t_adb0403d0f314bea_raw_mesh",
+              "t_adb0403d0f314bea_process_log",
+              "t_adb0403d0f314bea_model_json",
+              "t_adb0403d0f314bea_execution_json",
+              "t_adb0403d0f314bea_invocation_json",
+              "t_adb0403d0f314bea_report",
+              "t_32fdf618efe641b7_mesh",
+              "t_32fdf618efe641b7_report",
+              "t_f163250d55154793_mesh",
+              "t_f163250d55154793_report",
+              "t_38d578c55a624111_preview",
+              "t_38d578c55a624111_report"
+            ],
+            "checks": [],
+            "warnings": [],
+            "error": null
+          },
+          "printer_profile": {
+            "profile_id": "demo_v1",
+            "version": "1.0.0",
+            "profile_kind": "demo",
+            "process": "FDM",
+            "material": "PLA",
+            "nozzle_mm": 0.4,
+            "layer_height_mm": 0.2,
+            "min_wall_mm": 1.2,
+            "build_volume_mm": [
+              220.0,
+              220.0,
+              250.0
+            ],
+            "slicer_version": "2.9.6",
+            "supports_policy": "human_review"
+          },
+          "inspection": null,
+          "slicer_confirmation": null
+        },
+        "evidence": [
+          {
+            "evidence_id": "t_75498c6e0c9e4676_human",
+            "source_type": "tool",
+            "source_id": "s_77d654ea6775812b13d24cf2",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": null,
+            "artifact_id": "t_75498c6e0c9e4676_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:35:35.934255Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_5d6d575a82a845b2_evidence",
+            "source_type": "tool",
+            "source_id": "t_5d6d575a82a845b2",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": null,
+            "artifact_id": "t_5d6d575a82a845b2_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:35:35.947919Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_087e600b682347af_human",
+            "source_type": "tool",
+            "source_id": "s_bd1b816cae61653db1e584a6",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": null,
+            "artifact_id": "t_087e600b682347af_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:35:38.034253Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_adb0403d0f314bea_evidence",
+            "source_type": "tool",
+            "source_id": "t_adb0403d0f314bea",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_2197024814e84fefaa589a03",
+            "artifact_id": "t_adb0403d0f314bea_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:35:38.049987Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_32fdf618efe641b7_evidence",
+            "source_type": "tool",
+            "source_id": "t_32fdf618efe641b7",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_ccf6f887db0041909b48fde7",
+            "artifact_id": "t_32fdf618efe641b7_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:35:51.073685Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_f163250d55154793_evidence",
+            "source_type": "tool",
+            "source_id": "t_f163250d55154793",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_8febc9cbf06f4744b1a1af25",
+            "artifact_id": "t_f163250d55154793_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:35:52.775605Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_38d578c55a624111_evidence",
+            "source_type": "tool",
+            "source_id": "t_38d578c55a624111",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_8febc9cbf06f4744b1a1af25",
+            "artifact_id": "t_38d578c55a624111_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:35:53.767892Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          }
+        ],
+        "datasets": [],
+        "artifacts": [
+          {
+            "artifact_id": "t_75498c6e0c9e4676_human",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_75498c6e0c9e4676/human.json",
+            "created_at": "2026-10-21T10:35:35.934255Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_5d6d575a82a845b2_original",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": null,
+            "kind": "input_image",
+            "relative_path": "assets/a_44392447ad6f430b94682278718bf61b/original.png",
+            "created_at": "2026-10-21T10:35:35.947919Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_5d6d575a82a845b2_foreground",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": null,
+            "kind": "foreground_image",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_5d6d575a82a845b2/foreground.png",
+            "created_at": "2026-10-21T10:35:35.947919Z",
+            "derived_from": [
+              "t_5d6d575a82a845b2_original"
+            ],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_5d6d575a82a845b2_mask",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": null,
+            "kind": "foreground_image",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_5d6d575a82a845b2/mask.png",
+            "created_at": "2026-10-21T10:35:35.947919Z",
+            "derived_from": [
+              "t_5d6d575a82a845b2_original"
+            ],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_5d6d575a82a845b2_report",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_5d6d575a82a845b2/tool-report.json",
+            "created_at": "2026-10-21T10:35:35.947919Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_087e600b682347af_human",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_087e600b682347af/human.json",
+            "created_at": "2026-10-21T10:35:38.034253Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_adb0403d0f314bea_raw_mesh",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_2197024814e84fefaa589a03",
+            "kind": "raw_mesh",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/versions/m_2197024814e84fefaa589a03/original.ply",
+            "created_at": "2026-10-21T10:35:38.049987Z",
+            "derived_from": [],
+            "unit": "unitless"
+          },
+          {
+            "artifact_id": "t_adb0403d0f314bea_process_log",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_2197024814e84fefaa589a03",
+            "kind": "log",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_adb0403d0f314bea/process.log",
+            "created_at": "2026-10-21T10:35:38.049987Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_adb0403d0f314bea_model_json",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_2197024814e84fefaa589a03",
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_adb0403d0f314bea/model.json",
+            "created_at": "2026-10-21T10:35:38.049987Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_adb0403d0f314bea_execution_json",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_2197024814e84fefaa589a03",
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_adb0403d0f314bea/execution.json",
+            "created_at": "2026-10-21T10:35:38.049987Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_adb0403d0f314bea_invocation_json",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_2197024814e84fefaa589a03",
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_adb0403d0f314bea/invocation.json",
+            "created_at": "2026-10-21T10:35:38.049987Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_adb0403d0f314bea_report",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_2197024814e84fefaa589a03",
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_adb0403d0f314bea/tool-report.json",
+            "created_at": "2026-10-21T10:35:38.049987Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_32fdf618efe641b7_mesh",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_ccf6f887db0041909b48fde7",
+            "kind": "repaired_mesh",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/versions/m_ccf6f887db0041909b48fde7/mesh.ply",
+            "created_at": "2026-10-21T10:35:51.073685Z",
+            "derived_from": [],
+            "unit": "unitless"
+          },
+          {
+            "artifact_id": "t_32fdf618efe641b7_report",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_ccf6f887db0041909b48fde7",
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_32fdf618efe641b7/tool-report.json",
+            "created_at": "2026-10-21T10:35:51.073685Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_f163250d55154793_mesh",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_8febc9cbf06f4744b1a1af25",
+            "kind": "repaired_mesh",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/versions/m_8febc9cbf06f4744b1a1af25/mesh.ply",
+            "created_at": "2026-10-21T10:35:52.775605Z",
+            "derived_from": [],
+            "unit": "mm"
+          },
+          {
+            "artifact_id": "t_f163250d55154793_report",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_8febc9cbf06f4744b1a1af25",
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_f163250d55154793/tool-report.json",
+            "created_at": "2026-10-21T10:35:52.775605Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_38d578c55a624111_preview",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_8febc9cbf06f4744b1a1af25",
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_38d578c55a624111/preview.png",
+            "created_at": "2026-10-21T10:35:53.767892Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_38d578c55a624111_report",
+            "run_id": "3e68c1c0-8498-4e5c-98a7-1c96068e7ac7",
+            "mesh_version": "m_8febc9cbf06f4744b1a1af25",
+            "kind": "inspection_report",
+            "relative_path": "runs/3e68c1c0-8498-4e5c-98a7-1c96068e7ac7/tools/t_38d578c55a624111/tool-report.json",
+            "created_at": "2026-10-21T10:35:53.767892Z",
+            "derived_from": [],
+            "unit": null
+          }
+        ],
+        "warnings": [],
+        "events": [
+          "目标高度是多少？",
+          "高度单位是毫米(mm)还是厘米(cm)？",
+          "这是设计目标高度，还是有测量依据的实物高度？",
+          "哪个轴朝上？请确认模型方向。",
+          "请核对语言模型提取的约束；姿态必须另行明确确认。",
+          "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。",
+          "请复核前景、主体完整性及简单非功能摆件适用性。",
+          "请复核本版本预览中的朝向、底面稳定性及组件。"
+        ],
+        "error": null
+      },
+      "pending": {
+        "pending_input_id": "i_6461b41a516542728425642720cedd15",
+        "kind": "print_review",
+        "mesh_version": "m_8febc9cbf06f4744b1a1af25",
+        "questions": [
+          "请复核本版本预览中的朝向、底面稳定性及组件。"
+        ],
+        "details": {
+          "component_count": 1,
+          "preview_artifact_id": "t_38d578c55a624111_preview"
+        }
+      },
+      "resources": {
+        "active_seconds": 4.894349131733179,
+        "known_completed_active_seconds": 4.894349131733179,
+        "tool_calls": 5,
+        "llm": {
+          "availability": "configured",
+          "calls": 1,
+          "cost": null,
+          "input_tokens": 344,
+          "output_tokens": 75,
+          "records": [
+            {
+              "cost": null,
+              "input_tokens": 344,
+              "model": "deepseek-flash",
+              "output_tokens": 75,
+              "purpose": "parse",
+              "reserved_upper_bound": 3819,
+              "status": "succeeded"
+            }
+          ],
+          "reserved_tokens": 0,
+          "usage_complete": true
+        }
+      }
+    },
+    "passed": false,
+    "error": {
+      "type": "TypeError",
+      "message": "'NoneType' object is not subscriptable"
+    },
+    "service_processes_stopped": true,
+    "gpu_after": "0 MiB, 0 %"
+  },
+  "live-final": {
+    "kind": "real_cloud_agent_http",
+    "confirmation_origin": "test_fixture",
+    "human_acceptance": false,
+    "model_execution": "succeeded",
+    "llm_execution": "succeeded",
+    "physical_printing": false,
+    "formal_model_comparison": false,
+    "cases": [
+      {
+        "kind": "natural_language",
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "first": {
+          "response": {
+            "schema_version": "1.0.0",
+            "request_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "task_id": "image_to_3d_print",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "status": "waiting_for_input",
+            "data": {
+              "request": {
+                "schema_version": "1.0.0",
+                "image_asset_id": "a_2641ceaab2244d1fbf83f9926f91befe",
+                "height_value": null,
+                "height_unit": null,
+                "scale_source": null,
+                "scale_evidence_id": null,
+                "orientation": {
+                  "up_axis": null,
+                  "confirmed": false
+                },
+                "printer_profile_id": "demo_v1",
+                "description": "这是简单的方块摆件，目标高度8厘米。其他不明确的地方请追问，不要猜。"
+              },
+              "state": {
+                "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+                "stage": "input",
+                "status": "waiting_for_input",
+                "pending_input_id": "i_c310e1cedd7749cdb25cf8c19590f6b2",
+                "pending_input_type": "height",
+                "mesh_version": null,
+                "repair_round": 0,
+                "artifacts": [],
+                "checks": [],
+                "warnings": [],
+                "error": null
+              },
+              "printer_profile": {
+                "profile_id": "demo_v1",
+                "version": "1.0.0",
+                "profile_kind": "demo",
+                "process": "FDM",
+                "material": "PLA",
+                "nozzle_mm": 0.4,
+                "layer_height_mm": 0.2,
+                "min_wall_mm": 1.2,
+                "build_volume_mm": [
+                  220.0,
+                  220.0,
+                  250.0
+                ],
+                "slicer_version": "2.9.6",
+                "supports_policy": "human_review"
+              },
+              "inspection": null,
+              "slicer_confirmation": null
+            },
+            "evidence": [],
+            "datasets": [],
+            "artifacts": [],
+            "warnings": [],
+            "events": [
+              "目标高度是多少？",
+              "高度单位是毫米(mm)还是厘米(cm)？",
+              "这是设计目标高度，还是有测量依据的实物高度？",
+              "哪个轴朝上？请确认模型方向。",
+              "请核对语言模型提取的约束；姿态必须另行明确确认。",
+              "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。",
+              "请确认该 8 厘米是目标打印高度（用户指定），还是对图中实物测量所得？"
+            ],
+            "error": null
+          },
+          "pending": {
+            "pending_input_id": "i_c310e1cedd7749cdb25cf8c19590f6b2",
+            "kind": "constraints",
+            "mesh_version": null,
+            "questions": [
+              "目标高度是多少？",
+              "高度单位是毫米(mm)还是厘米(cm)？",
+              "这是设计目标高度，还是有测量依据的实物高度？",
+              "哪个轴朝上？请确认模型方向。",
+              "请核对语言模型提取的约束；姿态必须另行明确确认。",
+              "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。",
+              "请确认该 8 厘米是目标打印高度（用户指定），还是对图中实物测量所得？"
+            ],
+            "details": {
+              "missing": [
+                "height",
+                "height_unit",
+                "scale_source",
+                "orientation"
+              ],
+              "suggestions": {
+                "explanation": "描述中明确目标高度为 8 厘米，因此按用户目标尺寸解析；上方向未确认，需追问。",
+                "height_unit": "cm",
+                "height_value": 8.0,
+                "questions": [
+                  "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。",
+                  "请确认该 8 厘米是目标打印高度（用户指定），还是对图中实物测量所得？"
+                ],
+                "scale_source": "user_target",
+                "up_axis": null
+              }
+            }
+          },
+          "resources": {
+            "active_seconds": 0.0,
+            "known_completed_active_seconds": 0.0,
+            "tool_calls": 0,
+            "llm": {
+              "availability": "configured",
+              "calls": 1,
+              "cost": null,
+              "input_tokens": 347,
+              "output_tokens": 100,
+              "records": [
+                {
+                  "cost": null,
+                  "input_tokens": 347,
+                  "model": "deepseek-flash",
+                  "output_tokens": 100,
+                  "purpose": "parse",
+                  "reserved_upper_bound": 3819,
+                  "served_model": "deepseek-flash",
+                  "status": "succeeded"
+                }
+              ],
+              "reserved_tokens": 0,
+              "usage_complete": true
+            }
+          }
+        }
+      }
+    ],
+    "source_case": "development/block.png",
+    "configuration": {
+      "schema_version": "runtime-v1",
+      "default_backend": "triposr",
+      "configured_backends": [
+        "triposr",
+        "trellis2_candidate"
+      ],
+      "inspection_configured": true,
+      "llm_configured": true,
+      "llm_model": "deepseek-flash",
+      "confirmation_origin": "test_fixture",
+      "worker_concurrency": 1,
+      "active_timeout_s": 900.0,
+      "max_tool_calls": 32,
+      "max_llm_calls": 4,
+      "max_llm_tokens": 12000
+    },
+    "invalid_upload_http": 422,
+    "seconds": 47.10951506718993,
+    "second_waiting_task": {
+      "response": {
+        "schema_version": "1.0.0",
+        "request_id": "0ebaebd8-5d0f-4fcc-bfec-ca433c768ebc",
+        "task_id": "image_to_3d_print",
+        "run_id": "0ebaebd8-5d0f-4fcc-bfec-ca433c768ebc",
+        "status": "waiting_for_input",
+        "data": {
+          "request": {
+            "schema_version": "1.0.0",
+            "image_asset_id": "a_2641ceaab2244d1fbf83f9926f91befe",
+            "height_value": null,
+            "height_unit": null,
+            "scale_source": null,
+            "scale_evidence_id": null,
+            "orientation": {
+              "up_axis": null,
+              "confirmed": false
+            },
+            "printer_profile_id": "demo_v1",
+            "description": ""
+          },
+          "state": {
+            "run_id": "0ebaebd8-5d0f-4fcc-bfec-ca433c768ebc",
+            "stage": "input",
+            "status": "waiting_for_input",
+            "pending_input_id": "i_6ca0759149b347a0ba49b1005bce2031",
+            "pending_input_type": "height",
+            "mesh_version": null,
+            "repair_round": 0,
+            "artifacts": [],
+            "checks": [],
+            "warnings": [],
+            "error": null
+          },
+          "printer_profile": {
+            "profile_id": "demo_v1",
+            "version": "1.0.0",
+            "profile_kind": "demo",
+            "process": "FDM",
+            "material": "PLA",
+            "nozzle_mm": 0.4,
+            "layer_height_mm": 0.2,
+            "min_wall_mm": 1.2,
+            "build_volume_mm": [
+              220.0,
+              220.0,
+              250.0
+            ],
+            "slicer_version": "2.9.6",
+            "supports_policy": "human_review"
+          },
+          "inspection": null,
+          "slicer_confirmation": null
+        },
+        "evidence": [],
+        "datasets": [],
+        "artifacts": [],
+        "warnings": [],
+        "events": [
+          "目标高度是多少？",
+          "高度单位是毫米(mm)还是厘米(cm)？",
+          "这是设计目标高度，还是有测量依据的实物高度？",
+          "哪个轴朝上？请确认模型方向。"
+        ],
+        "error": null
+      },
+      "pending": {
+        "pending_input_id": "i_6ca0759149b347a0ba49b1005bce2031",
+        "kind": "constraints",
+        "mesh_version": null,
+        "questions": [
+          "目标高度是多少？",
+          "高度单位是毫米(mm)还是厘米(cm)？",
+          "这是设计目标高度，还是有测量依据的实物高度？",
+          "哪个轴朝上？请确认模型方向。"
+        ],
+        "details": {
+          "missing": [
+            "height",
+            "height_unit",
+            "scale_source",
+            "orientation"
+          ],
+          "suggestions": null
+        }
+      },
+      "resources": {
+        "active_seconds": 0.0,
+        "known_completed_active_seconds": 0.0,
+        "tool_calls": 0,
+        "llm": {
+          "availability": "configured_unused",
+          "calls": 0,
+          "cost": null,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "records": [],
+          "reserved_tokens": 0,
+          "usage_complete": true
+        }
+      }
+    },
+    "after_reconstruction": {
+      "response": {
+        "schema_version": "1.0.0",
+        "request_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "task_id": "image_to_3d_print",
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "status": "waiting_for_input",
+        "data": {
+          "request": {
+            "schema_version": "1.0.0",
+            "image_asset_id": "a_2641ceaab2244d1fbf83f9926f91befe",
+            "height_value": 80.0,
+            "height_unit": "mm",
+            "scale_source": "user_target",
+            "scale_evidence_id": null,
+            "orientation": {
+              "up_axis": "z",
+              "confirmed": true
+            },
+            "printer_profile_id": "demo_v1",
+            "description": "这是简单的方块摆件，目标高度8厘米。其他不明确的地方请追问，不要猜。"
+          },
+          "state": {
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "stage": "scale",
+            "status": "waiting_for_input",
+            "pending_input_id": "i_db10e399f1f24b28a78aafb81c657c43",
+            "pending_input_type": "orientation",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "repair_round": 1,
+            "artifacts": [
+              "t_c06bcb2ef8f14597_human",
+              "t_09c032fd497d4698_original",
+              "t_09c032fd497d4698_foreground",
+              "t_09c032fd497d4698_mask",
+              "t_09c032fd497d4698_report",
+              "t_639c214224ab40fc_human",
+              "t_fa26d3b8e6554fb2_raw_mesh",
+              "t_fa26d3b8e6554fb2_process_log",
+              "t_fa26d3b8e6554fb2_model_json",
+              "t_fa26d3b8e6554fb2_execution_json",
+              "t_fa26d3b8e6554fb2_invocation_json",
+              "t_fa26d3b8e6554fb2_report",
+              "t_0ad082c91a634336_mesh",
+              "t_0ad082c91a634336_report",
+              "t_91911ab9006a448d_mesh",
+              "t_91911ab9006a448d_report",
+              "t_6b674278d3ab490a_preview",
+              "t_6b674278d3ab490a_report"
+            ],
+            "checks": [],
+            "warnings": [],
+            "error": null
+          },
+          "printer_profile": {
+            "profile_id": "demo_v1",
+            "version": "1.0.0",
+            "profile_kind": "demo",
+            "process": "FDM",
+            "material": "PLA",
+            "nozzle_mm": 0.4,
+            "layer_height_mm": 0.2,
+            "min_wall_mm": 1.2,
+            "build_volume_mm": [
+              220.0,
+              220.0,
+              250.0
+            ],
+            "slicer_version": "2.9.6",
+            "supports_policy": "human_review"
+          },
+          "inspection": null,
+          "slicer_confirmation": null
+        },
+        "evidence": [
+          {
+            "evidence_id": "t_c06bcb2ef8f14597_human",
+            "source_type": "tool",
+            "source_id": "s_292f619dc7597bb5a82b7f1c",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "artifact_id": "t_c06bcb2ef8f14597_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:38:04.822005Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_09c032fd497d4698_evidence",
+            "source_type": "tool",
+            "source_id": "t_09c032fd497d4698",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "artifact_id": "t_09c032fd497d4698_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_639c214224ab40fc_human",
+            "source_type": "tool",
+            "source_id": "s_4de04e309146a779b3febeb2",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "artifact_id": "t_639c214224ab40fc_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:38:06.966130Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_fa26d3b8e6554fb2_evidence",
+            "source_type": "tool",
+            "source_id": "t_fa26d3b8e6554fb2",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "artifact_id": "t_fa26d3b8e6554fb2_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_0ad082c91a634336_evidence",
+            "source_type": "tool",
+            "source_id": "t_0ad082c91a634336",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_e1891bb3681a46e0bad7c75d",
+            "artifact_id": "t_0ad082c91a634336_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:20.499831Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_91911ab9006a448d_evidence",
+            "source_type": "tool",
+            "source_id": "t_91911ab9006a448d",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_91911ab9006a448d_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:22.217199Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_6b674278d3ab490a_evidence",
+            "source_type": "tool",
+            "source_id": "t_6b674278d3ab490a",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_6b674278d3ab490a_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:23.356647Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          }
+        ],
+        "datasets": [],
+        "artifacts": [
+          {
+            "artifact_id": "t_c06bcb2ef8f14597_human",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_c06bcb2ef8f14597/human.json",
+            "created_at": "2026-10-21T10:38:04.822005Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_original",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "input_image",
+            "relative_path": "assets/a_2641ceaab2244d1fbf83f9926f91befe/original.png",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_foreground",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "foreground_image",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_09c032fd497d4698/foreground.png",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [
+              "t_09c032fd497d4698_original"
+            ],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_mask",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "foreground_image",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_09c032fd497d4698/mask.png",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [
+              "t_09c032fd497d4698_original"
+            ],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_09c032fd497d4698/tool-report.json",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_639c214224ab40fc_human",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_639c214224ab40fc/human.json",
+            "created_at": "2026-10-21T10:38:06.966130Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_raw_mesh",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "raw_mesh",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/versions/m_9888bd1032e0403d86a0b8d7/original.ply",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": "unitless"
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_process_log",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "log",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/process.log",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_model_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/model.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_execution_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/execution.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_invocation_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/invocation.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/tool-report.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_0ad082c91a634336_mesh",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_e1891bb3681a46e0bad7c75d",
+            "kind": "repaired_mesh",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/versions/m_e1891bb3681a46e0bad7c75d/mesh.ply",
+            "created_at": "2026-10-21T10:38:20.499831Z",
+            "derived_from": [],
+            "unit": "unitless"
+          },
+          {
+            "artifact_id": "t_0ad082c91a634336_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_e1891bb3681a46e0bad7c75d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_0ad082c91a634336/tool-report.json",
+            "created_at": "2026-10-21T10:38:20.499831Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_91911ab9006a448d_mesh",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "repaired_mesh",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/versions/m_398e3ccadfbf4e03b88ed13d/mesh.ply",
+            "created_at": "2026-10-21T10:38:22.217199Z",
+            "derived_from": [],
+            "unit": "mm"
+          },
+          {
+            "artifact_id": "t_91911ab9006a448d_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_91911ab9006a448d/tool-report.json",
+            "created_at": "2026-10-21T10:38:22.217199Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_6b674278d3ab490a_preview",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_6b674278d3ab490a/preview.png",
+            "created_at": "2026-10-21T10:38:23.356647Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_6b674278d3ab490a_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_6b674278d3ab490a/tool-report.json",
+            "created_at": "2026-10-21T10:38:23.356647Z",
+            "derived_from": [],
+            "unit": null
+          }
+        ],
+        "warnings": [],
+        "events": [
+          "目标高度是多少？",
+          "高度单位是毫米(mm)还是厘米(cm)？",
+          "这是设计目标高度，还是有测量依据的实物高度？",
+          "哪个轴朝上？请确认模型方向。",
+          "请核对语言模型提取的约束；姿态必须另行明确确认。",
+          "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。",
+          "请确认该 8 厘米是目标打印高度（用户指定），还是对图中实物测量所得？",
+          "请复核前景、主体完整性及简单非功能摆件适用性。",
+          "请复核本版本预览中的朝向、底面稳定性及组件。"
+        ],
+        "error": null
+      },
+      "pending": {
+        "pending_input_id": "i_db10e399f1f24b28a78aafb81c657c43",
+        "kind": "print_review",
+        "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+        "questions": [
+          "请复核本版本预览中的朝向、底面稳定性及组件。"
+        ],
+        "details": {
+          "component_count": 1,
+          "preview_artifact_id": "t_6b674278d3ab490a_preview"
+        }
+      },
+      "resources": {
+        "active_seconds": 5.623481560498476,
+        "known_completed_active_seconds": 5.623481560498476,
+        "tool_calls": 5,
+        "llm": {
+          "availability": "configured",
+          "calls": 1,
+          "cost": null,
+          "input_tokens": 347,
+          "output_tokens": 100,
+          "records": [
+            {
+              "cost": null,
+              "input_tokens": 347,
+              "model": "deepseek-flash",
+              "output_tokens": 100,
+              "purpose": "parse",
+              "reserved_upper_bound": 3819,
+              "served_model": "deepseek-flash",
+              "status": "succeeded"
+            }
+          ],
+          "reserved_tokens": 0,
+          "usage_complete": true
+        }
+      }
+    },
+    "waiting_runner_released": true,
+    "waiting_restart_preserved": true,
+    "after_inspection": {
+      "response": {
+        "schema_version": "1.0.0",
+        "request_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "task_id": "image_to_3d_print",
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "status": "waiting_for_input",
+        "data": {
+          "request": {
+            "schema_version": "1.0.0",
+            "image_asset_id": "a_2641ceaab2244d1fbf83f9926f91befe",
+            "height_value": 80.0,
+            "height_unit": "mm",
+            "scale_source": "user_target",
+            "scale_evidence_id": null,
+            "orientation": {
+              "up_axis": "z",
+              "confirmed": true
+            },
+            "printer_profile_id": "demo_v1",
+            "description": "这是简单的方块摆件，目标高度8厘米。其他不明确的地方请追问，不要猜。"
+          },
+          "state": {
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "stage": "repair",
+            "status": "waiting_for_input",
+            "pending_input_id": "i_aeede9cecd4e4a9b95ec30c650ecc7ae",
+            "pending_input_type": "repair_confirmation",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "repair_round": 1,
+            "artifacts": [
+              "t_c06bcb2ef8f14597_human",
+              "t_09c032fd497d4698_original",
+              "t_09c032fd497d4698_foreground",
+              "t_09c032fd497d4698_mask",
+              "t_09c032fd497d4698_report",
+              "t_639c214224ab40fc_human",
+              "t_fa26d3b8e6554fb2_raw_mesh",
+              "t_fa26d3b8e6554fb2_process_log",
+              "t_fa26d3b8e6554fb2_model_json",
+              "t_fa26d3b8e6554fb2_execution_json",
+              "t_fa26d3b8e6554fb2_invocation_json",
+              "t_fa26d3b8e6554fb2_report",
+              "t_0ad082c91a634336_mesh",
+              "t_0ad082c91a634336_report",
+              "t_91911ab9006a448d_mesh",
+              "t_91911ab9006a448d_report",
+              "t_6b674278d3ab490a_preview",
+              "t_6b674278d3ab490a_report",
+              "t_101a172002834378_human",
+              "t_e6ebbfda291045a1_blender_evidence",
+              "t_e6ebbfda291045a1_blender_log",
+              "t_e6ebbfda291045a1_report"
+            ],
+            "checks": [
+              {
+                "name": "finite_coordinates",
+                "status": "pass",
+                "value": true,
+                "threshold": null,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "components",
+                "status": "pass",
+                "value": 1,
+                "threshold": 1,
+                "unit": "count",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "reason": "分离组件须确认保留或指定删除，不能默认只留最大件",
+                  "review": {
+                    "component_count": 1,
+                    "confirmed": true,
+                    "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+                    "origin": "test_fixture",
+                    "reviewer": "cloud_fixture_automation"
+                  }
+                }
+              },
+              {
+                "name": "boundary_edges",
+                "status": "fail",
+                "value": 208,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "non_manifold_edges",
+                "status": "pass",
+                "value": 0,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "non_manifold_vertices",
+                "status": "fail",
+                "value": 2,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "watertight",
+                "status": "fail",
+                "value": false,
+                "threshold": true,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "normals",
+                "status": "pass",
+                "value": true,
+                "threshold": true,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "self_intersection",
+                "status": "pass",
+                "value": 0,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "face_indices": []
+                }
+              },
+              {
+                "name": "wall_thickness",
+                "status": "not_run",
+                "value": null,
+                "threshold": null,
+                "unit": null,
+                "tool_version": null,
+                "evidence_artifact_id": null,
+                "details": {
+                  "reason": "需要有效毫米尺度、水密且法线正确；不能将无命中当作通过"
+                }
+              },
+              {
+                "name": "overhang",
+                "status": "warn",
+                "value": 4492,
+                "threshold": 45.0,
+                "unit": "degree",
+                "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "critical_face_indices": [],
+                  "definition": "downward normal angle to -Z <45 degrees, bed faces excluded",
+                  "face_indices": {
+                    "original_count": 4492,
+                    "first_10": [
+                      1366,
+                      1367,
+                      1374,
+                      1375,
+                      1383,
+                      1973,
+                      1980,
+                      1981,
+                      1986,
+                      1987
+                    ],
+                    "abbreviated": true
+                  },
+                  "supports": "human_slicer_review"
+                }
+              },
+              {
+                "name": "dimensions",
+                "status": "pass",
+                "value": 0.0,
+                "threshold": 0.8,
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "dimensions_mm": [
+                    67.19655227661133,
+                    61.90082931518555,
+                    80.0
+                  ],
+                  "target_height_mm": 80.0
+                }
+              },
+              {
+                "name": "build_volume",
+                "status": "pass",
+                "value": true,
+                "threshold": [
+                  220.0,
+                  220.0,
+                  250.0
+                ],
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "profile_kind": "demo",
+                  "profile_version": "1.0.0"
+                }
+              },
+              {
+                "name": "bed_contact",
+                "status": "fail",
+                "value": false,
+                "threshold": 0.01,
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "contact_area_mm2": 0.0,
+                  "human_review": {
+                    "confirmed": true,
+                    "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+                    "origin": "test_fixture",
+                    "reviewer": "cloud_fixture_automation"
+                  },
+                  "minimum_z_mm": 0.0,
+                  "reason": "接触面积不等同稳定；需用户复核底面和支撑"
+                }
+              }
+            ],
+            "warnings": [],
+            "error": null
+          },
+          "printer_profile": {
+            "profile_id": "demo_v1",
+            "version": "1.0.0",
+            "profile_kind": "demo",
+            "process": "FDM",
+            "material": "PLA",
+            "nozzle_mm": 0.4,
+            "layer_height_mm": 0.2,
+            "min_wall_mm": 1.2,
+            "build_volume_mm": [
+              220.0,
+              220.0,
+              250.0
+            ],
+            "slicer_version": "2.9.6",
+            "supports_policy": "human_review"
+          },
+          "inspection": {
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "unit": "mm",
+            "dimensions_mm": [
+              67.19655227661133,
+              61.90082931518555,
+              80.0
+            ],
+            "volume_mm3": null,
+            "volume_reason": "缺有效毫米实体、自交检查或方向证据",
+            "component_count": 1,
+            "watertight": false,
+            "normals_consistent": true,
+            "boundary_edge_count": 208,
+            "non_manifold_edge_count": 0,
+            "non_manifold_vertex_count": 2,
+            "checks": [
+              {
+                "name": "finite_coordinates",
+                "status": "pass",
+                "value": true,
+                "threshold": null,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "components",
+                "status": "pass",
+                "value": 1,
+                "threshold": 1,
+                "unit": "count",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "reason": "分离组件须确认保留或指定删除，不能默认只留最大件",
+                  "review": {
+                    "component_count": 1,
+                    "confirmed": true,
+                    "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+                    "origin": "test_fixture",
+                    "reviewer": "cloud_fixture_automation"
+                  }
+                }
+              },
+              {
+                "name": "boundary_edges",
+                "status": "fail",
+                "value": 208,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "non_manifold_edges",
+                "status": "pass",
+                "value": 0,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "non_manifold_vertices",
+                "status": "fail",
+                "value": 2,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "watertight",
+                "status": "fail",
+                "value": false,
+                "threshold": true,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "normals",
+                "status": "pass",
+                "value": true,
+                "threshold": true,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "self_intersection",
+                "status": "pass",
+                "value": 0,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "face_indices": []
+                }
+              },
+              {
+                "name": "wall_thickness",
+                "status": "not_run",
+                "value": null,
+                "threshold": null,
+                "unit": null,
+                "tool_version": null,
+                "evidence_artifact_id": null,
+                "details": {
+                  "reason": "需要有效毫米尺度、水密且法线正确；不能将无命中当作通过"
+                }
+              },
+              {
+                "name": "overhang",
+                "status": "warn",
+                "value": 4492,
+                "threshold": 45.0,
+                "unit": "degree",
+                "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "critical_face_indices": [],
+                  "definition": "downward normal angle to -Z <45 degrees, bed faces excluded",
+                  "face_indices": {
+                    "original_count": 4492,
+                    "first_10": [
+                      1366,
+                      1367,
+                      1374,
+                      1375,
+                      1383,
+                      1973,
+                      1980,
+                      1981,
+                      1986,
+                      1987
+                    ],
+                    "abbreviated": true
+                  },
+                  "supports": "human_slicer_review"
+                }
+              },
+              {
+                "name": "dimensions",
+                "status": "pass",
+                "value": 0.0,
+                "threshold": 0.8,
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "dimensions_mm": [
+                    67.19655227661133,
+                    61.90082931518555,
+                    80.0
+                  ],
+                  "target_height_mm": 80.0
+                }
+              },
+              {
+                "name": "build_volume",
+                "status": "pass",
+                "value": true,
+                "threshold": [
+                  220.0,
+                  220.0,
+                  250.0
+                ],
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "profile_kind": "demo",
+                  "profile_version": "1.0.0"
+                }
+              },
+              {
+                "name": "bed_contact",
+                "status": "fail",
+                "value": false,
+                "threshold": 0.01,
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "contact_area_mm2": 0.0,
+                  "human_review": {
+                    "confirmed": true,
+                    "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+                    "origin": "test_fixture",
+                    "reviewer": "cloud_fixture_automation"
+                  },
+                  "minimum_z_mm": 0.0,
+                  "reason": "接触面积不等同稳定；需用户复核底面和支撑"
+                }
+              }
+            ]
+          },
+          "slicer_confirmation": null
+        },
+        "evidence": [
+          {
+            "evidence_id": "t_c06bcb2ef8f14597_human",
+            "source_type": "tool",
+            "source_id": "s_292f619dc7597bb5a82b7f1c",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "artifact_id": "t_c06bcb2ef8f14597_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:38:04.822005Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_09c032fd497d4698_evidence",
+            "source_type": "tool",
+            "source_id": "t_09c032fd497d4698",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "artifact_id": "t_09c032fd497d4698_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_639c214224ab40fc_human",
+            "source_type": "tool",
+            "source_id": "s_4de04e309146a779b3febeb2",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "artifact_id": "t_639c214224ab40fc_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:38:06.966130Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_fa26d3b8e6554fb2_evidence",
+            "source_type": "tool",
+            "source_id": "t_fa26d3b8e6554fb2",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "artifact_id": "t_fa26d3b8e6554fb2_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_0ad082c91a634336_evidence",
+            "source_type": "tool",
+            "source_id": "t_0ad082c91a634336",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_e1891bb3681a46e0bad7c75d",
+            "artifact_id": "t_0ad082c91a634336_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:20.499831Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_91911ab9006a448d_evidence",
+            "source_type": "tool",
+            "source_id": "t_91911ab9006a448d",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_91911ab9006a448d_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:22.217199Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_6b674278d3ab490a_evidence",
+            "source_type": "tool",
+            "source_id": "t_6b674278d3ab490a",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_6b674278d3ab490a_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:23.356647Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_101a172002834378_human",
+            "source_type": "tool",
+            "source_id": "s_5cfb1c6ab6fedfd20dc75844",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_101a172002834378_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:38:31.641640Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_e6ebbfda291045a1_evidence",
+            "source_type": "tool",
+            "source_id": "t_e6ebbfda291045a1",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_e6ebbfda291045a1_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:31.679306Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          }
+        ],
+        "datasets": [],
+        "artifacts": [
+          {
+            "artifact_id": "t_c06bcb2ef8f14597_human",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_c06bcb2ef8f14597/human.json",
+            "created_at": "2026-10-21T10:38:04.822005Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_original",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "input_image",
+            "relative_path": "assets/a_2641ceaab2244d1fbf83f9926f91befe/original.png",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_foreground",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "foreground_image",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_09c032fd497d4698/foreground.png",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [
+              "t_09c032fd497d4698_original"
+            ],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_mask",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "foreground_image",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_09c032fd497d4698/mask.png",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [
+              "t_09c032fd497d4698_original"
+            ],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_09c032fd497d4698/tool-report.json",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_639c214224ab40fc_human",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_639c214224ab40fc/human.json",
+            "created_at": "2026-10-21T10:38:06.966130Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_raw_mesh",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "raw_mesh",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/versions/m_9888bd1032e0403d86a0b8d7/original.ply",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": "unitless"
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_process_log",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "log",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/process.log",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_model_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/model.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_execution_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/execution.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_invocation_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/invocation.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/tool-report.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_0ad082c91a634336_mesh",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_e1891bb3681a46e0bad7c75d",
+            "kind": "repaired_mesh",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/versions/m_e1891bb3681a46e0bad7c75d/mesh.ply",
+            "created_at": "2026-10-21T10:38:20.499831Z",
+            "derived_from": [],
+            "unit": "unitless"
+          },
+          {
+            "artifact_id": "t_0ad082c91a634336_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_e1891bb3681a46e0bad7c75d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_0ad082c91a634336/tool-report.json",
+            "created_at": "2026-10-21T10:38:20.499831Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_91911ab9006a448d_mesh",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "repaired_mesh",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/versions/m_398e3ccadfbf4e03b88ed13d/mesh.ply",
+            "created_at": "2026-10-21T10:38:22.217199Z",
+            "derived_from": [],
+            "unit": "mm"
+          },
+          {
+            "artifact_id": "t_91911ab9006a448d_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_91911ab9006a448d/tool-report.json",
+            "created_at": "2026-10-21T10:38:22.217199Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_6b674278d3ab490a_preview",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_6b674278d3ab490a/preview.png",
+            "created_at": "2026-10-21T10:38:23.356647Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_6b674278d3ab490a_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_6b674278d3ab490a/tool-report.json",
+            "created_at": "2026-10-21T10:38:23.356647Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_101a172002834378_human",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_101a172002834378/human.json",
+            "created_at": "2026-10-21T10:38:31.641640Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_e6ebbfda291045a1_blender_evidence",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_e6ebbfda291045a1/blender-result.json",
+            "created_at": "2026-10-21T10:38:31.679306Z",
+            "derived_from": [],
+            "unit": "mm"
+          },
+          {
+            "artifact_id": "t_e6ebbfda291045a1_blender_log",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "log",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_e6ebbfda291045a1/blender.log",
+            "created_at": "2026-10-21T10:38:31.679306Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_e6ebbfda291045a1_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_e6ebbfda291045a1/tool-report.json",
+            "created_at": "2026-10-21T10:38:31.679306Z",
+            "derived_from": [],
+            "unit": null
+          }
+        ],
+        "warnings": [],
+        "events": [
+          "目标高度是多少？",
+          "高度单位是毫米(mm)还是厘米(cm)？",
+          "这是设计目标高度，还是有测量依据的实物高度？",
+          "哪个轴朝上？请确认模型方向。",
+          "请核对语言模型提取的约束；姿态必须另行明确确认。",
+          "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。",
+          "请确认该 8 厘米是目标打印高度（用户指定），还是对图中实物测量所得？",
+          "请复核前景、主体完整性及简单非功能摆件适用性。",
+          "请复核本版本预览中的朝向、底面稳定性及组件。",
+          "检查未通过，请指定受支持的修复参数，或停止任务。"
+        ],
+        "error": null
+      },
+      "pending": {
+        "pending_input_id": "i_aeede9cecd4e4a9b95ec30c650ecc7ae",
+        "kind": "repair_request",
+        "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+        "questions": [
+          "检查未通过，请指定受支持的修复参数，或停止任务。"
+        ],
+        "details": {
+          "allowed_operations": [
+            "fill_small_holes"
+          ],
+          "blocking_checks": [
+            "boundary_edges",
+            "non_manifold_vertices",
+            "watertight",
+            "wall_thickness",
+            "bed_contact"
+          ]
+        }
+      },
+      "resources": {
+        "active_seconds": 27.504804592579603,
+        "known_completed_active_seconds": 27.504804592579603,
+        "tool_calls": 6,
+        "llm": {
+          "availability": "configured",
+          "calls": 2,
+          "cost": null,
+          "input_tokens": 974,
+          "output_tokens": 376,
+          "records": [
+            {
+              "cost": null,
+              "input_tokens": 347,
+              "model": "deepseek-flash",
+              "output_tokens": 100,
+              "purpose": "parse",
+              "reserved_upper_bound": 3819,
+              "served_model": "deepseek-flash",
+              "status": "succeeded"
+            },
+            {
+              "cost": null,
+              "input_tokens": 627,
+              "model": "deepseek-flash",
+              "output_tokens": 276,
+              "purpose": "explain",
+              "reserved_upper_bound": 4485,
+              "served_model": "deepseek-flash",
+              "status": "succeeded"
+            }
+          ],
+          "reserved_tokens": 0,
+          "usage_complete": true
+        }
+      }
+    },
+    "final": {
+      "response": {
+        "schema_version": "1.0.0",
+        "request_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "task_id": "image_to_3d_print",
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "status": "failed",
+        "data": {
+          "request": {
+            "schema_version": "1.0.0",
+            "image_asset_id": "a_2641ceaab2244d1fbf83f9926f91befe",
+            "height_value": 80.0,
+            "height_unit": "mm",
+            "scale_source": "user_target",
+            "scale_evidence_id": null,
+            "orientation": {
+              "up_axis": "z",
+              "confirmed": true
+            },
+            "printer_profile_id": "demo_v1",
+            "description": "这是简单的方块摆件，目标高度8厘米。其他不明确的地方请追问，不要猜。"
+          },
+          "state": {
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "stage": "repair",
+            "status": "failed",
+            "pending_input_id": null,
+            "pending_input_type": null,
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "repair_round": 1,
+            "artifacts": [
+              "t_c06bcb2ef8f14597_human",
+              "t_09c032fd497d4698_original",
+              "t_09c032fd497d4698_foreground",
+              "t_09c032fd497d4698_mask",
+              "t_09c032fd497d4698_report",
+              "t_639c214224ab40fc_human",
+              "t_fa26d3b8e6554fb2_raw_mesh",
+              "t_fa26d3b8e6554fb2_process_log",
+              "t_fa26d3b8e6554fb2_model_json",
+              "t_fa26d3b8e6554fb2_execution_json",
+              "t_fa26d3b8e6554fb2_invocation_json",
+              "t_fa26d3b8e6554fb2_report",
+              "t_0ad082c91a634336_mesh",
+              "t_0ad082c91a634336_report",
+              "t_91911ab9006a448d_mesh",
+              "t_91911ab9006a448d_report",
+              "t_6b674278d3ab490a_preview",
+              "t_6b674278d3ab490a_report",
+              "t_101a172002834378_human",
+              "t_e6ebbfda291045a1_blender_evidence",
+              "t_e6ebbfda291045a1_blender_log",
+              "t_e6ebbfda291045a1_report",
+              "t_8f84254db279457e_human",
+              "t_795cadb5913843ad_json",
+              "t_795cadb5913843ad_markdown"
+            ],
+            "checks": [
+              {
+                "name": "finite_coordinates",
+                "status": "pass",
+                "value": true,
+                "threshold": null,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "components",
+                "status": "pass",
+                "value": 1,
+                "threshold": 1,
+                "unit": "count",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "reason": "分离组件须确认保留或指定删除，不能默认只留最大件",
+                  "review": {
+                    "component_count": 1,
+                    "confirmed": true,
+                    "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+                    "origin": "test_fixture",
+                    "reviewer": "cloud_fixture_automation"
+                  }
+                }
+              },
+              {
+                "name": "boundary_edges",
+                "status": "fail",
+                "value": 208,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "non_manifold_edges",
+                "status": "pass",
+                "value": 0,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "non_manifold_vertices",
+                "status": "fail",
+                "value": 2,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "watertight",
+                "status": "fail",
+                "value": false,
+                "threshold": true,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "normals",
+                "status": "pass",
+                "value": true,
+                "threshold": true,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "self_intersection",
+                "status": "pass",
+                "value": 0,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "face_indices": []
+                }
+              },
+              {
+                "name": "wall_thickness",
+                "status": "not_run",
+                "value": null,
+                "threshold": null,
+                "unit": null,
+                "tool_version": null,
+                "evidence_artifact_id": null,
+                "details": {
+                  "reason": "需要有效毫米尺度、水密且法线正确；不能将无命中当作通过"
+                }
+              },
+              {
+                "name": "overhang",
+                "status": "warn",
+                "value": 4492,
+                "threshold": 45.0,
+                "unit": "degree",
+                "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "critical_face_indices": [],
+                  "definition": "downward normal angle to -Z <45 degrees, bed faces excluded",
+                  "face_indices": {
+                    "original_count": 4492,
+                    "first_10": [
+                      1366,
+                      1367,
+                      1374,
+                      1375,
+                      1383,
+                      1973,
+                      1980,
+                      1981,
+                      1986,
+                      1987
+                    ],
+                    "abbreviated": true
+                  },
+                  "supports": "human_slicer_review"
+                }
+              },
+              {
+                "name": "dimensions",
+                "status": "pass",
+                "value": 0.0,
+                "threshold": 0.8,
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "dimensions_mm": [
+                    67.19655227661133,
+                    61.90082931518555,
+                    80.0
+                  ],
+                  "target_height_mm": 80.0
+                }
+              },
+              {
+                "name": "build_volume",
+                "status": "pass",
+                "value": true,
+                "threshold": [
+                  220.0,
+                  220.0,
+                  250.0
+                ],
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "profile_kind": "demo",
+                  "profile_version": "1.0.0"
+                }
+              },
+              {
+                "name": "bed_contact",
+                "status": "fail",
+                "value": false,
+                "threshold": 0.01,
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "contact_area_mm2": 0.0,
+                  "human_review": {
+                    "confirmed": true,
+                    "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+                    "origin": "test_fixture",
+                    "reviewer": "cloud_fixture_automation"
+                  },
+                  "minimum_z_mm": 0.0,
+                  "reason": "接触面积不等同稳定；需用户复核底面和支撑"
+                }
+              }
+            ],
+            "warnings": [],
+            "error": {
+              "code": "MESH_NOT_PRINTABLE",
+              "message": "用户选择停止修复",
+              "details": {}
+            }
+          },
+          "printer_profile": {
+            "profile_id": "demo_v1",
+            "version": "1.0.0",
+            "profile_kind": "demo",
+            "process": "FDM",
+            "material": "PLA",
+            "nozzle_mm": 0.4,
+            "layer_height_mm": 0.2,
+            "min_wall_mm": 1.2,
+            "build_volume_mm": [
+              220.0,
+              220.0,
+              250.0
+            ],
+            "slicer_version": "2.9.6",
+            "supports_policy": "human_review"
+          },
+          "inspection": {
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "unit": "mm",
+            "dimensions_mm": [
+              67.19655227661133,
+              61.90082931518555,
+              80.0
+            ],
+            "volume_mm3": null,
+            "volume_reason": "缺有效毫米实体、自交检查或方向证据",
+            "component_count": 1,
+            "watertight": false,
+            "normals_consistent": true,
+            "boundary_edge_count": 208,
+            "non_manifold_edge_count": 0,
+            "non_manifold_vertex_count": 2,
+            "checks": [
+              {
+                "name": "finite_coordinates",
+                "status": "pass",
+                "value": true,
+                "threshold": null,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "components",
+                "status": "pass",
+                "value": 1,
+                "threshold": 1,
+                "unit": "count",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "reason": "分离组件须确认保留或指定删除，不能默认只留最大件",
+                  "review": {
+                    "component_count": 1,
+                    "confirmed": true,
+                    "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+                    "origin": "test_fixture",
+                    "reviewer": "cloud_fixture_automation"
+                  }
+                }
+              },
+              {
+                "name": "boundary_edges",
+                "status": "fail",
+                "value": 208,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "non_manifold_edges",
+                "status": "pass",
+                "value": 0,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "non_manifold_vertices",
+                "status": "fail",
+                "value": 2,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "watertight",
+                "status": "fail",
+                "value": false,
+                "threshold": true,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "normals",
+                "status": "pass",
+                "value": true,
+                "threshold": true,
+                "unit": null,
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {}
+              },
+              {
+                "name": "self_intersection",
+                "status": "pass",
+                "value": 0,
+                "threshold": 0,
+                "unit": null,
+                "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "face_indices": []
+                }
+              },
+              {
+                "name": "wall_thickness",
+                "status": "not_run",
+                "value": null,
+                "threshold": null,
+                "unit": null,
+                "tool_version": null,
+                "evidence_artifact_id": null,
+                "details": {
+                  "reason": "需要有效毫米尺度、水密且法线正确；不能将无命中当作通过"
+                }
+              },
+              {
+                "name": "overhang",
+                "status": "warn",
+                "value": 4492,
+                "threshold": 45.0,
+                "unit": "degree",
+                "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "critical_face_indices": [],
+                  "definition": "downward normal angle to -Z <45 degrees, bed faces excluded",
+                  "face_indices": {
+                    "original_count": 4492,
+                    "first_10": [
+                      1366,
+                      1367,
+                      1374,
+                      1375,
+                      1383,
+                      1973,
+                      1980,
+                      1981,
+                      1986,
+                      1987
+                    ],
+                    "abbreviated": true
+                  },
+                  "supports": "human_slicer_review"
+                }
+              },
+              {
+                "name": "dimensions",
+                "status": "pass",
+                "value": 0.0,
+                "threshold": 0.8,
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "dimensions_mm": [
+                    67.19655227661133,
+                    61.90082931518555,
+                    80.0
+                  ],
+                  "target_height_mm": 80.0
+                }
+              },
+              {
+                "name": "build_volume",
+                "status": "pass",
+                "value": true,
+                "threshold": [
+                  220.0,
+                  220.0,
+                  250.0
+                ],
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "profile_kind": "demo",
+                  "profile_version": "1.0.0"
+                }
+              },
+              {
+                "name": "bed_contact",
+                "status": "fail",
+                "value": false,
+                "threshold": 0.01,
+                "unit": "mm",
+                "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+                "evidence_artifact_id": "t_e6ebbfda291045a1_report",
+                "details": {
+                  "contact_area_mm2": 0.0,
+                  "human_review": {
+                    "confirmed": true,
+                    "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+                    "origin": "test_fixture",
+                    "reviewer": "cloud_fixture_automation"
+                  },
+                  "minimum_z_mm": 0.0,
+                  "reason": "接触面积不等同稳定；需用户复核底面和支撑"
+                }
+              }
+            ]
+          },
+          "slicer_confirmation": null
+        },
+        "evidence": [
+          {
+            "evidence_id": "t_c06bcb2ef8f14597_human",
+            "source_type": "tool",
+            "source_id": "s_292f619dc7597bb5a82b7f1c",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "artifact_id": "t_c06bcb2ef8f14597_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:38:04.822005Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_09c032fd497d4698_evidence",
+            "source_type": "tool",
+            "source_id": "t_09c032fd497d4698",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "artifact_id": "t_09c032fd497d4698_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_639c214224ab40fc_human",
+            "source_type": "tool",
+            "source_id": "s_4de04e309146a779b3febeb2",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "artifact_id": "t_639c214224ab40fc_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:38:06.966130Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_fa26d3b8e6554fb2_evidence",
+            "source_type": "tool",
+            "source_id": "t_fa26d3b8e6554fb2",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "artifact_id": "t_fa26d3b8e6554fb2_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_0ad082c91a634336_evidence",
+            "source_type": "tool",
+            "source_id": "t_0ad082c91a634336",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_e1891bb3681a46e0bad7c75d",
+            "artifact_id": "t_0ad082c91a634336_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:20.499831Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_91911ab9006a448d_evidence",
+            "source_type": "tool",
+            "source_id": "t_91911ab9006a448d",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_91911ab9006a448d_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:22.217199Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_6b674278d3ab490a_evidence",
+            "source_type": "tool",
+            "source_id": "t_6b674278d3ab490a",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_6b674278d3ab490a_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:23.356647Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_101a172002834378_human",
+            "source_type": "tool",
+            "source_id": "s_5cfb1c6ab6fedfd20dc75844",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_101a172002834378_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:38:31.641640Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          },
+          {
+            "evidence_id": "t_e6ebbfda291045a1_evidence",
+            "source_type": "tool",
+            "source_id": "t_e6ebbfda291045a1",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_e6ebbfda291045a1_report",
+            "locator": "data",
+            "created_at": "2026-10-21T10:38:31.679306Z",
+            "summary": "实际工具执行记录；不替代最终预览和切片确认"
+          },
+          {
+            "evidence_id": "t_8f84254db279457e_human",
+            "source_type": "tool",
+            "source_id": "s_53618e96d05f385e88ce9051",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "artifact_id": "t_8f84254db279457e_human",
+            "locator": "human.json",
+            "created_at": "2026-10-21T10:38:41.564214Z",
+            "summary": "固定样例自动提交，不作实际人工证据"
+          }
+        ],
+        "datasets": [],
+        "artifacts": [
+          {
+            "artifact_id": "t_c06bcb2ef8f14597_human",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_c06bcb2ef8f14597/human.json",
+            "created_at": "2026-10-21T10:38:04.822005Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_original",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "input_image",
+            "relative_path": "assets/a_2641ceaab2244d1fbf83f9926f91befe/original.png",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_foreground",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "foreground_image",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_09c032fd497d4698/foreground.png",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [
+              "t_09c032fd497d4698_original"
+            ],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_mask",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "foreground_image",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_09c032fd497d4698/mask.png",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [
+              "t_09c032fd497d4698_original"
+            ],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_09c032fd497d4698_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_09c032fd497d4698/tool-report.json",
+            "created_at": "2026-10-21T10:38:04.835631Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_639c214224ab40fc_human",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": null,
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_639c214224ab40fc/human.json",
+            "created_at": "2026-10-21T10:38:06.966130Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_raw_mesh",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "raw_mesh",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/versions/m_9888bd1032e0403d86a0b8d7/original.ply",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": "unitless"
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_process_log",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "log",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/process.log",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_model_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/model.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_execution_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/execution.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_invocation_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/invocation.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_fa26d3b8e6554fb2_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_9888bd1032e0403d86a0b8d7",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_fa26d3b8e6554fb2/tool-report.json",
+            "created_at": "2026-10-21T10:38:06.983790Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_0ad082c91a634336_mesh",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_e1891bb3681a46e0bad7c75d",
+            "kind": "repaired_mesh",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/versions/m_e1891bb3681a46e0bad7c75d/mesh.ply",
+            "created_at": "2026-10-21T10:38:20.499831Z",
+            "derived_from": [],
+            "unit": "unitless"
+          },
+          {
+            "artifact_id": "t_0ad082c91a634336_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_e1891bb3681a46e0bad7c75d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_0ad082c91a634336/tool-report.json",
+            "created_at": "2026-10-21T10:38:20.499831Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_91911ab9006a448d_mesh",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "repaired_mesh",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/versions/m_398e3ccadfbf4e03b88ed13d/mesh.ply",
+            "created_at": "2026-10-21T10:38:22.217199Z",
+            "derived_from": [],
+            "unit": "mm"
+          },
+          {
+            "artifact_id": "t_91911ab9006a448d_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_91911ab9006a448d/tool-report.json",
+            "created_at": "2026-10-21T10:38:22.217199Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_6b674278d3ab490a_preview",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_6b674278d3ab490a/preview.png",
+            "created_at": "2026-10-21T10:38:23.356647Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_6b674278d3ab490a_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_6b674278d3ab490a/tool-report.json",
+            "created_at": "2026-10-21T10:38:23.356647Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_101a172002834378_human",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_101a172002834378/human.json",
+            "created_at": "2026-10-21T10:38:31.641640Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_e6ebbfda291045a1_blender_evidence",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_e6ebbfda291045a1/blender-result.json",
+            "created_at": "2026-10-21T10:38:31.679306Z",
+            "derived_from": [],
+            "unit": "mm"
+          },
+          {
+            "artifact_id": "t_e6ebbfda291045a1_blender_log",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "log",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_e6ebbfda291045a1/blender.log",
+            "created_at": "2026-10-21T10:38:31.679306Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_e6ebbfda291045a1_report",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_e6ebbfda291045a1/tool-report.json",
+            "created_at": "2026-10-21T10:38:31.679306Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_8f84254db279457e_human",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "inspection_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_8f84254db279457e/human.json",
+            "created_at": "2026-10-21T10:38:41.564214Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_795cadb5913843ad_json",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "quality_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_795cadb5913843ad/quality.json",
+            "created_at": "2026-10-21T10:38:41.607647Z",
+            "derived_from": [],
+            "unit": null
+          },
+          {
+            "artifact_id": "t_795cadb5913843ad_markdown",
+            "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "kind": "quality_report",
+            "relative_path": "runs/d6d629d5-4f08-4449-aa03-94e7b5ac5017/tools/t_795cadb5913843ad/quality.md",
+            "created_at": "2026-10-21T10:38:41.607647Z",
+            "derived_from": [],
+            "unit": null
+          }
+        ],
+        "warnings": [],
+        "events": [
+          "目标高度是多少？",
+          "高度单位是毫米(mm)还是厘米(cm)？",
+          "这是设计目标高度，还是有测量依据的实物高度？",
+          "哪个轴朝上？请确认模型方向。",
+          "请核对语言模型提取的约束；姿态必须另行明确确认。",
+          "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。",
+          "请确认该 8 厘米是目标打印高度（用户指定），还是对图中实物测量所得？",
+          "请复核前景、主体完整性及简单非功能摆件适用性。",
+          "请复核本版本预览中的朝向、底面稳定性及组件。",
+          "检查未通过，请指定受支持的修复参数，或停止任务。"
+        ],
+        "error": {
+          "code": "MESH_NOT_PRINTABLE",
+          "message": "用户选择停止修复",
+          "details": {}
+        }
+      },
+      "pending": null,
+      "resources": {
+        "active_seconds": 37.36909410730004,
+        "known_completed_active_seconds": 37.36909410730004,
+        "tool_calls": 6,
+        "llm": {
+          "availability": "configured",
+          "calls": 2,
+          "cost": null,
+          "input_tokens": 974,
+          "output_tokens": 376,
+          "records": [
+            {
+              "cost": null,
+              "input_tokens": 347,
+              "model": "deepseek-flash",
+              "output_tokens": 100,
+              "purpose": "parse",
+              "reserved_upper_bound": 3819,
+              "served_model": "deepseek-flash",
+              "status": "succeeded"
+            },
+            {
+              "cost": null,
+              "input_tokens": 627,
+              "model": "deepseek-flash",
+              "output_tokens": 276,
+              "purpose": "explain",
+              "reserved_upper_bound": 4485,
+              "served_model": "deepseek-flash",
+              "status": "succeeded"
+            }
+          ],
+          "reserved_tokens": 0,
+          "usage_complete": true
+        }
+      }
+    },
+    "reconstruction_calls": 1,
+    "events": [
+      {
+        "event_id": 1,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "created",
+        "stage": "input",
+        "status": "queued",
+        "created_at": "2026-10-21T10:37:57.262713+00:00",
+        "data": {}
+      },
+      {
+        "event_id": 2,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "llm_started",
+        "stage": "input",
+        "status": "running",
+        "created_at": "2026-10-21T10:37:59.550263+00:00",
+        "data": {
+          "call": 1,
+          "purpose": "parse"
+        }
+      },
+      {
+        "event_id": 3,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "input",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:00.759648+00:00",
+        "data": {
+          "node": "parse"
+        }
+      },
+      {
+        "event_id": 4,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "waiting",
+        "stage": "input",
+        "status": "waiting_for_input",
+        "created_at": "2026-10-21T10:38:00.791867+00:00",
+        "data": {
+          "pending": {
+            "details": {
+              "missing": [
+                "height",
+                "height_unit",
+                "scale_source",
+                "orientation"
+              ],
+              "suggestions": {
+                "explanation": "描述中明确目标高度为 8 厘米，因此按用户目标尺寸解析；上方向未确认，需追问。",
+                "height_unit": "cm",
+                "height_value": 8.0,
+                "questions": [
+                  "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。",
+                  "请确认该 8 厘米是目标打印高度（用户指定），还是对图中实物测量所得？"
+                ],
+                "scale_source": "user_target",
+                "up_axis": null
+              }
+            },
+            "kind": "constraints",
+            "mesh_version": null,
+            "pending_input_id": "i_c310e1cedd7749cdb25cf8c19590f6b2",
+            "public_type": "height",
+            "questions": [
+              "目标高度是多少？",
+              "高度单位是毫米(mm)还是厘米(cm)？",
+              "这是设计目标高度，还是有测量依据的实物高度？",
+              "哪个轴朝上？请确认模型方向。",
+              "请核对语言模型提取的约束；姿态必须另行明确确认。",
+              "请确认摆件的上方向（up_axis），例如 +Z 或 +Y。",
+              "请确认该 8 厘米是目标打印高度（用户指定），还是对图中实物测量所得？"
+            ]
+          }
+        }
+      },
+      {
+        "event_id": 8,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "input_submitted",
+        "stage": "input",
+        "status": "queued",
+        "created_at": "2026-10-21T10:38:02.989867+00:00",
+        "data": {
+          "submission_id": "s_292f619dc7597bb5a82b7f1c"
+        }
+      },
+      {
+        "event_id": 9,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "input",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:04.824430+00:00",
+        "data": {
+          "node": "consume"
+        }
+      },
+      {
+        "event_id": 10,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "tool_started",
+        "stage": "preprocess",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:04.832765+00:00",
+        "data": {
+          "call": 1,
+          "operation": "prepare_image"
+        }
+      },
+      {
+        "event_id": 11,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "preprocess",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:04.872712+00:00",
+        "data": {
+          "node": "prepare"
+        }
+      },
+      {
+        "event_id": 12,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "waiting",
+        "stage": "preprocess",
+        "status": "waiting_for_input",
+        "created_at": "2026-10-21T10:38:04.880237+00:00",
+        "data": {
+          "pending": {
+            "details": {
+              "foreground_artifact_id": "t_09c032fd497d4698_foreground",
+              "mask_artifact_id": "t_09c032fd497d4698_mask"
+            },
+            "kind": "input_review",
+            "mesh_version": null,
+            "pending_input_id": "i_1471d763a38c476faed538551936ac79",
+            "public_type": "replacement_image",
+            "questions": [
+              "请复核前景、主体完整性及简单非功能摆件适用性。"
+            ]
+          }
+        }
+      },
+      {
+        "event_id": 13,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "input_submitted",
+        "stage": "preprocess",
+        "status": "queued",
+        "created_at": "2026-10-21T10:38:04.904468+00:00",
+        "data": {
+          "submission_id": "s_4de04e309146a779b3febeb2"
+        }
+      },
+      {
+        "event_id": 14,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "preprocess",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:06.968995+00:00",
+        "data": {
+          "node": "consume"
+        }
+      },
+      {
+        "event_id": 15,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "tool_started",
+        "stage": "reconstruct",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:06.977658+00:00",
+        "data": {
+          "call": 2,
+          "operation": "reconstruct"
+        }
+      },
+      {
+        "event_id": 16,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "reconstruct",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:20.481225+00:00",
+        "data": {
+          "node": "reconstruct"
+        }
+      },
+      {
+        "event_id": 17,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "tool_started",
+        "stage": "repair",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:20.495464+00:00",
+        "data": {
+          "call": 3,
+          "operation": "clean"
+        }
+      },
+      {
+        "event_id": 18,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "repair",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:22.196606+00:00",
+        "data": {
+          "node": "clean"
+        }
+      },
+      {
+        "event_id": 19,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "tool_started",
+        "stage": "scale",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:22.210676+00:00",
+        "data": {
+          "call": 4,
+          "operation": "scale"
+        }
+      },
+      {
+        "event_id": 20,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "scale",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:22.315710+00:00",
+        "data": {
+          "node": "scale"
+        }
+      },
+      {
+        "event_id": 21,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "tool_started",
+        "stage": "scale",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:23.349967+00:00",
+        "data": {
+          "call": 5,
+          "operation": "preview"
+        }
+      },
+      {
+        "event_id": 22,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "scale",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:26.711898+00:00",
+        "data": {
+          "node": "preview"
+        }
+      },
+      {
+        "event_id": 23,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "waiting",
+        "stage": "scale",
+        "status": "waiting_for_input",
+        "created_at": "2026-10-21T10:38:26.733911+00:00",
+        "data": {
+          "pending": {
+            "details": {
+              "component_count": 1,
+              "preview_artifact_id": "t_6b674278d3ab490a_preview"
+            },
+            "kind": "print_review",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "pending_input_id": "i_db10e399f1f24b28a78aafb81c657c43",
+            "public_type": "orientation",
+            "questions": [
+              "请复核本版本预览中的朝向、底面稳定性及组件。"
+            ]
+          }
+        }
+      },
+      {
+        "event_id": 24,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "input_submitted",
+        "stage": "scale",
+        "status": "queued",
+        "created_at": "2026-10-21T10:38:29.797050+00:00",
+        "data": {
+          "submission_id": "s_5cfb1c6ab6fedfd20dc75844"
+        }
+      },
+      {
+        "event_id": 25,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "scale",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:31.645074+00:00",
+        "data": {
+          "node": "consume"
+        }
+      },
+      {
+        "event_id": 26,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "tool_started",
+        "stage": "inspect",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:31.676913+00:00",
+        "data": {
+          "call": 6,
+          "operation": "inspect"
+        }
+      },
+      {
+        "event_id": 27,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "inspect",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:37.127439+00:00",
+        "data": {
+          "node": "inspect"
+        }
+      },
+      {
+        "event_id": 28,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "llm_started",
+        "stage": "inspect",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:37.191794+00:00",
+        "data": {
+          "call": 2,
+          "purpose": "explain"
+        }
+      },
+      {
+        "event_id": 29,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "inspect",
+        "status": "running",
+        "created_at": "2026-10-21T10:38:39.387834+00:00",
+        "data": {
+          "node": "explain"
+        }
+      },
+      {
+        "event_id": 30,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "waiting",
+        "stage": "repair",
+        "status": "waiting_for_input",
+        "created_at": "2026-10-21T10:38:39.455866+00:00",
+        "data": {
+          "pending": {
+            "details": {
+              "allowed_operations": [
+                "fill_small_holes"
+              ],
+              "blocking_checks": [
+                "boundary_edges",
+                "non_manifold_vertices",
+                "watertight",
+                "wall_thickness",
+                "bed_contact"
+              ]
+            },
+            "kind": "repair_request",
+            "mesh_version": "m_398e3ccadfbf4e03b88ed13d",
+            "pending_input_id": "i_aeede9cecd4e4a9b95ec30c650ecc7ae",
+            "public_type": "repair_confirmation",
+            "questions": [
+              "检查未通过，请指定受支持的修复参数，或停止任务。"
+            ]
+          }
+        }
+      },
+      {
+        "event_id": 31,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "input_submitted",
+        "stage": "repair",
+        "status": "queued",
+        "created_at": "2026-10-21T10:38:39.684685+00:00",
+        "data": {
+          "submission_id": "s_53618e96d05f385e88ce9051"
+        }
+      },
+      {
+        "event_id": 32,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "node_completed",
+        "stage": "repair",
+        "status": "failed",
+        "created_at": "2026-10-21T10:38:41.583362+00:00",
+        "data": {
+          "node": "consume"
+        }
+      },
+      {
+        "event_id": 33,
+        "run_id": "d6d629d5-4f08-4449-aa03-94e7b5ac5017",
+        "kind": "completed",
+        "stage": "repair",
+        "status": "failed",
+        "created_at": "2026-10-21T10:38:41.653366+00:00",
+        "data": {}
+      }
+    ],
+    "reports_downloaded": [
+      "t_795cadb5913843ad_json.json",
+      "t_795cadb5913843ad_markdown.md"
+    ],
+    "passed": true,
+    "service_processes_stopped": true,
+    "gpu_after": "0 MiB, 0 %"
+  }
+}
