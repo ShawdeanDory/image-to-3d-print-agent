@@ -1,0 +1,18 @@
+
+> image-to-3d-print-ui@0.1.0 test
+> vitest run --reporter=verbose
+
+
+ RUN  v3.2.4 C:/Users/Lenovo/Desktop/大数据实训/frontend
+
+ ✓ src/domain.test.ts > 页面沿用后端语义 > 未执行不能当通过，未知高度不填0 2ms
+ ✓ src/domain.test.ts > 页面沿用后端语义 > 悬垂面数与角度分开，布尔结果不拼尺寸单位 0ms
+ ✓ src/domain.test.ts > 页面沿用后端语义 > 限制图片大小与类型，最终格式仍由服务端核验 1ms
+ ✓ src/domain.test.ts > 页面沿用后端语义 > 按事件ID去重，拒绝其他任务事件 1ms
+ ✓ src/domain.test.ts > 页面沿用后端语义 > 每次确认绑定等待项与版本，不能由字段覆盖 1ms
+ ✓ src/domain.test.ts > 页面沿用后端语义 > 仅本任务登记模型进入预览，不把日志当下载或预存模型 0ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  19:37:21
+   Duration  917ms (transform 63ms, setup 0ms, collect 69ms, tests 7ms, environment 0ms, prepare 408ms)

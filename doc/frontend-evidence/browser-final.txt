@@ -1,0 +1,17 @@
+
+> image-to-3d-print-ui@0.1.0 test:browser
+> playwright test
+
+
+Running 4 tests using 1 worker
+
+(node:9312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\workflow.spec.ts:17:1 › 真实API与CPU工具fixture：缺尺度、刷新、确认、修复预览、下载和切片失败 (23.3s)
+  ok 2 tests\workflow.spec.ts:127:1 › 取消等待任务，刷新不恢复计算 (3.1s)
+  ok 3 tests\workflow.spec.ts:145:1 › 损坏上传与断网可理解，后端字符串只作为文本 (948ms)
+  ok 4 tests\workflow.spec.ts:174:1 › 网络失败后重试保持同一提交内容与幂等ID (3.1s)
+
+  4 passed (32.9s)

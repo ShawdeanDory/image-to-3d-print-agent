@@ -1,0 +1,19 @@
+........................................................................ [ 36%]
+.......sss..s.........................................s................. [ 72%]
+......................................................                   [100%]
+============================== warnings summary ===============================
+runtime\envs\backend\Lib\site-packages\langgraph\checkpoint\base\__init__.py:18
+  C:\Users\Lenovo\Desktop\大数据实训\runtime\envs\backend\Lib\site-packages\langgraph\checkpoint\base\__init__.py:18: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+    from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+
+runtime\envs\backend\Lib\site-packages\starlette\testclient.py:37
+  C:\Users\Lenovo\Desktop\大数据实训\runtime\envs\backend\Lib\site-packages\starlette\testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [1] tests\geometry\test_processes.py:9: Linux进程组验证
+SKIPPED [2] tests\geometry\test_processes.py:19: Linux进程组验证
+SKIPPED [1] tests\geometry\test_processes.py:41: Linux进程组验证
+SKIPPED [1] tests\measurement\test_silhouette.py:203: 该系统不允许创建符号链接
+193 passed, 5 skipped, 2 warnings in 53.94s

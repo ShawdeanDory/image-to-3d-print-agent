@@ -1,0 +1,18 @@
+{
+  "plan": {
+    "dataset_version": "1.0.0",
+    "backend": "triposr",
+    "model_revision": "107cefdc244c39106fa830359024f6a2f1c78871",
+    "code_revision": "d5a41c2+frontend-revision",
+    "protocol_version": "1.0.0",
+    "split": "holdout"
+  },
+  "gate": {
+    "allowed": false,
+    "reasons": [
+      "未提供真实人工冻结记录"
+    ],
+    "execution": "not_run"
+  },
+  "actual_holdout_execution": "not_run"
+}
