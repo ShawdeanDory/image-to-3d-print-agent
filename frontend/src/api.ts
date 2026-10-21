@@ -4,6 +4,7 @@ export interface Capabilities {
   schema_version: 'runtime-v1'; default_backend: string | null; configured_backends: string[];
   inspection_configured: boolean; llm_configured: boolean; llm_model: string | null;
   confirmation_origin: 'human' | 'test_fixture'; worker_concurrency: number;
+  input_review_policy?: 'automatic' | 'manual';
 }
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) { super(message); }

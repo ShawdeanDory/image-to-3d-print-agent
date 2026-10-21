@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-21",
+  "baseline": "aa48536",
+  "public_schema": "1.0.0",
+  "runtime_schema": "runtime-v1",
+  "windows": {
+    "command": "python -m pytest tests -q --tb=short",
+    "passed": 207,
+    "skipped": 6,
+    "seconds": 46.23,
+    "warnings": 2
+  },
+  "linux": {
+    "command": "PYTHONPATH=src ../../runtime/envs/backend/bin/python -m pytest tests -q --tb=short",
+    "passed": 213,
+    "skipped": 0,
+    "seconds": 20.89,
+    "warnings": 2
+  },
+  "frontend": {
+    "unit_passed": 6,
+    "build": "passed",
+    "build_warning": "832.26kB main chunk exceeds500kB advisory",
+    "manual_policy_browser_passed": 4,
+    "automatic_policy_browser_passed": 1,
+    "browser_origin": "explicit_test_fixture"
+  },
+  "static_checks": {
+    "public_schema": "passed",
+    "tool_schema": "passed",
+    "runtime_schema": "passed",
+    "generated_types": "passed",
+    "prepared_manifest_30cases": "passed",
+    "holdout_execution": "not_run"
+  },
+  "live": {
+    "backends": 2,
+    "reconstructions_per_task": 1,
+    "initial_image_wait": false,
+    "human_acceptance": false,
+    "llm_calls": 0,
+    "print_success": "not_verified",
+    "slicer": "not_run"
+  },
+  "last_cloud_snapshot": {
+    "running_tasks": 0,
+    "gpu_mib": 0,
+    "old_tasks_preserved": 3,
+    "archive_files": 57,
+    "artifact_bytes": 333413685,
+    "archive_bytes": 173180596,
+    "archive_sha256": "33b4082dd57fc7af1cb2674a7db7d9b3cf3714c0ef55f073bcf3e899943324d1"
+  },
+  "handoff": {
+    "source_deployed": true,
+    "full_archive_download": "blocked_ssh_connection_closed",
+    "final_remote_status": "unknown_after_disconnect",
+    "new_manual_review": "passed_by_user_2026-10-21"
+  }
+}

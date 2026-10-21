@@ -8,7 +8,7 @@ from ..schemas.task import ModelTaskRequest
 from ..schemas.validation import resolve_artifact_path
 from ..schemas import PrinterProfile
 from ..tools import ToolSession,ToolFailure,ToolOutcome
-from ..image.assets import AssetStore,InputReview
+from ..image.assets import AssetStore,InputReview,AutomaticInputAcceptance
 from ..adapters.reconstruction import BackendConfig,ReconstructionAdapter
 from ..inspection.service import InspectionConfig,BedReview,ComponentReview,inspect_mesh,preview_mesh
 from ..artifacts.export import export_mesh
@@ -24,11 +24,12 @@ class PrepareCall(Call):
     operation:Literal['prepare_image']
     asset_id:Id
     background_backend:Literal['trellis2_candidate']|None=None
+    preprocessing:Literal['legacy_foreground','official_input']='legacy_foreground'
 class ReconstructCall(Call):
     operation:Literal['reconstruct']
     backend:Literal['triposr','trellis2_candidate']
     prepared_outcome:RelativePath
-    review:InputReview
+    review:InputReview|AutomaticInputAcceptance
 class MeshCall(Call):
     operation:Literal['clean','export','preview']
     mesh_version:Id
@@ -74,7 +75,7 @@ class ToolConfiguration(ContractModel):
         if any(key!=value.backend for key,value in self.backends.items()):raise ValueError('后端注册键与实际配置不一致，不能静默换模型')
         return self
 
-def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human'):
+def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human',automatic_input=False):
     root=Path(root).resolve();command=COMMANDS.validate_python(command)
     store=MeshStore(root);assets=AssetStore(root);op=command.operation;run=command.run_id
     tool_name={'import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
@@ -85,7 +86,9 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
             raise ToolFailure('INVALID_ARGUMENT','服务端确认来源无效')
         if op=='confirm' and human_action is not True:
             raise ToolFailure('STATE_CONFLICT','结构修改确认只能由已核对当前等待项的人工接口提交，不能由模型工具自行批准')
-        needs_confirmation=(op=='reconstruct' and command.review.decision=='accepted' or
+        if op=='reconstruct' and isinstance(command.review,AutomaticInputAcceptance) and automatic_input is not True:
+            raise ToolFailure('STATE_CONFLICT','自动图片继续仅允许服务端已启用的政策调用')
+        needs_confirmation=(op=='reconstruct' and isinstance(command.review,InputReview) and command.review.decision=='accepted' or
             op=='scale' and not command.request.pending_inputs or
             op=='inspect' and any(review is not None and review.confirmed for review in [command.bed_review,command.component_review]))
         if needs_confirmation and human_action is not True:
@@ -97,10 +100,10 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
             return session.finish({'asset':asset.model_dump(mode='json')})
         if op=='prepare_image':
             config=configuration.backends.get(command.background_backend) if command.background_backend else None
-            return assets.prepare(command.asset_id,run,ReconstructionAdapter(root,config).remove_background if config else None)
+            return assets.prepare(command.asset_id,run,ReconstructionAdapter(root,config).remove_background if config else None,command.preprocessing)
         if op=='reconstruct':
             prepared=ToolOutcome.model_validate_json(resolve_artifact_path(root,command.prepared_outcome).read_text(encoding='utf-8'))
-            return ReconstructionAdapter(root,configuration.backends.get(command.backend)).reconstruct(run,prepared,command.review,cancel_event)
+            return ReconstructionAdapter(root,configuration.backends.get(command.backend)).reconstruct(run,prepared,command.review,cancel_event,automatic_input=automatic_input)
         if op=='clean':return store.clean(run,command.mesh_version)
         if op=='scale':return store.scale(run,command.mesh_version,command.request)
         if op=='inspect':return inspect_mesh(root,run,command.mesh_version,command.profile,command.height_mm,command.bed_review,configuration.inspection,command.component_review)

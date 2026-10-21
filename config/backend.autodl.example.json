@@ -4,16 +4,21 @@
   "background_backend": "trellis2_candidate",
   "operator_name": "course_operator",
   "confirmation_origin": "human",
-  "profile_files": ["/root/autodl-tmp/image-to-3d-print-agent/deployments/backend-20261021-01/fixtures/p1/printer_profile.json"],
+  "input_review_policy": "automatic",
+  "profile_files": ["/root/autodl-tmp/image-to-3d-print-agent/deployments/official-20261021-01/fixtures/p1/printer_profile.json"],
   "tools": {
     "backends": {
       "triposr": {
         "backend": "triposr",
+        "inference_profile": "official",
+        "timeout_s": 300,
         "python": "/root/autodl-tmp/image-to-3d-print-agent/runtime/envs/triposr/bin/python",
         "execution_root": "/root/autodl-tmp/image-to-3d-print-agent"
       },
       "trellis2_candidate": {
         "backend": "trellis2_candidate",
+        "inference_profile": "official",
+        "timeout_s": 1200,
         "python": "/root/autodl-tmp/image-to-3d-print-agent/runtime/envs/trellis2/bin/python",
         "execution_root": "/root/autodl-tmp/image-to-3d-print-agent"
       }
@@ -35,6 +40,6 @@
   },
   "api_token_env": "I3D_API_TOKEN",
   "cors_origins": ["http://localhost:5173"],
-  "active_timeout_s": 900,
+  "active_timeout_s": 1800,
   "max_tool_calls": 32
 }

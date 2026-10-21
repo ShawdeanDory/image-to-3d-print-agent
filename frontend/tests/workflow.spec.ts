@@ -2,6 +2,7 @@ import {test,expect} from '@playwright/test';
 import path from 'node:path';
 
 const root=path.resolve('..');const image=path.join(root,'fixtures/p1/procedural/block.png');
+const evidence=path.resolve(process.env.I3D_BROWSER_EVIDENCE_DIR||path.join(root,'runs/mid-frontend-20261021-01'));
 test.beforeEach(async({page})=>{await page.goto('/');await page.evaluate(()=>localStorage.clear());await page.reload();});
 test.afterEach(async({page})=>{await page.goto('about:blank');});
 test('真实API与CPU工具fixture：缺尺度、刷新、确认、修复预览、下载和切片失败',async({page})=>{
@@ -21,7 +22,7 @@ test('真实API与CPU工具fixture：缺尺度、刷新、确认、修复预览�
   await page.locator('.model-selectors select').last().selectOption({index:1});
   await expect(page.locator('canvas')).toHaveCount(2);
   await page.waitForFunction(()=>{const pair=document.querySelector('.model-pair')!.getBoundingClientRect();return [...document.querySelectorAll('.model-pair canvas')].every(c=>c.getBoundingClientRect().right<=pair.right+1);});
-  await page.screenshot({path:path.join(root,'runs/mid-frontend-20261021-01/fixture-preview.png'),fullPage:true});
+  await page.screenshot({path:path.join(evidence,'fixture-preview.png'),fullPage:true});
   await form.locator('[name=bed_confirmed]').check();await form.getByRole('button',{name:'提交本版本复核'}).click();
   await expect(page.getByRole('heading',{name:'选择受控修复或停止'})).toBeVisible();
   await expect(page.getByText('失败',{exact:true}).first()).toBeVisible();
@@ -29,11 +30,11 @@ test('真实API与CPU工具fixture：缺尺度、刷新、确认、修复预览�
   await form.getByRole('button',{name:'接受本提案'}).click();await expect(page.getByRole('heading',{name:'确认姿态与底面'})).toBeVisible();
   await form.locator('[name=bed_confirmed]').check();await form.getByRole('button',{name:'提交本版本复核'}).click();
   await expect(page.getByRole('heading',{name:'提交切片证据'})).toBeVisible();
-  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:/候选STL/}).last().click();const downloaded=await downloadPromise;expect(downloaded.suggestedFilename()).toMatch(/\.stl$/);await downloaded.saveAs(path.join(root,'runs/mid-frontend-20261021-01/fixture-candidate.stl'));
+  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:/候选STL/}).last().click();const downloaded=await downloadPromise;expect(downloaded.suggestedFilename()).toMatch(/\.stl$/);await downloaded.saveAs(path.join(evidence,'fixture-candidate.stl'));
   await form.locator('[name=result]').selectOption('fail');for(const n of ['sx','sy','sz'])await form.locator(`[name=${n}]`).fill('10');
   await form.locator('[name=slice]').setInputFiles(image);await form.getByRole('button',{name:'提交实际切片结论'}).click();
   await expect(page.getByText('SLICER_VALIDATION_FAILED',{exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'提交切片证据'})).toHaveCount(0);
-  await page.screenshot({path:path.join(root,'runs/mid-frontend-20261021-01/fixture-stopped.png'),fullPage:true});
+  await page.screenshot({path:path.join(evidence,'fixture-stopped.png'),fullPage:true});
 });
 test('取消等待任务，刷新不恢复计算',async({page})=>{
   await page.getByLabel('输入图片').setInputFiles(image);await page.getByRole('button',{name:'创建建模任务'}).click();

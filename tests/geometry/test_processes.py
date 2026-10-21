@@ -8,7 +8,7 @@ from image_to_3d_print.tools import ToolFailure
 
 @pytest.mark.skipif(os.name!='posix',reason='Linux进程组验证')
 def test_model_env_isolation(tmp_path,monkeypatch):
-    config=BackendConfig(backend='triposr',python=Path(sys.executable),execution_root=tmp_path)
+    config=BackendConfig(backend='triposr',python=Path(sys.executable),execution_root=tmp_path,inference_profile='legacy_geometry')
     monkeypatch.setenv('PYTHONPATH','forbidden_parent_test_deps')
     monkeypatch.setattr('subprocess.check_output',lambda *a,**k:REVISIONS['triposr']+'\n')
     script=tmp_path/'fake_worker.py';script.write_text("import json,os,pathlib;pathlib.Path(__file__).with_suffix('.json').write_text(json.dumps({'path':os.environ.get('PYTHONPATH')}))")
@@ -19,7 +19,7 @@ def test_model_env_isolation(tmp_path,monkeypatch):
 @pytest.mark.skipif(os.name!='posix',reason='Linux进程组验证')
 @pytest.mark.parametrize('cancel',[False,True])
 def test_timeout_and_cancel_stop_child(tmp_path,monkeypatch,cancel):
-    config=BackendConfig(backend='triposr',python=Path(sys.executable),execution_root=tmp_path,timeout_s=.05)
+    config=BackendConfig(backend='triposr',python=Path(sys.executable),execution_root=tmp_path,timeout_s=.05,inference_profile='legacy_geometry')
     monkeypatch.setattr('subprocess.check_output',lambda *a,**k:REVISIONS['triposr']+'\n')
     script=tmp_path/'wait.py';script.write_text('import time;time.sleep(5)')
     (tmp_path/'image').write_bytes(b'fixture')
@@ -33,6 +33,16 @@ def test_backend_configuration_cannot_switch():
     config=BackendConfig(backend='trellis2_candidate',python=Path('/python'),execution_root=Path('/root'))
     with pytest.raises(ValidationError):ToolConfiguration(backends={'triposr':config})
 
+@pytest.mark.skipif(os.name!='posix',reason='官方入口校验位于Linux执行路径')
+def test_modified_official_entry_is_rejected_before_model(tmp_path,monkeypatch):
+    from types import SimpleNamespace
+    config=BackendConfig(backend='triposr',python=Path(sys.executable),execution_root=tmp_path)
+    monkeypatch.setattr('subprocess.check_output',lambda *a,**k:REVISIONS['triposr']+'\n')
+    monkeypatch.setattr('subprocess.run',lambda *a,**k:SimpleNamespace(returncode=1))
+    with pytest.raises(ToolFailure) as error:
+        execute_worker(config,'reconstruct',tmp_path/'input.png',tmp_path,tmp_path/'unused.py')
+    assert error.value.code=='MODEL_NOT_CONFIGURED'
+
 def test_command_rejects_unknown_and_paths():
     from uuid import uuid4
     with pytest.raises(ValidationError):COMMANDS.validate_python({'operation':'shell','run_id':str(uuid4()),'command':'ls'})
@@ -41,7 +51,7 @@ def test_command_rejects_unknown_and_paths():
 @pytest.mark.skipif(os.name!='posix',reason='Linux进程组验证')
 def test_interrupted_parent_reaps_process_group(tmp_path,monkeypatch):
     import subprocess,signal
-    config=BackendConfig(backend='triposr',python=Path(sys.executable),execution_root=tmp_path)
+    config=BackendConfig(backend='triposr',python=Path(sys.executable),execution_root=tmp_path,inference_profile='legacy_geometry')
     monkeypatch.setattr(subprocess,'check_output',lambda *a,**k:REVISIONS['triposr']+'\n')
     original=subprocess.Popen;created=[]
     def tracked(*args,**kwargs):

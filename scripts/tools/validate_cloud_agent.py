@@ -31,7 +31,7 @@ def main():
     args=parser.parse_args();output=args.output.resolve();output.mkdir(parents=True,exist_ok=False)
     project=args.project_root.resolve();started=time.perf_counter()
     config={'root':str(output/'storage'),'default_backend':'triposr','background_backend':'trellis2_candidate',
-        'confirmation_origin':'test_fixture','operator_name':'cloud_fixture_automation',
+        'confirmation_origin':'test_fixture','operator_name':'cloud_fixture_automation','input_review_policy':'manual',
         'profile_files':[str(REPO/'fixtures/p1/printer_profile.json')],
         'tools':{'backends':{key:{'backend':key,'python':str(project/f'runtime/envs/{env}/bin/python'),
             'execution_root':str(project)} for key,env in [('triposr','triposr'),('trellis2_candidate','trellis2')]},

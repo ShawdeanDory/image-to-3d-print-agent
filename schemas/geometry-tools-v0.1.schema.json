@@ -123,6 +123,44 @@
       "title": "ArtifactRecord",
       "type": "object"
     },
+    "AutomaticInputAcceptance": {
+      "additionalProperties": false,
+      "description": "技术上可读图片自动继续；不声明主体、前景或语义已人工确认。",
+      "properties": {
+        "asset_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "foreground_artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Foreground Artifact Id",
+          "type": "string"
+        },
+        "origin": {
+          "const": "automatic",
+          "default": "automatic",
+          "title": "Origin",
+          "type": "string"
+        },
+        "semantic_suitability": {
+          "const": "not_checked",
+          "default": "not_checked",
+          "title": "Semantic Suitability",
+          "type": "string"
+        }
+      },
+      "required": [
+        "asset_id",
+        "foreground_artifact_id"
+      ],
+      "title": "AutomaticInputAcceptance",
+      "type": "object"
+    },
     "BackendConfig": {
       "additionalProperties": false,
       "properties": {
@@ -133,6 +171,15 @@
           ],
           "title": "Backend",
           "type": "string"
+        },
+        "chunk_size": {
+          "default": 8192,
+          "enum": [
+            2048,
+            8192
+          ],
+          "title": "Chunk Size",
+          "type": "integer"
         },
         "device": {
           "const": "cuda:0",
@@ -145,9 +192,21 @@
           "title": "Execution Root",
           "type": "string"
         },
+        "inference_profile": {
+          "default": "official",
+          "enum": [
+            "official",
+            "legacy_geometry"
+          ],
+          "title": "Inference Profile",
+          "type": "string"
+        },
         "mc_resolution": {
-          "const": 128,
-          "default": 128,
+          "default": 256,
+          "enum": [
+            128,
+            256
+          ],
           "title": "Mc Resolution",
           "type": "integer"
         },
@@ -163,22 +222,36 @@
           "type": "string"
         },
         "seed": {
-          "default": 0,
-          "title": "Seed",
-          "type": "integer"
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seed"
         },
         "timeout_s": {
-          "default": 300,
+          "default": 900,
           "exclusiveMinimum": 0,
-          "maximum": 300,
+          "maximum": 1800,
           "title": "Timeout S",
           "type": "number"
         },
         "trellis_output_variant": {
-          "const": "native_geometry",
-          "default": "native_geometry",
-          "title": "Trellis Output Variant",
-          "type": "string"
+          "anyOf": [
+            {
+              "const": "native_geometry",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trellis Output Variant"
         }
       },
       "required": [
@@ -945,6 +1018,15 @@
           "title": "Operation",
           "type": "string"
         },
+        "preprocessing": {
+          "default": "legacy_foreground",
+          "enum": [
+            "legacy_foreground",
+            "official_input"
+          ],
+          "title": "Preprocessing",
+          "type": "string"
+        },
         "run_id": {
           "format": "uuid",
           "title": "Run Id",
@@ -1179,7 +1261,15 @@
           "type": "string"
         },
         "review": {
-          "$ref": "#/$defs/InputReview"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/InputReview"
+            },
+            {
+              "$ref": "#/$defs/AutomaticInputAcceptance"
+            }
+          ],
+          "title": "Review"
         },
         "run_id": {
           "format": "uuid",

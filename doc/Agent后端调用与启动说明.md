@@ -149,10 +149,12 @@ DeepSeek配置base_url=https://api.deepseek.com、model=deepseek-flash、thinkin
 当前API和worker已分别在screen的i3d-backend-api/i3d-backend-worker中空闲运行，不重复启动第二worker。需要停服务时进入对应screen，按Ctrl+C结束程序；重新启动可在两个云端终端分别执行：
 
 ```bash
-cd /root/autodl-tmp/image-to-3d-print-agent/deployments/backend-20261021-01
+cd /root/autodl-tmp/image-to-3d-print-agent/deployments/official-20261021-01
 bash scripts/tools/start_cloud_backend.sh api
 # 另一个终端，同目录执行：
 bash scripts/tools/start_cloud_backend.sh worker
 ```
 
 两进程使用同一持久存储，默认只监听127.0.0.1:8000；通过SSH隧道访问/docs或供前端连接，不修改AutoDL公网端口。关机后服务会停止，数据盘文件保留；再次启动后核对环境再启动上述两个进程，在途计算按原重启规则明确失败，不自动重跑。真实模型尚有打印缺陷，当前服务可供交互和失败路径演示，不能宣称已取得打印合格交付。
+
+2026-10-21已切换为固定官方推理部署，默认input_review_policy=automatic，初始图片复核自动继续且语义标not_checked；其他确认保持。官方模型工具超时分别300/1200秒，任务活动上限1800秒。启动器明确加载当前部署src，旧backend目录保留但不作为当前启动目录。官方外观GLB与打印几何分别保存，见[本轮报告](官方推理对齐与自动图片准备.md)。历史验证器显式manual以复现原人工路径，不能把它们的自动fixture确认用于实际人工任务。

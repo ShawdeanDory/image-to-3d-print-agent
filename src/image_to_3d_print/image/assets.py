@@ -23,6 +23,16 @@ class InputReview(ContractModel):
     def accepted(self):
         return self.decision=='accepted' and self.complete_subject and self.simple_nonfunctional_ornament and self.foreground_correct
 
+class AutomaticInputAcceptance(ContractModel):
+    """技术上可读图片自动继续；不声明主体、前景或语义已人工确认。"""
+    asset_id: Id
+    foreground_artifact_id: Id
+    origin: Literal['automatic'] = 'automatic'
+    semantic_suitability: Literal['not_checked'] = 'not_checked'
+
+    @property
+    def accepted(self): return True
+
 class AssetStore:
     def __init__(self,root):self.root=Path(root).resolve()
 
@@ -63,12 +73,19 @@ class AssetStore:
             return asset
         except (OSError,ValueError) as exc:raise ToolFailure('REFERENCE_NOT_FOUND','资产不存在或记录不一致') from exc
 
-    def prepare(self,asset_id,run_id,background_runner=None):
+    def prepare(self,asset_id,run_id,background_runner=None,preprocessing='legacy_foreground'):
         session=ToolSession(self.root,run_id,'preprocess')
         try:
             asset=self.get(asset_id)
             source=resolve_artifact_path(self.root,asset.relative_path)
             original=session.add('original',source,'input_image')
+            if preprocessing == 'official_input':
+                # 保留原字节，由所选官方入口负责去背景、裁切和缩放。
+                return session.finish({'asset_id':asset_id,'method':'backend_official_preprocessing',
+                    'foreground_artifact_id':original.artifact_id,'mask_artifact_id':None,
+                    'review_required':False,'semantic_suitability':'not_checked','original_preserved':True,
+                    'input_dimensions':[asset.width,asset.height],'additional_downsampling':False})
+            if preprocessing != 'legacy_foreground':raise ToolFailure('INVALID_ARGUMENT','未知图片准备方式')
             with Image.open(source) as image:image=ImageOps.exif_transpose(image).convert('RGBA')
             alpha=image.getchannel('A'); method='existing_alpha'
             if alpha.getbbox() is None:raise ToolFailure('INVALID_IMAGE','图片没有前景')

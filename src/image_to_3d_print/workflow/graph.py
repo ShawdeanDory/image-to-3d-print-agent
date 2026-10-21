@@ -11,6 +11,7 @@ from ..geometry.core import MeshStore, load_mesh, topology
 from ..schemas.task import ModelTaskRequest
 from ..schemas.common import MeshInspection, SlicerConfirmation, EvidenceRecord
 from ..tools import ToolOutcome, ToolFailure, ToolSession
+from ..image.assets import AutomaticInputAcceptance
 from ..reports.quality import write_quality
 from .llm import LanguageModel
 from .state import save_context, fail, response_for
@@ -69,7 +70,8 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
                 else: nxt = 'prepare'
         elif step == 'prepared':
             ctx['stage'] = 'preprocess'
-            nxt = wait_for(ctx, 'input_review', 'replacement_image', ['请复核前景、主体完整性及简单非功能摆件适用性。'],
+            if settings.input_review_policy == 'automatic': nxt = 'accept_input'
+            else: nxt = wait_for(ctx, 'input_review', 'replacement_image', ['请复核前景、主体完整性及简单非功能摆件适用性。'],
                 {'foreground_artifact_id': ctx['prepared']['tool']['data']['foreground_artifact_id'],
                  'mask_artifact_id': ctx['prepared']['tool']['data']['mask_artifact_id']})
         elif step == 'input_received': nxt = 'consume'
@@ -147,6 +149,33 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
         ctx.setdefault('human_reviews', []).append(payload)
         return artifact.artifact_id
 
+    def accept_input(ctx):
+        if settings.input_review_policy != 'automatic':
+            raise ToolFailure('STATE_CONFLICT','服务端未启用图片自动继续')
+        ctx['pending']=None
+        backend_config=settings.tools.backends.get(ctx['backend'])
+        if backend_config and backend_config.inference_profile=='official' and ctx['prepared']['tool']['data'].get('method')!='backend_official_preprocessing':
+            # 旧检查点不能把历史256像素前景冒充原图；先重新登记同资产原字节。
+            outcome=tool(ctx,'prepare_image',asset_id=ctx['request']['image_asset_id'],preprocessing='official_input')
+            ctx['prepared']=outcome.model_dump(mode='json')
+            report=next(a for a in outcome.artifacts if a.artifact_id.endswith('_report'))
+            ctx['prepared_outcome']=str((root/report.relative_path).parent.relative_to(root)/'outcome.json').replace('\\','/')
+        review = AutomaticInputAcceptance(asset_id=ctx['request']['image_asset_id'],
+            foreground_artifact_id=ctx['prepared']['tool']['data']['foreground_artifact_id'])
+        session = ToolSession(root,ctx['run_id'],'preprocess')
+        path = session.directory/'automatic-input.json'
+        path.write_text(review.model_dump_json(indent=2)+'\n',encoding='utf-8')
+        artifact = session.add('automatic_input',path,'inspection_report')
+        ctx['artifacts'].append(artifact.model_dump(mode='json'))
+        ctx['evidence'].append(EvidenceRecord(evidence_id=session.prefix+'_automatic',source_type='tool',
+            source_id=review.asset_id,run_id=ctx['run_id'],artifact_id=artifact.artifact_id,
+            locator='automatic-input.json',created_at=session.now,
+            summary='服务端图片自动继续政策；未做人工前景或语义复核').model_dump(mode='json'))
+        ctx['input_review']=review.model_dump(mode='json')
+        ctx['pending']=None
+        ctx['step']='reviewed'
+        ctx['warnings'].append('图片已自动继续；主体完整性和语义适用性未人工复核。')
+
     def consume(ctx):
         # 分层图片是在等待期间由API添加；从任务库合并，不能丢失到旧检查点中。
         latest = store.row(ctx['run_id'])['context']
@@ -154,6 +183,11 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
         ctx['artifacts'].extend(a for a in latest['artifacts'] if a['artifact_id'] not in existing)
         answer = ctx.pop('answer')
         kind = answer['kind']
+        if kind == 'automatic_input':
+            if not ctx.get('pending') or ctx['pending']['kind']!='input_review' or answer['pending_input_id']!=ctx['pending']['pending_input_id']:
+                raise ToolFailure('STATE_CONFLICT','自动接续仅适用于同一图片等待项')
+            accept_input(ctx)
+            return
         aid = human_record(ctx, answer, kind)
         ctx['pending'] = None
         if kind == 'constraints':
@@ -199,7 +233,8 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
         ctx['inflight'] = operation
         persist(ctx, 'tool_started', {'operation': operation, 'call': ctx['tool_calls']})
         outcome = ToolOutcome.model_validate(tool_dispatch(root, {'run_id': ctx['run_id'], 'operation': operation, **arguments},
-            settings.tools, human_action=True, confirmation_origin=settings.confirmation_origin))
+            settings.tools, human_action=True, confirmation_origin=settings.confirmation_origin,
+            automatic_input=settings.input_review_policy=='automatic'))
         if str(outcome.tool.run_id) != ctx['run_id'] or any(str(a.run_id) != ctx['run_id'] for a in outcome.artifacts):
             raise ToolFailure('STATE_CONFLICT', '工具返回了其他任务的产物')
         known_artifacts = {a['artifact_id'] for a in ctx['artifacts']} | {a.artifact_id for a in outcome.artifacts}
@@ -208,6 +243,10 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
             raise ToolFailure('STATE_CONFLICT', '工具引用了未登记的产物或证据')
         ctx['artifacts'].extend(a.model_dump(mode='json') for a in outcome.artifacts)
         ctx['evidence'].extend(e.model_dump(mode='json') for e in outcome.evidence)
+        frames=outcome.tool.data.get('artifact_frames',{})
+        if not isinstance(frames,dict) or not set(frames)<=known_artifacts or any(v not in {'y_up','z_up'} for v in frames.values()):
+            raise ToolFailure('STATE_CONFLICT','产物显示坐标引用无效')
+        ctx.setdefault('artifact_frames',{}).update(frames)
         ctx['operations'].append({'operation': operation, 'mesh_version': ctx['mesh_version'],
             'result': outcome.tool.model_dump(mode='json')})
         ctx.pop('inflight', None)
@@ -235,6 +274,7 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
             try:
                 ctx['status'] = 'running'
                 if name == 'consume': consume(ctx)
+                elif name == 'accept_input': accept_input(ctx)
                 elif name == 'parse':
                     ctx['stage'] = 'input'
                     parsed = llm.call(ctx, store, 'parse', {'description': ctx['request']['description'],
@@ -249,7 +289,10 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
                         'error': ctx.get('error'), 'export': ctx.get('export_data')}).explanation
                 elif name == 'prepare':
                     ctx['stage'] = 'preprocess'
-                    outcome = tool(ctx, 'prepare_image', asset_id=ctx['request']['image_asset_id'], background_backend=settings.background_backend)
+                    backend_config=settings.tools.backends.get(ctx['backend'])
+                    preparation='official_input' if backend_config and backend_config.inference_profile=='official' else 'legacy_foreground'
+                    outcome = tool(ctx, 'prepare_image', asset_id=ctx['request']['image_asset_id'], background_backend=settings.background_backend,
+                        preprocessing=preparation)
                     ctx['prepared'] = outcome.model_dump(mode='json')
                     report = next(a for a in outcome.artifacts if a.artifact_id.endswith('_report'))
                     ctx['prepared_outcome'] = str((root / report.relative_path).parent.relative_to(root) / 'outcome.json').replace('\\', '/')
@@ -333,7 +376,7 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
     builder.add_node('route', route)
     builder.add_node('wait', waiting)
     builder.add_node('finish', finish)
-    nodes = ['consume', 'parse', 'explain', 'prepare', 'reconstruct', 'clean', 'scale', 'preview', 'inspect', 'propose', 'confirm', 'apply', 'export']
+    nodes = ['consume', 'accept_input', 'parse', 'explain', 'prepare', 'reconstruct', 'clean', 'scale', 'preview', 'inspect', 'propose', 'confirm', 'apply', 'export']
     for name in nodes:
         builder.add_node(name, execute(name))
         builder.add_edge(name, 'route')

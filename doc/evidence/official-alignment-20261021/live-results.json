@@ -1,0 +1,179 @@
+{
+  "source_task": "43d395d8-aed2-49e8-8c1f-1bda3fcceda1",
+  "source_sha256": "1d6ac093c18648fc9568f58e310db3d1666d942cb0a2ea36b21be8384993f4ff",
+  "input_dimensions": [
+    910,
+    609
+  ],
+  "kind": "official_entry_live_workflow_validation",
+  "human_acceptance": false,
+  "llm_calls": 0,
+  "cases": [
+    {
+      "backend": "triposr",
+      "run": "e71621a8-c661-4534-b29b-1c88518d0dda",
+      "status": "waiting_for_input",
+      "stage": "scale",
+      "pending_kind": "print_review",
+      "error": null,
+      "model": {
+        "additional_downsampling": false,
+        "backend": "triposr",
+        "cuda_runtime": "12.4",
+        "device": "NVIDIA GeForce RTX 4090 D",
+        "geometry_frame": "z_up",
+        "geometry_source": "official_export_readback",
+        "inference_profile": "official",
+        "input_dimensions": [
+          910,
+          609
+        ],
+        "input_file": "original.jpg",
+        "mode": "reconstruct",
+        "official_entry": "run.py",
+        "official_entry_sha256": "bc1c124b3439f8ceb00ebd441848487ae7650af71053a80b266ae5db15784282",
+        "official_export_frame": "z_up",
+        "parameters": {
+          "bake_texture": false,
+          "chunk_size": 8192,
+          "foreground_ratio": 0.85,
+          "mc_resolution": 256,
+          "texture_resolution": 2048
+        },
+        "peak_allocated_mib": 4238.97119140625,
+        "peak_reserved_mib": 4582.0,
+        "seconds": {
+          "inference": null,
+          "load_and_prepare": null,
+          "total": 9.264060702174902
+        },
+        "seed": null,
+        "timing_scope": "unmodified official entry plus independent export readback; separate model times not instrumented",
+        "torch": "2.5.1+cu124"
+      },
+      "execution": {
+        "automatic_retries": 0,
+        "backend": "triposr",
+        "device": "cuda:0",
+        "entry": "model_worker.py",
+        "exit_code": 0,
+        "inference_profile": "official",
+        "input_sha256": "1d6ac093c18648fc9568f58e310db3d1666d942cb0a2ea36b21be8384993f4ff",
+        "machine": "configured_linux_instance",
+        "offline": true,
+        "process_wall_seconds": 12.513770785182714,
+        "seed": null,
+        "upstream_revision": "107cefdc244c39106fa830359024f6a2f1c78871"
+      },
+      "geometry": {
+        "vertex_count": 60632,
+        "face_count": 121042,
+        "component_count": 1,
+        "boundary_edge_count": 438,
+        "watertight": false,
+        "dimensions": [
+          0.4597933888435364,
+          0.9926775097846985,
+          0.8502092361450195
+        ]
+      },
+      "colored_artifact_id": "t_058bd4ad7a1b4f95_official_glb",
+      "glb_visual_kind": "vertex",
+      "glb_bytes": 2423640,
+      "frame": "z_up",
+      "color_range": [
+        245,
+        231,
+        229
+      ],
+      "reconstruction_calls": 1,
+      "automatic_input_recorded": true,
+      "active_seconds": 22.685199335217476,
+      "refresh_pending_kind": "print_review"
+    },
+    {
+      "backend": "trellis2_candidate",
+      "run": "0a1eccbb-2d8b-47a2-9d7f-db8d49e767df",
+      "status": "waiting_for_input",
+      "stage": "repair",
+      "pending_kind": "repair_request",
+      "error": null,
+      "model": {
+        "additional_downsampling": false,
+        "backend": "trellis2_candidate",
+        "cuda_runtime": "12.4",
+        "device": "NVIDIA GeForce RTX 4090 D",
+        "geometry_frame": "z_up",
+        "geometry_source": "official_export_readback",
+        "inference_profile": "official",
+        "input_dimensions": [
+          910,
+          609
+        ],
+        "input_file": "original.jpg",
+        "mode": "reconstruct",
+        "official_entry": "example.py",
+        "official_entry_sha256": "e0d9edaa2aff3cf8067a3272f0d68c044db9a7497d6117295c0f89e93c2ed9dc",
+        "official_export_frame": "y_up",
+        "parameters": {
+          "decimation_target": 1000000,
+          "official_pbr_video": true,
+          "pipeline_type": "1024_cascade",
+          "remesh": true,
+          "remesh_band": 1,
+          "remesh_project": 0,
+          "seed": 42,
+          "texture_size": 4096
+        },
+        "peak_allocated_mib": 7387.7705078125,
+        "peak_reserved_mib": 7888.0,
+        "seconds": {
+          "inference": null,
+          "load_and_prepare": null,
+          "total": 540.275594599545
+        },
+        "seed": 42,
+        "timing_scope": "unmodified official entry plus independent export readback; separate model times not instrumented",
+        "torch": "2.6.0+cu124"
+      },
+      "execution": {
+        "automatic_retries": 0,
+        "backend": "trellis2_candidate",
+        "device": "cuda:0",
+        "entry": "model_worker.py",
+        "exit_code": 0,
+        "inference_profile": "official",
+        "input_sha256": "1d6ac093c18648fc9568f58e310db3d1666d942cb0a2ea36b21be8384993f4ff",
+        "machine": "configured_linux_instance",
+        "offline": true,
+        "process_wall_seconds": 544.8814152702689,
+        "seed": 42,
+        "upstream_revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd"
+      },
+      "geometry": {
+        "vertex_count": 499493,
+        "face_count": 998978,
+        "component_count": 2,
+        "boundary_edge_count": 0,
+        "watertight": false,
+        "dimensions": [
+          1.0002617835998535,
+          0.7923375964164734,
+          0.7941422760486603
+        ]
+      },
+      "colored_artifact_id": "t_cff66e18a9ee4035_official_glb",
+      "glb_visual_kind": "texture",
+      "glb_bytes": 35490600,
+      "frame": "y_up",
+      "texture_size": [
+        4096,
+        4096
+      ],
+      "reconstruction_calls": 1,
+      "automatic_input_recorded": true,
+      "active_seconds": 579.432756356895,
+      "refresh_pending_kind": "repair_request"
+    }
+  ]
+}

@@ -19,7 +19,7 @@ REPO = Path(__file__).resolve().parents[2]
 
 @pytest.fixture
 def setup_service(tmp_path):
-    settings = Settings(root=tmp_path, default_backend='triposr',
+    settings = Settings(root=tmp_path, default_backend='triposr',input_review_policy='manual',
         profile_files=[REPO / 'fixtures/p1/printer_profile.json'])
     service = TaskService(settings)
     payload = io.BytesIO()
@@ -73,7 +73,10 @@ def pump(service, settings, run, tools=None, language_model=None):
         graph = build_graph(settings, service.store, saver, tool_dispatch=tools or dispatch, language_model=language_model)
         config = {'configurable': {'thread_id': run}, 'recursion_limit': 160}
         if ctx['status'] == 'waiting_for_input':
-            graph.invoke(Command(resume=service.store.pending_submission(run, ctx['pending']['pending_input_id'])), config)
+            submission=service.store.pending_submission(run, ctx['pending']['pending_input_id'])
+            if submission is None and settings.input_review_policy=='automatic' and ctx['pending']['kind']=='input_review':
+                submission={'kind':'automatic_input','pending_input_id':ctx['pending']['pending_input_id']}
+            graph.invoke(Command(resume=submission), config)
         else:
             ctx['status'] = 'running'
             ctx['evidence_origin'] = 'test_fixture' if tools else 'runtime'

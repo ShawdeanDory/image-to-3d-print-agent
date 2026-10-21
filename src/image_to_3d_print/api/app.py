@@ -39,6 +39,7 @@ def create_app(settings=None):
             'configured_backends': list(settings.tools.backends), 'inspection_configured': settings.tools.inspection is not None,
             'llm_configured': settings.llm.configured, 'llm_model': settings.llm.model,
             'confirmation_origin': settings.confirmation_origin,
+            'input_review_policy': settings.input_review_policy,
             'worker_concurrency': 1, 'active_timeout_s': settings.active_timeout_s,
             'max_tool_calls': settings.max_tool_calls, 'max_llm_calls': 4, 'max_llm_tokens': 12000}
 
@@ -71,7 +72,7 @@ def create_app(settings=None):
         row = service.store.row(run_id)
         ctx = row['context']
         pending = {k: v for k, v in ctx['pending'].items() if k != 'public_type'} if row['status'] == 'waiting_for_input' and ctx.get('pending') else None
-        return {'response': row['response'], 'pending': pending,
+        return {'response': row['response'], 'pending': pending,'artifact_frames':ctx.get('artifact_frames',{}),
             'resources': {'active_seconds': None if ctx.get('interrupted_active_seconds_unknown') else row['active_seconds'],
                 'known_completed_active_seconds': row['active_seconds'], 'tool_calls': ctx['tool_calls'], 'llm': ctx['llm']}}
 

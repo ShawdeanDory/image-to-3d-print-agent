@@ -27,6 +27,10 @@ def ts(schema):
     if kind == 'object':
         fields = schema.get('properties', {})
         if not fields:
+            patterns=schema.get('patternProperties',{})
+            if patterns:
+                values=list(dict.fromkeys(ts(value) for value in patterns.values()))
+                return 'Record<string, '+' | '.join(values)+'>'
             additional = schema.get('additionalProperties', {})
             return 'Record<string, ' + (ts(additional) if isinstance(additional, dict) else 'unknown') + '>'
         required = set(schema.get('required', []))

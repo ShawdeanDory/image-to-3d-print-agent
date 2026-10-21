@@ -31,10 +31,11 @@ class Settings(ContractModel):
     profile_files: list[Path] = Field(default_factory=list)
     operator_name: Text = 'local_operator'
     confirmation_origin: Literal['human', 'test_fixture'] = 'human'
+    input_review_policy: Literal['automatic', 'manual'] = 'automatic'
     api_token_env: str = 'I3D_API_TOKEN'
     cors_origins: list[str] = Field(default_factory=list)
     llm: LLMConfig = Field(default_factory=LLMConfig)
-    active_timeout_s: float = Field(default=900, gt=0, le=900)
+    active_timeout_s: float = Field(default=1800, gt=0, le=3600)
     max_tool_calls: int = Field(default=32, gt=0, le=32)
 
     @property

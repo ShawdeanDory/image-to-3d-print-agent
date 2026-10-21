@@ -48,3 +48,5 @@ npm.cmd run dev
 类型由公共Schema自动生成，在根目录运行python scripts/tools/export_frontend_types.py --check核对；不能手改contracts.generated.ts。公共状态、等待项及最终门槛仍由后端定义。
 
 输入约束、刷新恢复、幂等、模型对比、逐项报告和切片提交说明见[前端与评估交付](../doc/初步前端与评估交付.md)。
+
+2026-10-21实际官方推理更新见[报告](../doc/官方推理对齐与自动图片准备.md)：图片准备默认自动继续，原图送官方入口；PLY保留顶点色，GLB使用原材质和服务端轴向。官方外观可在“当前模型”中选择原始GLB；打印版本和确认门槛仍独立。现有本机5173使用9000隧道时保持原I3D_API_TARGET配置，不重复占用同一端口。自动政策浏览器回归需在独立fixture加--input-policy automatic，并设置I3D_AUTOMATIC_BROWSER=1及新的I3D_BROWSER_EVIDENCE_DIR，避免覆盖历史证据。

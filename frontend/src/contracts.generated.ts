@@ -143,7 +143,7 @@ export type ExperimentRecord = {
   "seed": number;
   "split": "development" | "evaluation" | "holdout";
   "status": "succeeded" | "failed" | "not_run";
-  "submodule_revisions"?: Record<string, unknown>;
+  "submodule_revisions"?: Record<string, string>;
   "upstream_commit"?: (string | null);
   "weights_revision"?: (string | null);
 };
@@ -288,6 +288,7 @@ export type RuntimeEvent = {
 };
 
 export type RuntimeTask = {
+  "artifact_frames"?: Record<string, "z_up" | "y_up">;
   "pending"?: (PendingInput | null);
   "resources"?: Record<string, unknown>;
   "response": ModelTaskResponse;

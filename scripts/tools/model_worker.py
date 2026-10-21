@@ -1,5 +1,5 @@
 """在锁定后端环境内工作，不导入服务层，不联网，不选官方固定图。"""
-import argparse,importlib.util,json,os
+import argparse,importlib.util,json,os,runpy,shutil,hashlib
 from pathlib import Path
 import sys,time
 
@@ -8,18 +8,24 @@ def main():
     parser.add_argument('--mode',choices=['reconstruct','background'],required=True)
     parser.add_argument('--backend',choices=['triposr','trellis2_candidate'],required=True)
     parser.add_argument('--root',type=Path,required=True);parser.add_argument('--input',type=Path,required=True)
-    parser.add_argument('--output',type=Path,required=True);parser.add_argument('--seed',type=int,default=0)
+    parser.add_argument('--output',type=Path,required=True);parser.add_argument('--seed',type=int,default=None)
+    parser.add_argument('--profile',choices=['official','legacy_geometry'],default='official')
     args=parser.parse_args()
     import numpy as np
     import torch
     import trimesh
     from PIL import Image,ImageOps
     if not torch.cuda.is_available():raise RuntimeError('cuda_unavailable')
-    torch.set_num_threads(4);torch.manual_seed(args.seed);torch.cuda.reset_peak_memory_stats()
+    torch.set_num_threads(4)
+    if args.profile=='legacy_geometry' or args.mode=='background':torch.manual_seed(args.seed or 0)
+    torch.cuda.reset_peak_memory_stats()
     started=time.perf_counter()
     with Image.open(args.input) as original:image=ImageOps.exif_transpose(original).convert('RGBA' if args.mode=='reconstruct' else 'RGB')
     source=args.root/'runtime/upstream'/('TripoSR' if args.backend=='triposr' else 'TRELLIS.2')
     sys.path.insert(0,str(source))
+    if args.mode=='reconstruct' and args.profile=='official':
+        official_inference(args,source,torch,started)
+        return
     if args.mode=='background':
         from huggingface_hub import snapshot_download
         filename=source/'trellis2/pipelines/rembg/BiRefNet.py'
@@ -47,19 +53,74 @@ def main():
         torch.cuda.synchronize();loaded=time.perf_counter()
         prepared=model.preprocess_image(image);prepared.save(args.output/'backend_input.png')
         with torch.inference_mode():
-            output=model.run(prepared,seed=args.seed,preprocess_image=False,pipeline_type='1024_cascade')[0]
+            output=model.run(prepared,seed=args.seed or 0,preprocess_image=False,pipeline_type='1024_cascade')[0]
         torch.cuda.synchronize();inferred=time.perf_counter()
         mesh=trimesh.Trimesh(vertices=output.vertices.detach().cpu().numpy(),faces=output.faces.detach().cpu().numpy(),process=False)
         mesh.export(args.output/'raw_mesh.ply')
         parameters={'pipeline_type':'1024_cascade','preprocessing':'official_alpha_crop_black_composite','coordinates':'native_z_up_no_glb_axis_conversion',
             'upstream_internal_processing':'pipeline decoding unchanged; no PBR video or postprocess.to_glb'}
     torch.cuda.synchronize()
-    report={'mode':args.mode,'backend':args.backend,'seed':args.seed,'parameters':parameters,'torch':torch.__version__,
+    report={'mode':args.mode,'backend':args.backend,'seed':args.seed or 0,'parameters':parameters,'torch':torch.__version__,
         'cuda_runtime':torch.version.cuda,'device':torch.cuda.get_device_name(0),'input_file':args.input.name,
         'seconds':{'load_and_prepare':loaded-started,'inference':inferred-loaded,'total':time.perf_counter()-started},
         'timing_scope':'inference includes backend image processing and model decoding; process startup is separately recorded',
         'peak_allocated_mib':torch.cuda.max_memory_allocated()/2**20,'peak_reserved_mib':torch.cuda.max_memory_reserved()/2**20}
     (args.output/'model.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(report))
+
+def official_inference(args,source,torch,started):
+    from PIL import Image
+    import trimesh
+    # 只引入纯读回模块，不把服务端依赖混入已通过模型环境。
+    sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src'))
+    from image_to_3d_print.adapters.official import read_official_geometry
+    output=args.output.resolve();directory=output/'official';directory.mkdir(exist_ok=False)
+    previous_cwd=Path.cwd();previous_argv=sys.argv[:]
+    try:
+        if args.backend=='triposr':
+            if not (Path(os.environ.get('U2NET_HOME',''))/'u2net.onnx').is_file():
+                raise RuntimeError('official_u2net_missing:先准备官方rembg权重，运行期间不自动联网')
+            entry=source/'run.py'
+            sys.argv=[str(entry),str(args.input.resolve()),'--pretrained-model-name-or-path',str(args.root/'weights/TripoSR'),
+                '--output-dir',str(directory),'--model-save-format','glb']
+            os.chdir(source)
+            result=runpy.run_path(str(entry),run_name='__main__')
+            exported=directory/'0/mesh.glb';frame='z_up'
+            options=result['args']
+            parameters={name:getattr(options,name) for name in ['mc_resolution','chunk_size','foreground_ratio','bake_texture','texture_resolution']}
+            seed=None
+        else:
+            entry=source/'example.py'
+            inputs=directory/'assets/example_image';inputs.mkdir(parents=True)
+            hdri=directory/'assets/hdri';hdri.mkdir()
+            # 未改官方脚本；隔离工作目录中的T.png是本次用户图片的逐字节副本。
+            shutil.copyfile(args.input,inputs/'T.png')
+            shutil.copyfile(source/'assets/hdri/forest.exr',hdri/'forest.exr')
+            assert hashlib.sha256((inputs/'T.png').read_bytes()).digest()==hashlib.sha256(args.input.read_bytes()).digest()
+            sys.argv=[str(entry)];os.chdir(directory)
+            result=runpy.run_path(str(entry),run_name='__main__')
+            native=result['mesh']
+            trimesh.Trimesh(vertices=native.vertices.detach().cpu().numpy(),faces=native.faces.detach().cpu().numpy(),process=False).export(output/'native_mesh.ply')
+            exported=directory/'sample.glb';frame='y_up'
+            parameters={'pipeline_type':'1024_cascade','seed':42,'decimation_target':1000000,'texture_size':4096,
+                'remesh':True,'remesh_band':1,'remesh_project':0,'official_pbr_video':True}
+            seed=42
+        torch.cuda.synchronize()
+        shutil.copyfile(exported,output/'official_export.glb')
+        geometry=read_official_geometry(output/'official_export.glb',frame)
+        geometry.export(output/'raw_mesh.ply')
+        with Image.open(args.input) as image:dimensions=list(image.size)
+        report={'mode':args.mode,'backend':args.backend,'inference_profile':'official','seed':seed,'parameters':parameters,
+            'official_entry':entry.name,'official_entry_sha256':hashlib.sha256(entry.read_bytes()).hexdigest(),
+            'official_export_frame':frame,'geometry_frame':'z_up','geometry_source':'official_export_readback',
+            'input_dimensions':dimensions,'additional_downsampling':False,'torch':torch.__version__,
+            'cuda_runtime':torch.version.cuda,'device':torch.cuda.get_device_name(0),'input_file':args.input.name,
+            'seconds':{'load_and_prepare':None,'inference':None,'total':time.perf_counter()-started},
+            'timing_scope':'unmodified official entry plus independent export readback; separate model times not instrumented',
+            'peak_allocated_mib':torch.cuda.max_memory_allocated()/2**20,'peak_reserved_mib':torch.cuda.max_memory_reserved()/2**20}
+        (output/'model.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+        print(json.dumps(report))
+    finally:
+        os.chdir(previous_cwd);sys.argv=previous_argv
 
 if __name__=='__main__':main()

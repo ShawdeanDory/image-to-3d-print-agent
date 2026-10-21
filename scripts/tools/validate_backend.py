@@ -21,7 +21,8 @@ def main():
     storage = output / 'storage'
     config = output / 'config.json'
     config.write_text(json.dumps({'root': str(storage), 'default_backend': 'triposr',
-        'operator_name': 'test_fixture_automation', 'profile_files': [str(ROOT / 'fixtures/p1/printer_profile.json')]},
+        'operator_name': 'test_fixture_automation', 'input_review_policy': 'manual',
+        'profile_files': [str(ROOT / 'fixtures/p1/printer_profile.json')]},
         ensure_ascii=False), encoding='utf-8')
     with socket.socket() as sock:
         sock.bind(('127.0.0.1', 0))

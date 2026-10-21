@@ -36,6 +36,8 @@ def run_task(settings, run, parent_pid=None, parent_birth=None):
             graph = build_graph(settings, store, saver)
             if ctx['status'] == 'waiting_for_input':
                 answer = store.pending_submission(run, ctx['pending']['pending_input_id'])
+                if answer is None and settings.input_review_policy=='automatic' and ctx['pending']['kind']=='input_review':
+                    answer={'kind':'automatic_input','pending_input_id':ctx['pending']['pending_input_id']}
                 if answer is None: raise ValueError('恢复缺少已持久化的人工输入')
                 with tracing_context(enabled=False): graph.invoke(Command(resume=answer), config)
             else:

@@ -95,9 +95,21 @@ class Worker:
             save_context(self.store, ctx, 'worker_stopped')
         return True
 
+    def queue_automatic_input_reviews(self):
+        """仅接续旧图片等待；不批准姿态、结构修改或切片，不创建人工提交。"""
+        if self.settings.input_review_policy!='automatic':return
+        with self.store.transaction() as db:
+            runs=[r['run'] for r in db.execute("SELECT run FROM tasks WHERE status='waiting_for_input'")]
+            for run in runs:
+                row=self.store.row(run,db);ctx=row['context']
+                if (ctx.get('pending') or {}).get('kind')!='input_review':continue
+                db.execute("UPDATE tasks SET status='queued' WHERE run=?",(run,))
+                self.store.event(db,run,'input_policy_updated',ctx,{'policy':'automatic','origin':'tool'})
+
     def serve(self, once=False):
         with SingleWorker(self.store.root):
             self.recover_interrupted()
+            self.queue_automatic_input_reviews()
             while not self.stopping:
                 worked = self.run_once()
                 if once: break

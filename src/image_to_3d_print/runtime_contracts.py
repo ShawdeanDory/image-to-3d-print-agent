@@ -108,6 +108,7 @@ class RuntimeTask(ContractModel):
     response: ModelTaskResponse
     pending: PendingInput | None = None
     resources: dict = Field(default_factory=dict)
+    artifact_frames: dict[Id, Literal['z_up', 'y_up']] = Field(default_factory=dict)
 
 
 class ParsedRequirements(ContractModel):

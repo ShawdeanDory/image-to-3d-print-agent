@@ -1427,6 +1427,23 @@
       "additionalProperties": false,
       "description": "只用于扩展查询；普通查询仍返回原ModelTaskResponse。",
       "properties": {
+        "artifact_frames": {
+          "patternProperties": {
+            "^[a-z][a-z0-9_-]*$": {
+              "enum": [
+                "z_up",
+                "y_up"
+              ],
+              "type": "string"
+            }
+          },
+          "propertyNames": {
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "title": "Artifact Frames",
+          "type": "object"
+        },
         "pending": {
           "anyOf": [
             {
