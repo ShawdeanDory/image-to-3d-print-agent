@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Literal
 import numpy as np
 import trimesh
+from ..geometry.appearance import vertex_colors
 
 
 def read_official_geometry(path: Path, frame: Literal['z_up','y_up']):
@@ -14,4 +15,6 @@ def read_official_geometry(path: Path, frame: Literal['z_up','y_up']):
         raise ValueError('官方导出不是有效网格')
     if frame=='y_up':
         mesh.apply_transform(trimesh.transformations.rotation_matrix(np.pi/2,[1,0,0]))
+    colors=vertex_colors(mesh)
+    if colors is not None:mesh.visual=trimesh.visual.ColorVisuals(mesh,vertex_colors=colors)
     return mesh

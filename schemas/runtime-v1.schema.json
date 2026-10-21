@@ -321,6 +321,22 @@
           "default": null,
           "title": "Backend"
         },
+        "reconstruction_profile": {
+          "anyOf": [
+            {
+              "enum": [
+                "official",
+                "course_fast"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reconstruction Profile"
+        },
         "request": {
           "$ref": "#/$defs/ModelTaskRequest"
         }

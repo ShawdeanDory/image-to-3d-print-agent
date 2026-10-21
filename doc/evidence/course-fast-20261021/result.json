@@ -1,0 +1,182 @@
+{
+  "run_id": "9aeb2c3c-c00f-4c00-837d-c5dc686c41c7",
+  "status": "waiting_for_input",
+  "pending": "print_review",
+  "error": null,
+  "wall_seconds": 189.44526243954897,
+  "input_sha256": "1d6ac093c18648fc9568f58e310db3d1666d942cb0a2ea36b21be8384993f4ff",
+  "model": {
+    "additional_downsampling": false,
+    "appearance": {
+      "original": "pbr_glb",
+      "processed": "vertex_base_color_approximation"
+    },
+    "backend": "trellis2_candidate",
+    "cuda_runtime": "12.4",
+    "device": "NVIDIA GeForce RTX 4090 D",
+    "face_count": 99615,
+    "geometry_frame": "z_up",
+    "geometry_source": "fast_export_readback",
+    "inference_profile": "course_fast",
+    "input_dimensions": [
+      910,
+      609
+    ],
+    "input_file": "original.jpg",
+    "mode": "reconstruct",
+    "official_entry": null,
+    "official_export_frame": "y_up",
+    "parameters": {
+      "decimation_target": 100000,
+      "official_pbr_video": false,
+      "pipeline_type": "1024_cascade",
+      "remesh": true,
+      "remesh_band": 1,
+      "remesh_project": 0,
+      "seed": 42,
+      "texture_size": 2048
+    },
+    "peak_allocated_mib": 5302.650390625,
+    "peak_reserved_mib": 5928.0,
+    "seconds": {
+      "geometry_uv_texture_export": 28.593475177884102,
+      "independent_readback": 0.31256286799907684,
+      "inference": 41.48533948883414,
+      "load_and_prepare": 99.1525293327868,
+      "native_export": 0.9913431853055954,
+      "preprocess": 1.2447544783353806,
+      "total": 171.7800045311451
+    },
+    "seed": 42,
+    "timing_scope": "CUDA synchronized, disjoint stages; UV/remesh/baking combined inside upstream to_glb; no video; process startup separately recorded",
+    "torch": "2.6.0+cu124",
+    "upstream_library": "trellis2.pipelines + o_voxel.postprocess.to_glb",
+    "vertex_count": 56997
+  },
+  "human_reviews": [],
+  "operations": [
+    "prepare_image",
+    "reconstruct",
+    "clean",
+    "scale",
+    "preview"
+  ],
+  "mesh_version": "m_4608b1664d7745348704acbe",
+  "geometry": {
+    "vertex_count": 49816,
+    "face_count": 99615,
+    "component_count": 2,
+    "watertight": false,
+    "normals_consistent": true,
+    "boundary_edge_count": 27,
+    "non_manifold_edge_count": 0,
+    "non_manifold_vertex_count": 0,
+    "non_manifold_vertices": [],
+    "dimensions": [
+      125.95014953613281,
+      99.73072052001953,
+      100.0
+    ],
+    "volume": null
+  },
+  "visual_kind": "vertex",
+  "color_range": [
+    253,
+    230,
+    215
+  ],
+  "inspection": {
+    "ready_for_print": false,
+    "mesh_version": "m_4608b1664d7745348704acbe",
+    "dimensions_mm": [
+      125.95014953613281,
+      99.73072052001953,
+      100.0
+    ],
+    "component_count": 2,
+    "checks": [
+      {
+        "name": "finite_coordinates",
+        "status": "pass",
+        "value": true,
+        "threshold": null
+      },
+      {
+        "name": "components",
+        "status": "warn",
+        "value": 2,
+        "threshold": 1
+      },
+      {
+        "name": "boundary_edges",
+        "status": "fail",
+        "value": 27,
+        "threshold": 0
+      },
+      {
+        "name": "non_manifold_edges",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "name": "non_manifold_vertices",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "name": "watertight",
+        "status": "fail",
+        "value": false,
+        "threshold": true
+      },
+      {
+        "name": "normals",
+        "status": "pass",
+        "value": true,
+        "threshold": true
+      },
+      {
+        "name": "self_intersection",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "name": "wall_thickness",
+        "status": "not_run",
+        "value": null,
+        "threshold": null
+      },
+      {
+        "name": "overhang",
+        "status": "warn",
+        "value": 13550,
+        "threshold": 45.0
+      },
+      {
+        "name": "dimensions",
+        "status": "pass",
+        "value": 0.0,
+        "threshold": 1.0
+      },
+      {
+        "name": "build_volume",
+        "status": "pass",
+        "value": true,
+        "threshold": [
+          220.0,
+          220.0,
+          250.0
+        ]
+      },
+      {
+        "name": "bed_contact",
+        "status": "fail",
+        "value": false,
+        "threshold": 0.01
+      }
+    ]
+  }
+}

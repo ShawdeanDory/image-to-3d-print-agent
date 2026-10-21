@@ -196,6 +196,7 @@
           "default": "official",
           "enum": [
             "official",
+            "course_fast",
             "legacy_geometry"
           ],
           "title": "Inference Profile",
@@ -1259,6 +1260,22 @@
           "minLength": 1,
           "title": "Prepared Outcome",
           "type": "string"
+        },
+        "reconstruction_profile": {
+          "anyOf": [
+            {
+              "enum": [
+                "official",
+                "course_fast"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reconstruction Profile"
         },
         "review": {
           "anyOf": [

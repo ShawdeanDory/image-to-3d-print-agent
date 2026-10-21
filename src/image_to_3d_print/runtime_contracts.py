@@ -1,7 +1,7 @@
 """运行时v1扩展；公共1.0.0模型与状态保持兼容。"""
 from typing import Annotated, Literal, Union
 from uuid import UUID
-from pydantic import Field, StrictBool, StrictInt
+from pydantic import Field, StrictBool, StrictInt, model_validator
 from .schemas.common import ContractModel, Id, Text, Orientation, Positive, Dimensions, Status
 from .schemas.task import ModelTaskRequest, ModelTaskResponse, WorkflowState
 from .geometry.structure import StructureRequest
@@ -13,6 +13,13 @@ WorkflowStage = WorkflowState.model_fields['stage'].annotation
 class CreateTask(ContractModel):
     request: ModelTaskRequest
     backend: Backend | None = None
+    reconstruction_profile: Literal['official','course_fast'] | None = None
+
+    @model_validator(mode='after')
+    def profile_backend(self):
+        if self.reconstruction_profile=='course_fast' and self.backend!='trellis2_candidate':
+            raise ValueError('课程快速模式必须明确选择TRELLIS.2')
+        return self
 
 
 class InputBase(ContractModel):

@@ -300,7 +300,9 @@ def build_graph(settings, store, checkpointer, tool_dispatch=dispatch, language_
                 elif name == 'reconstruct':
                     ctx['stage'] = 'reconstruct'
                     if ctx['backend'] is None: raise ToolFailure('MODEL_NOT_CONFIGURED', '未显式选择重建后端')
-                    tool(ctx, name, backend=ctx['backend'], prepared_outcome=ctx['prepared_outcome'], review=ctx['input_review'])
+                    extra={'reconstruction_profile':ctx['reconstruction_profile']} if ctx.get('reconstruction_profile') else {}
+                    outcome=tool(ctx, name, backend=ctx['backend'], prepared_outcome=ctx['prepared_outcome'], review=ctx['input_review'],**extra)
+                    ctx['reconstruction_metrics']=outcome.tool.data.get('model')
                     ctx['step'] = 'reconstructed'
                 elif name == 'clean':
                     ctx['stage'] = 'repair'

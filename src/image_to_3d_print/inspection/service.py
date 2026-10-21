@@ -33,6 +33,7 @@ def blender_call(config,operation,mesh,directory,parameters=None):
     if digest(config.addon_dir/'object_print3d_utils/mesh_helpers.py')!=lock['print_toolbox']['sha256']:
         raise ToolFailure('TOOL_UNAVAILABLE','打印检查工具源码摘要与固定版本不符')
     payload={'vertices':mesh.vertices.tolist(),'faces':mesh.faces.tolist(),'parameters':parameters or {}}
+    if operation=='preview' and mesh.visual.kind=='vertex':payload['vertex_colors']=mesh.visual.vertex_colors.tolist()
     (directory/'blender-input.json').write_text(json.dumps(payload,allow_nan=False),encoding='utf-8')
     worker=Path(__file__).resolve().parents[3]/'scripts/tools/blender_worker.py'
     argv=[str(config.blender),'--background','--factory-startup','--threads','4','--python',str(worker),'--',

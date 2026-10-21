@@ -22,7 +22,7 @@ class BackendConfig(ContractModel):
     python: Path
     execution_root: Path
     timeout_s: float=Field(default=900,gt=0,le=1800)
-    inference_profile: Literal['official','legacy_geometry']='official'
+    inference_profile: Literal['official','course_fast','legacy_geometry']='official'
     seed: int|None=None
     pipeline_type: Literal['1024_cascade']='1024_cascade'
     mc_resolution: Literal[128,256]=256
@@ -32,7 +32,9 @@ class BackendConfig(ContractModel):
 
     @model_validator(mode='after')
     def fixed_official_parameters(self):
-        if self.inference_profile=='official' and (self.mc_resolution!=256 or self.chunk_size!=8192 or self.seed is not None or self.trellis_output_variant is not None):
+        if self.inference_profile=='course_fast' and self.backend!='trellis2_candidate':
+            raise ValueError('课程快速模式仅用于TRELLIS.2，不自动切换后端')
+        if self.inference_profile in {'official','course_fast'} and (self.mc_resolution!=256 or self.chunk_size!=8192 or self.seed is not None or self.trellis_output_variant is not None):
             raise ValueError('官方入口使用上游默认参数；自定义旧参数须明确legacy_geometry')
         return self
 
@@ -78,7 +80,7 @@ def execute_worker(config,mode,input_path,output,script,cancel_event=None):
             stop_process_group(process)
             raise
     execution={'backend':config.backend,'upstream_revision':revision,'exit_code':process.returncode,
-        'process_wall_seconds':time.perf_counter()-started,'seed':(42 if config.backend=='trellis2_candidate' else None) if config.inference_profile=='official' else (config.seed or 0),
+        'process_wall_seconds':time.perf_counter()-started,'seed':(42 if config.backend=='trellis2_candidate' else None) if config.inference_profile in {'official','course_fast'} else (config.seed or 0),
         'inference_profile':config.inference_profile,'entry':'model_worker.py',
         'machine':'configured_linux_instance','device':config.device,'offline':True,'automatic_retries':0,'input_sha256':digest(input_path)}
     (output/'execution.json').write_text(json.dumps(execution,indent=2)+'\n',encoding='utf-8')
@@ -119,12 +121,12 @@ class ReconstructionAdapter:
             session.mesh_version=version.mesh_version
             session.add('raw_mesh',self.root/version.relative_path,'raw_mesh','unitless')
             frames={}
-            if self.config.inference_profile=='official':
-                official=session.directory/'official_export.glb'
+            if self.config.inference_profile in {'official','course_fast'}:
+                official=session.directory/('fast_export.glb' if self.config.inference_profile=='course_fast' else 'official_export.glb')
                 if not official.is_file():raise ToolFailure('TOOL_UNAVAILABLE','官方完整导出缺失，不能回退为原生几何')
                 if (session.directory/'native_mesh.ply').exists():
                     session.add('native_before_official_export',session.directory/'native_mesh.ply','raw_mesh','unitless')
-                colored=session.add('official_glb',official,'raw_mesh','unitless')
+                colored=session.add('fast_glb' if self.config.inference_profile=='course_fast' else 'official_glb',official,'raw_mesh','unitless')
                 frames[colored.artifact_id]=metadata['official_export_frame']
                 if (session.directory/'official/sample.mp4').exists():
                     session.add('official_video',session.directory/'official/sample.mp4','log')

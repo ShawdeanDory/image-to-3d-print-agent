@@ -5,6 +5,7 @@ export interface Capabilities {
   inspection_configured: boolean; llm_configured: boolean; llm_model: string | null;
   confirmation_origin: 'human' | 'test_fixture'; worker_concurrency: number;
   input_review_policy?: 'automatic' | 'manual';
+  backend_profiles?: Record<string, ('official'|'course_fast')[]>;
 }
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) { super(message); }
@@ -32,8 +33,8 @@ export const api = {
   profiles: () => request<PrinterProfile[]>(`${base}/printer-profiles`),
   runtime: (id: string) => request<RuntimeTask>(`${taskUrl(id)}/runtime`),
   events: (id: string, after: number) => request<EventsPage>(`${taskUrl(id)}/events?after=${after}&limit=200`),
-  create: (body: ModelTaskRequest, backend: string, key: string) => request<ModelTaskResponse>(`${base}/model-tasks`, {
-    method: 'POST', headers: {'Content-Type':'application/json', 'Idempotency-Key':key}, body: JSON.stringify({request:body, backend}) }),
+  create: (body: ModelTaskRequest, backend: string, key: string, profile?: string) => request<ModelTaskResponse>(`${base}/model-tasks`, {
+    method: 'POST', headers: {'Content-Type':'application/json', 'Idempotency-Key':key}, body: JSON.stringify({request:body, backend,...(profile?{reconstruction_profile:profile}:{})}) }),
   input: (id: string, body: Record<string, unknown>, slicer = false) => request<ModelTaskResponse>(`${taskUrl(id)}/${slicer ? 'slicer-confirmation' : 'inputs'}`, {
     method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) }),
   cancel: (id: string) => request<ModelTaskResponse>(`${taskUrl(id)}/cancel`, {method:'POST'}),

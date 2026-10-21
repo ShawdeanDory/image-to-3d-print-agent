@@ -9,7 +9,7 @@ def main():
     parser.add_argument('--backend',choices=['triposr','trellis2_candidate'],required=True)
     parser.add_argument('--root',type=Path,required=True);parser.add_argument('--input',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True);parser.add_argument('--seed',type=int,default=None)
-    parser.add_argument('--profile',choices=['official','legacy_geometry'],default='official')
+    parser.add_argument('--profile',choices=['official','course_fast','legacy_geometry'],default='official')
     args=parser.parse_args()
     import numpy as np
     import torch
@@ -23,6 +23,10 @@ def main():
     with Image.open(args.input) as original:image=ImageOps.exif_transpose(original).convert('RGBA' if args.mode=='reconstruct' else 'RGB')
     source=args.root/'runtime/upstream'/('TripoSR' if args.backend=='triposr' else 'TRELLIS.2')
     sys.path.insert(0,str(source))
+    if args.mode=='reconstruct' and args.profile=='course_fast':
+        if args.backend!='trellis2_candidate':raise ValueError('course_fast_requires_trellis2')
+        course_fast_inference(args,source,torch,started)
+        return
     if args.mode=='reconstruct' and args.profile=='official':
         official_inference(args,source,torch,started)
         return
@@ -122,5 +126,51 @@ def official_inference(args,source,torch,started):
         print(json.dumps(report))
     finally:
         os.chdir(previous_cwd);sys.argv=previous_argv
+
+def course_fast_inference(args,source,torch,started):
+    """同一官方库/权重的显式工程变体；不伪称未改example.py。"""
+    from PIL import Image,ImageOps
+    import trimesh
+    from trellis2.pipelines import Trellis2ImageTo3DPipeline
+    from o_voxel import postprocess
+    sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src'))
+    from image_to_3d_print.adapters.official import read_official_geometry
+    output=args.output.resolve();stages={}
+    def stamp():
+        torch.cuda.synchronize()
+        return time.perf_counter()
+    pipeline=Trellis2ImageTo3DPipeline.from_pretrained('microsoft/TRELLIS.2-4B');pipeline.cuda()
+    loaded=stamp();stages['load_and_prepare']=loaded-started
+    with Image.open(args.input) as original:
+        dimensions=list(original.size);image=ImageOps.exif_transpose(original).copy()
+    prepared=pipeline.preprocess_image(image);prepared.save(output/'backend_input.png')
+    ready=stamp();stages['preprocess']=ready-loaded
+    with torch.inference_mode():
+        native=pipeline.run(prepared,seed=42,preprocess_image=False,pipeline_type='1024_cascade')[0]
+        native.simplify(16777216)
+    inferred=stamp();stages['inference']=inferred-ready
+    trimesh.Trimesh(vertices=native.vertices.detach().cpu().numpy(),faces=native.faces.detach().cpu().numpy(),process=False).export(output/'native_mesh.ply')
+    native_written=stamp();stages['native_export']=native_written-inferred
+    glb=postprocess.to_glb(vertices=native.vertices,faces=native.faces,attr_volume=native.attrs,
+        coords=native.coords,attr_layout=native.layout,voxel_size=native.voxel_size,
+        aabb=[[-.5,-.5,-.5],[.5,.5,.5]],decimation_target=100000,texture_size=2048,
+        remesh=True,remesh_band=1,remesh_project=0,verbose=True)
+    glb.export(output/'fast_export.glb')
+    exported=stamp();stages['geometry_uv_texture_export']=exported-native_written
+    geometry=read_official_geometry(output/'fast_export.glb','y_up');geometry.export(output/'raw_mesh.ply')
+    finished=stamp();stages['independent_readback']=finished-exported;stages['total']=finished-started
+    parameters={'pipeline_type':'1024_cascade','seed':42,'decimation_target':100000,'texture_size':2048,
+        'remesh':True,'remesh_band':1,'remesh_project':0,'official_pbr_video':False}
+    report={'mode':args.mode,'backend':args.backend,'inference_profile':'course_fast','seed':42,'parameters':parameters,
+        'official_entry':None,'upstream_library':'trellis2.pipelines + o_voxel.postprocess.to_glb',
+        'official_export_frame':'y_up','geometry_frame':'z_up','geometry_source':'fast_export_readback',
+        'appearance':{'original':'pbr_glb','processed':'vertex_base_color_approximation'},
+        'input_dimensions':dimensions,'additional_downsampling':False,'torch':torch.__version__,
+        'cuda_runtime':torch.version.cuda,'device':torch.cuda.get_device_name(0),'input_file':args.input.name,
+        'seconds':stages,'face_count':len(geometry.faces),'vertex_count':len(geometry.vertices),
+        'timing_scope':'CUDA synchronized, disjoint stages; UV/remesh/baking combined inside upstream to_glb; no video; process startup separately recorded',
+        'peak_allocated_mib':torch.cuda.max_memory_allocated()/2**20,'peak_reserved_mib':torch.cuda.max_memory_reserved()/2**20}
+    (output/'model.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
+
 
 if __name__=='__main__':main()

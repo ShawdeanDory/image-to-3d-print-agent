@@ -4,6 +4,7 @@ import {api,ApiError,artifactBlob,download,setAccessToken,type Capabilities} fro
 import {artifactGroups,checkLabel,checkNames,checkMeasure,display,heightNumber,id,mergeEvents,stageNames,statusNames,validateImage} from './domain';
 import PendingForm,{AxisSelect} from './PendingForm';
 import ModelView from './ModelView';
+import ReconstructionTiming from './ReconstructionTiming';
 
 const initialRun=()=>new URL(location.href).searchParams.get('task')||localStorage.getItem('i3d:last-run')||'';
 export default function App(){
@@ -14,6 +15,7 @@ export default function App(){
   const [preview,setPreview]=useState('');const lock=useRef(false);const createKey=useRef(id('create'));const cursor=useRef(0);
   const fileRef=useRef<File|null>(null);const assetRef=useRef<AssetRecord|null>(null);
   const [fileName,setFileName]=useState('');const [draftValid,setDraftValid]=useState(false);
+  const [chosenBackend,setChosenBackend]=useState('');
   const currentRun=useRef(run);currentRun.current=run;
   async function connect(){try{const [configuration,printerProfiles]=await Promise.all([api.configuration(),api.profiles()]);setCap(configuration);setProfiles(printerProfiles);setConnected(true);setError('');}catch(exc){setConnected(false);setError(message(exc));}}
   useEffect(()=>{void connect();},[]);
@@ -48,7 +50,7 @@ export default function App(){
       const body:ModelTaskRequest={schema_version:'1.0.0',image_asset_id:assetRef.current.asset_id,printer_profile_id:String(data.get('profile')),
         height_value:height,height_unit:(data.get('unit')||null) as 'mm'|'cm'|null,scale_source:(source||null) as 'user_target'|'measured_object'|null,scale_evidence_id:evidence,
         orientation:{up_axis:axis||null,confirmed:data.get('orientation_confirmed')==='on'},description:String(data.get('description')||'')};
-      const created=await api.create(body,String(data.get('backend')),createKey.current);setRun(created.run_id);setNotice('任务已创建，页面将显示服务端实际进度。');
+      const created=await api.create(body,String(data.get('backend')),createKey.current,String(data.get('reconstruction_profile')||'')||undefined);setRun(created.run_id);setNotice('任务已创建，页面将显示服务端实际进度。');
     });
   }
   async function submit(body:Record<string,unknown>,slicer=false){await api.input(run,body,slicer);setNotice('已提交，继续原任务。');await fetchTask();}
@@ -62,7 +64,8 @@ export default function App(){
     {preview&&<img className="input-preview" src={preview} alt="本次选择的输入图片"/>}
     <div className="form-grid"><label>目标高度<input name="height" aria-label="目标高度" type="number" min="0.000001" step="any" placeholder="可以先留空，稍后追问"/></label><label>高度单位<select name="unit" defaultValue=""><option value="">待补充</option><option value="mm">毫米(mm)</option><option value="cm">厘米(cm)</option></select></label><label>尺度来源<select name="source" defaultValue=""><option value="">待补充</option><option value="user_target">设计目标</option><option value="measured_object">实物测量</option></select></label><label>朝上方向<AxisSelect/></label></div>
     <label className="check"><input name="orientation_confirmed" type="checkbox"/>我已核对上述朝上方向</label><label>测量依据（实物测量时需要）<input name="measurement" type="file" accept="image/png,image/jpeg"/></label>
-    <div className="form-grid"><label>打印配置<select name="profile" required>{profiles.map(p=><option key={p.profile_id} value={p.profile_id}>{p.profile_id} · {p.material} · {p.nozzle_mm}mm喷嘴{p.profile_kind==='demo'?'（演示）':''}</option>)}</select></label><label>重建后端<select name="backend" required defaultValue={cap?.default_backend||''} key={cap?.default_backend}>{(cap?.configured_backends.length?cap.configured_backends:cap?.default_backend?[cap.default_backend]:[]).map(b=><option value={b} key={b}>{b==='triposr'?'TripoSR':b==='trellis2_candidate'?'TRELLIS.2候选':b}</option>)}</select></label></div>
+    <div className="form-grid"><label>打印配置<select name="profile" required>{profiles.map(p=><option key={p.profile_id} value={p.profile_id}>{p.profile_id} · {p.material} · {p.nozzle_mm}mm喷嘴{p.profile_kind==='demo'?'（演示）':''}</option>)}</select></label><label>重建后端<select name="backend" required onChange={e=>setChosenBackend(e.target.value)} defaultValue={cap?.default_backend||''} key={cap?.default_backend}>{(cap?.configured_backends.length?cap.configured_backends:cap?.default_backend?[cap.default_backend]:[]).map(b=><option value={b} key={b}>{b==='triposr'?'TripoSR':b==='trellis2_candidate'?'TRELLIS.2候选':b}</option>)}</select></label></div>
+    {(chosenBackend||cap?.default_backend)==='trellis2_candidate'&&cap?.backend_profiles?.trellis2_candidate?.includes('course_fast')&&<label>生成模式<select name="reconstruction_profile" defaultValue="official"><option value="official">官方完整 · 100万目标面/4K纹理/转台视频</option><option value="course_fast">课程快速 · 10万目标面/2K纹理/不生成转台视频</option></select><span className="muted">快速模式需检查简化后的细节与孔洞；生成后仍逐项检查。</span></label>}
     <label>补充描述<textarea name="description" maxLength={2000} placeholder="例如：做一个高8厘米的摆件。留空则仅使用填写的约束。"/></label>
     {cap&&!cap.llm_configured&&<p className="muted">语言模型未配置。请使用结构化约束并将描述留空。</p>}
     <button className="primary wide" disabled={!connected||!draftValid||!profiles.length}>{busy?'正在保存与创建…':'创建建模任务'}<span>↗</span></button>
@@ -75,6 +78,7 @@ export default function App(){
       {response.data.inspection?.dimensions_mm&&<div className="dimensions"><span>当前检查版本尺寸</span><strong>{response.data.inspection.dimensions_mm.map(n=>n.toFixed(2)).join(' × ')}<small>mm</small></strong><span>网格：{response.data.inspection.mesh_version}</span></div>}
       <ArtifactImages run={run} artifacts={(response.artifacts??[]).filter(a=>['input_image','foreground_image'].includes(a.kind)||a.artifact_id===task.pending?.details?.preview_artifact_id)}/>
     </section>
+    <ReconstructionTiming value={task.resources?.reconstruction}/>
     {task.pending&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>打印检查报告</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>
     {response.error&&<p className="error" role="alert"><strong>{response.error.code}</strong>：{response.error.message}</p>}

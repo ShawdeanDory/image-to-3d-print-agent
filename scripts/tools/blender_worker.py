@@ -52,7 +52,16 @@ def main():
         low=Vector(tuple(min(v.co[i] for v in mesh.vertices) for i in range(3)))
         high=Vector(tuple(max(v.co[i] for v in mesh.vertices) for i in range(3)))
         center=(low+high)/2;span=max(high-low)
-        material=bpy.data.materials.new('diagnostic_blue');material.diffuse_color=(.16,.42,.56,1.);obj.data.materials.append(material)
+        material=bpy.data.materials.new('mesh_appearance');material.diffuse_color=(.16,.42,.56,1.)
+        material_kind='diagnostic_blue'
+        if data.get('vertex_colors') and len(data['vertex_colors'])==len(mesh.vertices):
+            attribute=mesh.color_attributes.new(name='base_color',type='BYTE_COLOR',domain='POINT')
+            for item,color in zip(attribute.data,data['vertex_colors']):item.color_srgb=[c/255 for c in color]
+            material.use_nodes=True
+            color_node=material.node_tree.nodes.new('ShaderNodeVertexColor');color_node.layer_name='base_color'
+            material.node_tree.links.new(color_node.outputs['Color'],material.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
+            material_kind='vertex_base_color_approximation'
+        obj.data.materials.append(material)
         bpy.ops.object.camera_add(location=center+Vector((1.8,-2.5,1.8))*span)
         camera=bpy.context.object;camera.rotation_euler=(center-camera.location).to_track_quat('-Z','Y').to_euler()
         camera.data.type='ORTHO';camera.data.ortho_scale=span*1.6;scene.camera=camera
@@ -62,7 +71,7 @@ def main():
             lamp.rotation_euler=(center-lamp.location).to_track_quat('-Z','Y').to_euler()
         scene.world.color=(.4,.4,.4);scene.render.filepath=str(args.output.parent/'preview.png')
         bpy.ops.render.render(write_still=True)
-        result.update(preview_file='preview.png',render_device='CPU',material_override='diagnostic_blue')
+        result.update(preview_file='preview.png',render_device='CPU',material_override=material_kind)
     args.output.write_text(json.dumps(result,allow_nan=False)+'\n',encoding='utf-8')
     print(json.dumps({'operation':args.operation,'status':'completed','blender':bpy.app.version_string}))
 

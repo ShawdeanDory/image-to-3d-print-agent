@@ -30,6 +30,7 @@ class ReconstructCall(Call):
     backend:Literal['triposr','trellis2_candidate']
     prepared_outcome:RelativePath
     review:InputReview|AutomaticInputAcceptance
+    reconstruction_profile:Literal['official','course_fast']|None=None
 class MeshCall(Call):
     operation:Literal['clean','export','preview']
     mesh_version:Id
@@ -103,7 +104,11 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
             return assets.prepare(command.asset_id,run,ReconstructionAdapter(root,config).remove_background if config else None,command.preprocessing)
         if op=='reconstruct':
             prepared=ToolOutcome.model_validate_json(resolve_artifact_path(root,command.prepared_outcome).read_text(encoding='utf-8'))
-            return ReconstructionAdapter(root,configuration.backends.get(command.backend)).reconstruct(run,prepared,command.review,cancel_event,automatic_input=automatic_input)
+            config=configuration.backends.get(command.backend)
+            if command.reconstruction_profile is not None:
+                if config is None:raise ToolFailure('MODEL_NOT_CONFIGURED','所选后端没有配置，不自动换模型')
+                config=BackendConfig.model_validate({**config.model_dump(),'inference_profile':command.reconstruction_profile})
+            return ReconstructionAdapter(root,config).reconstruct(run,prepared,command.review,cancel_event,automatic_input=automatic_input)
         if op=='clean':return store.clean(run,command.mesh_version)
         if op=='scale':return store.scale(run,command.mesh_version,command.request)
         if op=='inspect':return inspect_mesh(root,run,command.mesh_version,command.profile,command.height_mm,command.bed_review,configuration.inspection,command.component_review)

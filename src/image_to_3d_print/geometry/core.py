@@ -11,6 +11,7 @@ from ..schemas.common import ContractModel,Id,RelativePath
 from ..schemas.task import ModelTaskRequest
 from ..schemas.validation import resolve_artifact_path
 from ..tools import ToolFailure,ToolSession,digest,new_directory
+from .appearance import vertex_colors
 
 class MeshVersion(ContractModel):
     run_id: UUID
@@ -34,8 +35,8 @@ def load_mesh(path):
         # 仅合并数值完全相同的顶点，消除STL每面重复顶点，不做近似焊接。
         unique,first,inverse=np.unique(v,axis=0,return_index=True,return_inverse=True)
         result=trimesh.Trimesh(vertices=unique,faces=inverse[f],process=False)
-        if mesh.visual.kind=='vertex' and len(mesh.visual.vertex_colors)==len(v):
-            result.visual.vertex_colors=np.asarray(mesh.visual.vertex_colors)[first]
+        colors=vertex_colors(mesh)
+        if colors is not None:result.visual.vertex_colors=colors[first]
         return result
     except (OSError,ValueError,AttributeError,TypeError,IndexError) as exc:
         raise ToolFailure('INVALID_ARGUMENT','网格为空、损坏、坐标/索引无效或超出范围') from exc

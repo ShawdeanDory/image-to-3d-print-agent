@@ -11,6 +11,7 @@ from ..schemas.validation import resolve_artifact_path
 from ..measurement import render_silhouette,normalize_mask,mask_iou
 from ..inspection.service import blender_call
 from .core import MeshStore,load_mesh,topology
+from .appearance import transfer_vertex_colors
 
 class StructureRequest(ContractModel):
     operation: Literal['fill_small_holes','remove_components','simplify']
@@ -112,6 +113,8 @@ def propose(root,run,version,request:StructureRequest,config=None):
         import trimesh
         preview=trimesh.Trimesh(vertices=result['vertices'],faces=result['faces'],process=False)
         changes=preservation(mesh,preview)
+        changes['appearance']=transfer_vertex_colors(mesh,preview)
+        changes['appearance']['source_version']=version
         # 简化还须在同一工具/尺度下复查自交和壁厚，不只比较面数。
         for name,candidate in [('before',mesh),('after',preview)]:
             if name=='before' and len(candidate.faces)>500000:

@@ -1,0 +1,26 @@
+{
+  "files": 43,
+  "markdown_links_checked": 207,
+  "python_ast_json_utf8_credentials": "passed",
+  "link_parser": "balanced parentheses; initial simple regex gave false positives on original course filename",
+  "windows_tests": {
+    "passed": 225,
+    "platform_skipped": 6,
+    "seconds": 55.22
+  },
+  "linux_tests": {
+    "passed": 231,
+    "seconds": 22.92
+  },
+  "frontend_unit_passed": 6,
+  "frontend_build": "passed",
+  "browser_fixed_passed": 1,
+  "real_browser_readonly": "passed",
+  "production_modes": "passed",
+  "manual_primary": "passed",
+  "manual_compatibility_patch": "passed",
+  "gpu_benchmark_calls": 1,
+  "holdout": "not_run",
+  "multi_image": "deferred_by_user",
+  "printable_delivery": false
+}

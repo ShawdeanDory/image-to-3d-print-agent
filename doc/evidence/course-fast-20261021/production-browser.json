@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "production_profiles": [
+    "官方完整 · 100万目标面/4K纹理/转台视频",
+    "课程快速 · 10万目标面/2K纹理/不生成转台视频"
+  ],
+  "default_mode": "official",
+  "historical_total": 544.8777566254139,
+  "historical_inference": null,
+  "model_submitted": false
+}

@@ -40,6 +40,7 @@ def create_app(settings=None):
             'llm_configured': settings.llm.configured, 'llm_model': settings.llm.model,
             'confirmation_origin': settings.confirmation_origin,
             'input_review_policy': settings.input_review_policy,
+            'backend_profiles':{name:['official','course_fast'] if name=='trellis2_candidate' else ['official'] for name in settings.tools.backends},
             'worker_concurrency': 1, 'active_timeout_s': settings.active_timeout_s,
             'max_tool_calls': settings.max_tool_calls, 'max_llm_calls': 4, 'max_llm_tokens': 12000}
 
@@ -71,10 +72,14 @@ def create_app(settings=None):
     def runtime(run_id: UUID):
         row = service.store.row(run_id)
         ctx = row['context']
+        metrics=ctx.get('reconstruction_metrics')
+        if metrics is None:
+            metrics=next((op.get('result',{}).get('data',{}).get('model') for op in reversed(ctx.get('operations',[])) if op.get('operation')=='reconstruct'),None)
         pending = {k: v for k, v in ctx['pending'].items() if k != 'public_type'} if row['status'] == 'waiting_for_input' and ctx.get('pending') else None
         return {'response': row['response'], 'pending': pending,'artifact_frames':ctx.get('artifact_frames',{}),
             'resources': {'active_seconds': None if ctx.get('interrupted_active_seconds_unknown') else row['active_seconds'],
-                'known_completed_active_seconds': row['active_seconds'], 'tool_calls': ctx['tool_calls'], 'llm': ctx['llm']}}
+                'known_completed_active_seconds': row['active_seconds'], 'tool_calls': ctx['tool_calls'], 'llm': ctx['llm'],
+                'reconstruction':metrics}}
 
     @app.get('/api/v1/model-tasks/{run_id}/events', response_model=EventsPage)
     def events(run_id: UUID, after: int = Query(default=0, ge=0), limit: int = Query(default=100, ge=1, le=200)):

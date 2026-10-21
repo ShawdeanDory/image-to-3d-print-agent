@@ -1,0 +1,10 @@
+{
+  "status": {
+    "kind": "desktop_cloud_services",
+    "api": "started",
+    "worker": "started",
+    "model_submitted": false
+  },
+  "active_tasks": 0,
+  "historical_idempotency_fix": true
+}

@@ -56,6 +56,7 @@ export type ConstraintsInput = {
 
 export type CreateTask = {
   "backend"?: ("triposr" | "trellis2_candidate" | null);
+  "reconstruction_profile"?: ("official" | "course_fast" | null);
   "request": ModelTaskRequest;
 };
 
