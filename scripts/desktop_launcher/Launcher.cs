@@ -60,6 +60,10 @@ public class Connector : IDisposable {
         }
         throw new Exception("找不到"+name+"，请安装已有项目要求的Node.js或Windows OpenSSH，不会自动下载");
     }
+    public static string ResolveNode(string directory) {
+        string bundled=Path.Combine(directory,"tools","node","node.exe");
+        return File.Exists(bundled)?bundled:Find("node.exe");
+    }
     string Need(string relative) {
         string path=Path.GetFullPath(Path.Combine(root,relative));
         if(!path.StartsWith(root+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase) || !File.Exists(path))throw new Exception("缺少项目文件："+relative);
@@ -109,9 +113,11 @@ public class Connector : IDisposable {
         var fields=json.Deserialize<Dictionary<string,object>>(raw);
         foreach(string key in fields.Keys)if(!new List<string>{"ssh_config","ssh_alias","remote_project","deployment","tunnel_port","ui_port"}.Contains(key))throw new Exception("启动配置含未知字段："+key);
         Config=json.Deserialize<LauncherConfig>(raw);Config.Validate();PageUrl="http://127.0.0.1:"+Config.ui_port+"/";
+        if(!File.Exists(Path.Combine(root,Config.ssh_config)) && File.Exists(Path.Combine(root,"首次配置.cmd")))
+            throw new Exception("尚未配置SSH，请先双击“首次配置.cmd”，把生成的公钥交给组长授权后再启动。");
         string sshConfig=Need(Config.ssh_config);string helper=Need("scripts/desktop_launcher/ensure_cloud_service.py");
         string vite=Need("frontend/node_modules/vite/bin/vite.js");Need("frontend/dist/index.html");
-        string ssh=Find("ssh.exe"),node=Find("node.exe");
+        string ssh=Find("ssh.exe"),node=ResolveNode(root);
         log("检查通过：现有SSH配置、Node.js和网页文件均在，不读取或打包密钥。");
         Phase="cloud";log("1/3连接云端，检查并补启动API/单worker…");
         string command="'"+Config.remote_project+"/runtime/envs/backend/bin/python' - --project '"+Config.remote_project+"' --deployment '"+Config.deployment+"'";

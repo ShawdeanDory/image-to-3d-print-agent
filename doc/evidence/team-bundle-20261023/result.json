@@ -1,0 +1,29 @@
+{
+  "task": "MID-BUNDLE-001",
+  "baseline": "a96f912e5acc17afad954666138afa7955ddad14",
+  "archive": "runs/team-bundle-20261022-01/造物工坊-队友启动包-Windows64-20261023.zip",
+  "bytes": 42756360,
+  "files": 242,
+  "sha256": "fa3ad2fff226d70fd1f15de46eb2d1b0125b0b6960aae827aac818cf54e29c87",
+  "node": "v24.14.1",
+  "vite": "7.1.12",
+  "runtime_dependency_packages": 14,
+  "checks": {
+    "csharp": 17,
+    "powershell5_setup": 9,
+    "bundle_security": 7,
+    "existing_contract": 10,
+    "extracted_local_http_fixture": 8,
+    "zip_crc": "passed",
+    "allowlist_and_secret_pattern_scan": "passed",
+    "frontend_build": "passed"
+  },
+  "private_keys_included": false,
+  "api_keys_included": false,
+  "cloud_called": false,
+  "model_called": false,
+  "http_evidence_type": "test_fixture",
+  "fixture_processes_stopped": true,
+  "new_teammate_machine_test": "not_run",
+  "manual_review": "pending"
+}

@@ -46,6 +46,27 @@ public static class DesktopLauncherTests {
                 bool remains;try{Process.GetProcessById(pid);remains=true;}catch(ArgumentException){remains=false;}
                 if(remains || unrelated.HasExited)throw new Exception("进程归属回收错误");checks.Add("dispose_only_owned_process");
             } finally {if(!unrelated.HasExited)unrelated.Kill();unrelated.WaitForExit();unrelated.Dispose();}
+            var resolver=typeof(Connector).GetMethod("ResolveNode",BindingFlags.Public|BindingFlags.Static);
+            if(resolver==null)throw new Exception("便携包缺少包内Node解析入口");
+            string bundle=Path.Combine(Path.GetTempPath(),"造物便携 测试-"+Guid.NewGuid().ToString("N"));
+            string nodeFolder=Path.Combine(bundle,"tools","node"),fallback=Path.Combine(bundle,"fallback");
+            Directory.CreateDirectory(nodeFolder);Directory.CreateDirectory(fallback);
+            string originalPath=Environment.GetEnvironmentVariable("PATH");
+            try {
+                string bundled=Path.Combine(nodeFolder,"node.exe"),system=Path.Combine(fallback,"node.exe");
+                File.WriteAllText(bundled,"fixture");File.WriteAllText(system,"fixture");Environment.SetEnvironmentVariable("PATH",fallback);
+                if((string)resolver.Invoke(null,new object[]{bundle})!=bundled)throw new Exception("没有优先选包内Node");checks.Add("portable_node_preferred");
+                File.Delete(bundled);
+                if((string)resolver.Invoke(null,new object[]{bundle})!=system)throw new Exception("系统Node兼容失败");checks.Add("system_node_fallback");
+                Environment.SetEnvironmentVariable("PATH","");bool rejected=false;
+                try{resolver.Invoke(null,new object[]{bundle});}catch(TargetInvocationException){rejected=true;}
+                if(!rejected)throw new Exception("缺Node应明确失败");checks.Add("missing_node_rejected");
+            } finally {
+                Environment.SetEnvironmentVariable("PATH",originalPath);
+                foreach(string file in Directory.GetFiles(nodeFolder))File.Delete(file);
+                foreach(string file in Directory.GetFiles(fallback))File.Delete(file);
+                Directory.Delete(nodeFolder);Directory.Delete(Path.Combine(bundle,"tools"));Directory.Delete(fallback);Directory.Delete(bundle);
+            }
             Console.WriteLine(new JavaScriptSerializer().Serialize(new{passed=checks.Count,checks=checks,cloud_called=false,model_called=false}));return 0;
         } catch(Exception exc){Console.WriteLine(new JavaScriptSerializer().Serialize(new{error=exc.ToString(),checks=checks}));return 2;}
     }
