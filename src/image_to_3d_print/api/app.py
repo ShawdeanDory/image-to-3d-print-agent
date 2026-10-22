@@ -43,6 +43,9 @@ def create_app(settings=None):
             'workflow_policy':settings.workflow_policy,
             'face_budget_policy':'image-complexity-v1' if settings.workflow_policy=='automatic_glb' else None,
             'appearance_policy':'official-pbr-v1',
+            'export_options':{'policy_version':'export-options-v1','min_target_faces':100,'max_target_faces':1000000,
+                'default_target_faces':'automatic','min_texture_size':256,'max_texture_size':4096,'default_texture_size':2048},
+            'preview_lighting':'official-forest-hdr-v1',
             'backend_profiles':{name:['course_fast'] if name=='trellis2_candidate' and settings.workflow_policy=='automatic_glb' else ['official','course_fast'] if name=='trellis2_candidate' else ['official'] for name in settings.tools.backends},
             'worker_concurrency': 1, 'active_timeout_s': settings.active_timeout_s,
             'max_tool_calls': settings.max_tool_calls, 'max_llm_calls': 4, 'max_llm_tokens': 12000}
@@ -83,6 +86,7 @@ def create_app(settings=None):
             'resources': {'active_seconds': None if ctx.get('interrupted_active_seconds_unknown') else row['active_seconds'],
                 'known_completed_active_seconds': row['active_seconds'], 'tool_calls': ctx['tool_calls'], 'llm': ctx['llm'],
                 'reconstruction':metrics,'mesh_budget':ctx.get('mesh_budget'),
+                'export_options':ctx.get('export_options'),
                 'appearance':(ctx.get('export_data') or {}).get('appearance')}}
 
     @app.get('/api/v1/model-tasks/{run_id}/events', response_model=EventsPage)

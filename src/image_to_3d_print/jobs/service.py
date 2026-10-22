@@ -41,6 +41,10 @@ class TaskService:
         create = body if isinstance(body, CreateTask) else CreateTask(request=body)
         req = create.request
         automatic=self.settings.workflow_policy=='automatic_glb'
+        if not automatic and (create.export_target_faces is not None or create.texture_size is not None):
+            raise ToolFailure('INVALID_ARGUMENT','手动导出参数仅支持一次提交的自动GLB任务')
+        if create.texture_size is not None and (create.backend or self.settings.default_backend)!='trellis2_candidate':
+            raise ToolFailure('INVALID_ARGUMENT','TripoSR仅提供顶点色，纹理分辨率设置需要选择TRELLIS.2')
         if automatic and any(k!='orientation' for k in req.pending_inputs):
             raise ToolFailure('INVALID_ARGUMENT','首次提交请填完整高度、单位和尺度来源')
         if automatic and create.reconstruction_profile=='official' and (create.backend or self.settings.default_backend)=='trellis2_candidate':
@@ -59,6 +63,8 @@ class TaskService:
         ctx = initial_context(uuid4(), req.model_dump(mode='json'), profile.model_dump(mode='json'),
             create.backend or self.settings.default_backend)
         ctx['reconstruction_profile']=create.reconstruction_profile
+        if automatic:
+            ctx['export_options']={'export_target_faces':create.export_target_faces,'texture_size':create.texture_size}
         ctx['workflow_policy']=self.settings.workflow_policy
         if automatic:ctx['face_budget_policy']='image-complexity-v1'
         ctx['orientation_source']=orientation_source
@@ -66,7 +72,8 @@ class TaskService:
         ctx['evidence_origin'] = 'test_fixture' if self.settings.confirmation_origin == 'test_fixture' else 'runtime'
         if measurements: self.measurement(ctx, req.scale_evidence_id)
         create_body=create.model_dump(mode='json')
-        if create.reconstruction_profile is None:create_body.pop('reconstruction_profile',None)
+        for name in ('reconstruction_profile','export_target_faces','texture_size'):
+            if getattr(create,name) is None:create_body.pop(name,None)
         return self.store.create(ctx, response_for(ctx), create_body, key)['response']
 
     def validate_input(self, ctx, body):

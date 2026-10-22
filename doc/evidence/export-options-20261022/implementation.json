@@ -1,0 +1,23 @@
+{
+  "baseline": "5a2b876e7fdf474dcb6082f7c15cb81e03701c24",
+  "date": "2026-10-22",
+  "static_python_ast_files": 10,
+  "frontend_build": "TypeScript/Vite exit0; 45 modules; JS868.60kB; existing chunk size warning",
+  "schema_exports": [
+    "runtime-v1",
+    "geometry-tools-v0.1",
+    "frontend types"
+  ],
+  "official_hdri": {
+    "revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+    "path": "assets/hdri/forest.exr",
+    "bytes": 552641,
+    "sha256": "bdf2298244affa0f85509380fd130ac6d4dfaa3c856df065998f7f4c1a93dc0d",
+    "license": "CC0; Greg Zaal / PolyHaven"
+  },
+  "automated_tests": "not_run_user_requested",
+  "generation": "not_run",
+  "baking": "not_run",
+  "browser_validation": "not_run",
+  "manual_review": "pending_user_feedback"
+}

@@ -23,6 +23,7 @@ def write_quality(store, ctx):
         'delivery':ctx.get('delivery'),'orientation_source':ctx.get('orientation_source'),
         'repair_attempt_log':ctx.get('repair_attempt_log',[]),'automation_origin':'automatic_policy' if ctx.get('workflow_policy')=='automatic_glb' else None,
         'mesh_budget':ctx.get('mesh_budget'),
+        'export_options':ctx.get('export_options'),
         'appearance':(ctx.get('export_data') or {}).get('appearance'),
         'active_seconds': (None if ctx.get('interrupted_active_seconds_unknown') else
             store.row(ctx['run_id'])['active_seconds'] + ctx.get('current_active_seconds', 0)),
@@ -45,7 +46,12 @@ def write_quality(store, ctx):
         md.append(('GLB生成完成' if ctx['status']=='succeeded' and delivery else 'GLB生成未完成')+'；不代表实际打印合格。')
         md.append(f"打印检查：{delivery['print_check'] if delivery else 'not_run'}；自动修复尝试：{ctx.get('repair_attempts',0)}轮。自动来源：automatic_policy；没有实际切片/打印确认。")
         if ctx.get('mesh_budget'):
-            b=ctx['mesh_budget'];md.append(f"自动面数：图像复杂度{b['classification']}，目标≤{b['target_faces']}面，实际{b.get('actual_faces','未生成')}面。"+(b.get('fallback_reason') or '保形验证及实际检查记录见JSON。'))
+            b=ctx['mesh_budget'];target=b.get('effective_target_faces',b['target_faces'])
+            origin='手动' if b.get('selection_source')=='manual' else '自动'
+            md.append(f"{origin}面数：图像复杂度{b['classification']}，目标≤{target}面，实际{b.get('actual_faces','未生成')}面。"+(b.get('fallback_reason') or '保形验证及实际检查记录见JSON。'))
+        if ctx.get('export_options'):
+            requested=ctx['export_options'].get('texture_size')
+            md.append(f"请求纹理：{requested or 2048}×{requested or 2048}；实际PBR与纹理状态另见外观记录，TripoSR不使用纹理分辨率。")
     if ctx.get('error'): md.append('停止原因：' + ctx['error']['message'])
     appearance=(ctx.get('export_data') or {}).get('appearance')
     if appearance:md.append('外观：'+('PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')+'；'+(appearance.get('warning') or appearance.get('reason') or '原始PBR来源与重投射参数见JSON。'))

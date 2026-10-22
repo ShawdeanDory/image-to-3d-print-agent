@@ -5,6 +5,7 @@ from pydantic import Field, StrictBool, StrictInt, model_validator
 from .schemas.common import ContractModel, Id, Text, Orientation, Positive, Dimensions, Status
 from .schemas.task import ModelTaskRequest, ModelTaskResponse, WorkflowState
 from .geometry.structure import StructureRequest
+from .export_options import ExportTargetFaces, TextureSize
 
 Backend = Literal['triposr', 'trellis2_candidate']
 WorkflowStage = WorkflowState.model_fields['stage'].annotation
@@ -14,6 +15,8 @@ class CreateTask(ContractModel):
     request: ModelTaskRequest
     backend: Backend | None = None
     reconstruction_profile: Literal['official','course_fast'] | None = None
+    export_target_faces: ExportTargetFaces | None = None
+    texture_size: TextureSize | None = None
 
     @model_validator(mode='after')
     def profile_backend(self):

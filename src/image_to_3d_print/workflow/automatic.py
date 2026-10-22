@@ -54,17 +54,20 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
             parts=list(mesh.split(only_watertight=False));area=sum(p.area for p in parts)
             small=[i for i,p in enumerate(parts) if p.area<=area*.01 and len(p.faces)<=len(mesh.faces)*.01]
             if small and len(small)<len(parts):options.append({'operation':'remove_components','remove_components':small})
-        if facts['face_count']>100000:options.append({'operation':'simplify','target_faces':100000,'min_wall_mm':float(ctx['profile']['min_wall_mm'])})
+        # 新任务的减面只由本次有效预算决定，不能再落回固定10万上限。
+        if not ctx.get('mesh_budget') and facts['face_count']>100000:
+            options.append({'operation':'simplify','target_faces':100000,'min_wall_mm':float(ctx['profile']['min_wall_mm'])})
         return next((o for o in options if (source.mesh_version,o['operation']) not in tried),None)
 
     def budget_request(ctx):
         budget=ctx.get('mesh_budget')
         if not budget:return None
         mesh=load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path)
-        target=budget['target_faces']
+        target=budget.get('effective_target_faces',budget['target_faces'])
         if len(mesh.faces)<=target:return None
         tried=budget.setdefault('attempted_targets',[])
-        candidate=next((t for t in (10000,30000,100000) if t>=target and t<len(mesh.faces) and t not in tried),None)
+        targets=(target,) if budget.get('selection_source')=='manual' else (10000,30000,100000)
+        candidate=next((t for t in targets if t>=target and t<len(mesh.faces) and t not in tried),None)
         if candidate is None:return None
         tried.append(candidate)
         return {'operation':'simplify','target_faces':candidate,'min_wall_mm':float(ctx['profile']['min_wall_mm'])}
@@ -89,10 +92,16 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                             raise ToolFailure('STATE_CONFLICT','复杂度分析不属于本次图片')
                         from ..image.complexity import ImageComplexity
                         ctx['mesh_budget']=ImageComplexity.model_validate(analyzed.tool.data['analysis']).model_dump(mode='json')
+                        requested=(ctx.get('export_options') or {}).get('export_target_faces')
+                        ctx['mesh_budget'].update(requested_target_faces=requested,
+                            effective_target_faces=requested if requested is not None else ctx['mesh_budget']['target_faces'],
+                            selection_source='manual' if requested is not None else 'automatic')
                 elif name=='reconstruct':
                     ctx['stage']='reconstruct'
                     review=AutomaticInputAcceptance(asset_id=ctx['request']['image_asset_id'],foreground_artifact_id=ctx['prepared']['foreground_artifact_id'])
                     args={'reconstruction_profile':ctx['reconstruction_profile']} if ctx.get('reconstruction_profile') else {}
+                    if ctx['backend']=='trellis2_candidate':
+                        args.update({k:v for k,v in (ctx.get('export_options') or {}).items() if v is not None})
                     outcome=tool(ctx,'reconstruct',backend=ctx['backend'],prepared_outcome=ctx['prepared_outcome'],review=review.model_dump(),**args)
                     ctx['reconstruction_metrics']=outcome.tool.data.get('model');ctx['next']='clean'
                 elif name=='clean':
@@ -155,9 +164,10 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     ctx['export_data']=data;ctx['next']='explain' if settings.llm.configured else 'finish'
                     if ctx.get('mesh_budget'):
                         actual=len(load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path).faces)
+                        target=ctx['mesh_budget'].get('effective_target_faces',ctx['mesh_budget']['target_faces'])
                         ctx['mesh_budget'].update(actual_faces=actual,mesh_version=ctx['mesh_version'],
-                            target_met=actual<=ctx['mesh_budget']['target_faces'],
-                            fallback_reason=None if actual<=ctx['mesh_budget']['target_faces'] else '低面数未通过保形/缺陷门槛或已达2轮，保留检查较好的有效版本')
+                            target_met=actual<=target,
+                            fallback_reason=None if actual<=target else '目标面数未通过保形/缺陷门槛或已达2轮，保留检查较好的有效版本')
                 elif name=='explain':
                     inspection=ctx.get('inspection') or {}
                     ctx['explanation']=llm.call(ctx,store,'explain',{'mesh_version':ctx['mesh_version'],

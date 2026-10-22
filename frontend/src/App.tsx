@@ -17,6 +17,7 @@ export default function App(){
   const [preview,setPreview]=useState('');const lock=useRef(false);const createKey=useRef(id('create'));const cursor=useRef(0);
   const fileRef=useRef<File|null>(null);const assetRef=useRef<AssetRecord|null>(null);
   const [fileName,setFileName]=useState('');const [draftValid,setDraftValid]=useState(false);
+  const [chosenBackend,setChosenBackend]=useState('');
   const currentRun=useRef(run);currentRun.current=run;
   async function connect(){try{const [configuration,printerProfiles]=await Promise.all([api.configuration(),api.profiles()]);setCap(configuration);setProfiles(printerProfiles);setConnected(true);setError('');}catch(exc){setConnected(false);setError(message(exc));}}
   useEffect(()=>{void connect();},[]);
@@ -46,6 +47,8 @@ export default function App(){
       const file=fileRef.current;if(!file)throw Error('请先选择图片');validateImage(file);
       const height=heightNumber(String(data.get('height')||''));
       if(height===null)throw Error('请在首次提交时填写目标高度');
+      const exportOptions={export_target_faces:optionalInteger(data.get('export_target_faces'),100,1000000,'目标面数'),
+        texture_size:optionalInteger(data.get('texture_size'),256,4096,'纹理分辨率')};
       if(!assetRef.current)assetRef.current=await api.upload(file) as AssetRecord;
       let evidence:string|null=null;const source=String(data.get('source')||'');const measurement=data.get('measurement') as File;
       if(source==='measured_object'){if(!measurement?.size)throw Error('实物测量需要上传测量依据');validateImage(measurement);evidence=(await api.upload(measurement,'?purpose=measurement') as AssetRecord).asset_id;}
@@ -53,11 +56,11 @@ export default function App(){
       const body:ModelTaskRequest={schema_version:'1.0.0',image_asset_id:assetRef.current.asset_id,printer_profile_id:String(data.get('profile')),
         height_value:height,height_unit:(data.get('unit')||null) as 'mm'|'cm'|null,scale_source:(source||null) as 'user_target'|'measured_object'|null,scale_evidence_id:evidence,
         orientation:{up_axis:axis||null,confirmed:false},description:String(data.get('description')||'')};
-      const created=await api.create(body,String(data.get('backend')),createKey.current);setRun(created.run_id);setNotice('任务已创建，后台将自动检查并最多修复2轮，结束后交付GLB。');
+      const created=await api.create(body,String(data.get('backend')),createKey.current,undefined,exportOptions);setRun(created.run_id);setNotice('任务已创建，后台将自动检查并最多修复2轮，结束后交付GLB。');
     });
   }
   async function submit(body:Record<string,unknown>,slicer=false){await api.input(run,body,slicer);setNotice('已提交，继续原任务。');await fetchTask();}
-  function newTask(){setRun('');setTask(null);setEvents([]);setSelected('');setCompare('');cursor.current=0;createKey.current=id('create');assetRef.current=null;localStorage.removeItem('i3d:last-run');history.replaceState(null,'',location.pathname);}
+  function newTask(){setChosenBackend('');setRun('');setTask(null);setEvents([]);setSelected('');setCompare('');cursor.current=0;createKey.current=id('create');assetRef.current=null;localStorage.removeItem('i3d:last-run');history.replaceState(null,'',location.pathname);}
   return <><header><a className="brand" href="/" onClick={e=>{e.preventDefault();newTask();}}><span className="brand-mark">造</span><span>造物工坊<small>图像到3D打印模型</small></span></a><div className="connection"><span className={connected?'dot online':'dot'}/>{connected?'已连接计算服务':'计算服务未连接'}<button className="text-button" onClick={()=>void connect()}>重新连接</button></div></header>
   <main><section className="intro"><div><p className="eyebrow">单张图片 · 简单摆件</p><h1>{run?'让每一步都有依据':'从一张图片，开始造物'}</h1><p className="lede">上传图片并填写参数，提交后自动生成、检查和有限修复，最后交付GLB。</p></div><div className="scope-note">适用于非功能性简单摆件<br/><strong>GLB生成完成与打印检查结果分别展示</strong></div></section>
   {cap?.confirmation_origin==='test_fixture'&&<p className="fixture-banner">固定验证服务：表单自动提交来源为test_fixture，不作为真实人工验收。</p>}
@@ -67,7 +70,9 @@ export default function App(){
     {preview&&<img className="input-preview" src={preview} alt="本次选择的输入图片"/>}
     <div className="form-grid"><label>目标高度<input name="height" aria-label="目标高度" required type="number" min="0.000001" step="any" placeholder="例如100"/></label><label>高度单位<select name="unit" defaultValue="mm"><option value="">待补充</option><option value="mm">毫米(mm)</option><option value="cm">厘米(cm)</option></select></label><label>尺度来源<select name="source" defaultValue="user_target"><option value="">待补充</option><option value="user_target">设计目标</option><option value="measured_object">实物测量</option></select></label><label>朝上方向<AxisSelect defaultValue="z"/></label></div>
     <label>测量依据（实物测量时需要）<input name="measurement" type="file" accept="image/png,image/jpeg"/></label>
-    <div className="form-grid"><label>打印配置<select name="profile" required>{profiles.map(p=><option key={p.profile_id} value={p.profile_id}>{p.profile_id} · {p.material} · {p.nozzle_mm}mm喷嘴{p.profile_kind==='demo'?'（演示）':''}</option>)}</select></label><label>重建后端<select name="backend" required defaultValue={cap?.default_backend||''} key={cap?.default_backend}>{(cap?.configured_backends.length?cap.configured_backends:cap?.default_backend?[cap.default_backend]:[]).map(b=><option value={b} key={b}>{b==='triposr'?'TripoSR':b==='trellis2_candidate'?'TRELLIS.2候选':b}</option>)}</select></label></div>
+    <div className="form-grid"><label>打印配置<select name="profile" required>{profiles.map(p=><option key={p.profile_id} value={p.profile_id}>{p.profile_id} · {p.material} · {p.nozzle_mm}mm喷嘴{p.profile_kind==='demo'?'（演示）':''}</option>)}</select></label><label>重建后端<select name="backend" required value={chosenBackend||cap?.default_backend||''} onChange={e=>setChosenBackend(e.target.value)}>{(cap?.configured_backends.length?cap.configured_backends:cap?.default_backend?[cap.default_backend]:[]).map(b=><option value={b} key={b}>{b==='triposr'?'TripoSR':b==='trellis2_candidate'?'TRELLIS.2候选':b}</option>)}</select></label></div>
+    <div className="form-grid"><label>导出目标面数（可选）<input name="export_target_faces" type="number" min="100" max="1000000" step="1" placeholder="留空自动判断，最高1000000面"/></label><label>方形纹理边长（像素，可选）<input name="texture_size" type="number" min="256" max="4096" step="1" placeholder="留空2048，最大4096" disabled={(chosenBackend||cap?.default_backend)!=='trellis2_candidate'}/></label></div>
+    <p className="muted">留空使用自动面数和2048×2048；可手动设置最高100万面、4096×4096。目标是减面预算，不会为低面数模型增加细节。纹理设置仅用于TRELLIS.2；更高设置需要更长处理时间。</p>
     <label>补充描述<textarea name="description" maxLength={2000} placeholder="例如：做一个高8厘米的摆件。留空则仅使用填写的约束。"/></label>
     {cap&&!cap.llm_configured&&<p className="muted">语言模型未配置。请使用结构化约束并将描述留空。</p>}
     <button className="primary wide" disabled={!connected||!draftValid||!profiles.length}>{busy?'正在保存与创建…':'创建建模任务'}<span>↗</span></button>
@@ -105,4 +110,9 @@ function ArtifactImage({run,artifact}:{run:string;artifact:ArtifactRecord}){
 function modelLabel(a:ArtifactRecord){return `${a.kind==='raw_mesh'?'原始模型':a.kind==='candidate_stl'?'候选STL':'处理/提案模型'} · ${a.mesh_version||'未知版本'} · ${a.relative_path.split('.').at(-1)?.toUpperCase()}`;}
 function fileLabel(a:ArtifactRecord){return ({log:'内部日志',quality_report:'质量报告',candidate_stl:'候选STL',raw_mesh:'原始模型',repaired_mesh:'处理/预览模型',inspection_report:'检查/确认记录',slicer_preview:'分层证据',slicer_confirmation:'切片确认',input_image:'输入图片',foreground_image:'前景图片'}[a.kind]||a.kind);}
 function message(exc:unknown){return exc instanceof ApiError?`${exc.message}（${exc.code}）`:exc instanceof Error?exc.message:'连接失败，请检查服务和SSH隧道';}
+function optionalInteger(value:FormDataEntryValue|null,min:number,max:number,label:string):number|undefined{
+  const text=String(value||'').trim();if(!text)return undefined;
+  const number=Number(text);if(!Number.isInteger(number)||number<min||number>max)throw Error(`${label}须为${min}～${max}之间的整数`);
+  return number;
+}
 const eventNames:Record<string,string>={node_completed:'步骤完成',node_failed:'步骤失败',completed:'处理结束',created:'任务已保存',queued:'进入队列',started:'开始处理',waiting:'等待补充',input_submitted:'确认已接收',tool_started:'工具开始',tool_finished:'工具结束',progress:'步骤更新',finished:'处理结束',llm_started:'语言模型请求',llm_finished:'语言模型已返回',cancelled:'任务已取消',recovered:'恢复检查点'};

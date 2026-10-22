@@ -13,6 +13,7 @@ from ..image.assets import InputReview,AutomaticInputAcceptance
 from ..schemas.common import ContractModel
 from ..schemas.validation import resolve_artifact_path
 from ..geometry.core import MeshStore,load_mesh,topology
+from ..export_options import ExportTargetFaces,TextureSize
 from ..tools import ToolFailure,ToolSession,digest,stop_process_group
 
 REVISIONS={'triposr':'107cefdc244c39106fa830359024f6a2f1c78871','trellis2_candidate':'75fbf0183001ed9876c8dbb35de6b68552ee08bd'}
@@ -29,9 +30,13 @@ class BackendConfig(ContractModel):
     chunk_size: Literal[2048,8192]=8192
     device: Literal['cuda:0']='cuda:0'
     trellis_output_variant: Literal['native_geometry']|None=None
+    export_target_faces: ExportTargetFaces|None=None
+    texture_size: TextureSize|None=None
 
     @model_validator(mode='after')
     def fixed_official_parameters(self):
+        if (self.export_target_faces is not None or self.texture_size is not None) and self.inference_profile!='course_fast':
+            raise ValueError('手动模型导出参数仅用于TRELLIS.2快速入口，不改写官方固定入口')
         if self.inference_profile=='course_fast' and self.backend!='trellis2_candidate':
             raise ValueError('课程快速模式仅用于TRELLIS.2，不自动切换后端')
         if self.inference_profile in {'official','course_fast'} and (self.mc_resolution!=256 or self.chunk_size!=8192 or self.seed is not None or self.trellis_output_variant is not None):
@@ -55,6 +60,8 @@ def execute_worker(config,mode,input_path,output,script,cancel_event=None):
     argv=[str(config.python),str(script),'--mode',mode,'--root',str(config.execution_root),'--backend',config.backend,
         '--input',str(input_path),'--output',str(output),'--profile',config.inference_profile]
     if config.seed is not None:argv.extend(['--seed',str(config.seed)])
+    if config.export_target_faces is not None:argv.extend(['--export-target-faces',str(config.export_target_faces)])
+    if config.texture_size is not None:argv.extend(['--texture-size',str(config.texture_size)])
     argv=[watchdog,'--signal=TERM','--kill-after=5s',f'{config.timeout_s}s',*argv]
     environment={**os.environ,'HF_HOME':str(config.execution_root/'runtime/cache/huggingface'),
         'HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1','CUDA_VISIBLE_DEVICES':'0','OPENCV_IO_ENABLE_OPENEXR':'1',

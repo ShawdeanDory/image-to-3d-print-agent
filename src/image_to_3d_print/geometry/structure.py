@@ -12,12 +12,13 @@ from ..measurement import render_silhouette,normalize_mask,mask_iou
 from ..inspection.service import blender_call
 from .core import MeshStore,load_mesh,topology
 from .appearance import transfer_vertex_colors
+from ..export_options import ExportTargetFaces
 
 class StructureRequest(ContractModel):
     operation: Literal['fill_small_holes','remove_components','simplify']
     max_perimeter_mm: float=Field(default=40,gt=0,le=40,strict=True)
     remove_components: list[StrictInt]=Field(default_factory=list)
-    target_faces: StrictInt=Field(default=100000,ge=100,le=500000)
+    target_faces: ExportTargetFaces=100000
     min_wall_mm: float=Field(default=1.2,gt=0)
 
 class Proposal(ContractModel):

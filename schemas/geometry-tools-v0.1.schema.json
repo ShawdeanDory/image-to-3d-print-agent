@@ -192,6 +192,20 @@
           "title": "Execution Root",
           "type": "string"
         },
+        "export_target_faces": {
+          "anyOf": [
+            {
+              "maximum": 1000000,
+              "minimum": 100,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Export Target Faces"
+        },
         "inference_profile": {
           "default": "official",
           "enum": [
@@ -233,6 +247,20 @@
           ],
           "default": null,
           "title": "Seed"
+        },
+        "texture_size": {
+          "anyOf": [
+            {
+              "maximum": 4096,
+              "minimum": 256,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Texture Size"
         },
         "timeout_s": {
           "default": 900,
@@ -1361,6 +1389,20 @@
           "title": "Backend",
           "type": "string"
         },
+        "export_target_faces": {
+          "anyOf": [
+            {
+              "maximum": 1000000,
+              "minimum": 100,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Export Target Faces"
+        },
         "operation": {
           "const": "reconstruct",
           "title": "Operation",
@@ -1403,6 +1445,20 @@
           "format": "uuid",
           "title": "Run Id",
           "type": "string"
+        },
+        "texture_size": {
+          "anyOf": [
+            {
+              "maximum": 4096,
+              "minimum": 256,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Texture Size"
         }
       },
       "required": [
@@ -1482,7 +1538,7 @@
         },
         "target_faces": {
           "default": 100000,
-          "maximum": 500000,
+          "maximum": 1000000,
           "minimum": 100,
           "title": "Target Faces",
           "type": "integer"

@@ -17,6 +17,7 @@ from ..artifacts.export import export_mesh,export_preview
 from .core import MeshStore
 from .structure import StructureRequest,propose,confirm,apply_proposal
 from .view import measure_view
+from ..export_options import ExportTargetFaces,TextureSize
 
 class Call(ContractModel):run_id:UUID
 class ImportCall(Call):
@@ -36,6 +37,8 @@ class ReconstructCall(Call):
     prepared_outcome:RelativePath
     review:InputReview|AutomaticInputAcceptance
     reconstruction_profile:Literal['official','course_fast']|None=None
+    export_target_faces:ExportTargetFaces|None=None
+    texture_size:TextureSize|None=None
 class MeshCall(Call):
     operation:Literal['clean','export','export_glb','preview']
     mesh_version:Id
@@ -120,9 +123,11 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
         if op=='reconstruct':
             prepared=ToolOutcome.model_validate_json(resolve_artifact_path(root,command.prepared_outcome).read_text(encoding='utf-8'))
             config=configuration.backends.get(command.backend)
-            if command.reconstruction_profile is not None:
+            if any(getattr(command,k) is not None for k in ('reconstruction_profile','export_target_faces','texture_size')):
                 if config is None:raise ToolFailure('MODEL_NOT_CONFIGURED','所选后端没有配置，不自动换模型')
-                config=BackendConfig.model_validate({**config.model_dump(),'inference_profile':command.reconstruction_profile})
+                updates={k:getattr(command,k) for k in ('export_target_faces','texture_size') if getattr(command,k) is not None}
+                if command.reconstruction_profile is not None:updates['inference_profile']=command.reconstruction_profile
+                config=BackendConfig.model_validate({**config.model_dump(),**updates})
             return ReconstructionAdapter(root,config).reconstruct(run,prepared,command.review,cancel_event,automatic_input=automatic_input)
         if op=='clean':return store.clean(run,command.mesh_version,count_repair_round=not automatic_action)
         if op=='scale':return store.scale(run,command.mesh_version,command.request,automatic_orientation=automatic_action)

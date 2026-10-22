@@ -10,7 +10,15 @@ def main():
     parser.add_argument('--root',type=Path,required=True);parser.add_argument('--input',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True);parser.add_argument('--seed',type=int,default=None)
     parser.add_argument('--profile',choices=['official','course_fast','legacy_geometry'],default='official')
+    parser.add_argument('--export-target-faces',type=int,default=None)
+    parser.add_argument('--texture-size',type=int,default=None)
     args=parser.parse_args()
+    if args.export_target_faces is not None and not 100<=args.export_target_faces<=1000000:
+        parser.error('export-target-faces必须在100～1000000之间')
+    if args.texture_size is not None and not 256<=args.texture_size<=4096:
+        parser.error('texture-size必须在256～4096之间')
+    if (args.export_target_faces is not None or args.texture_size is not None) and (args.profile!='course_fast' or args.backend!='trellis2_candidate'):
+        parser.error('手动导出参数仅支持TRELLIS.2快速入口')
     import numpy as np
     import torch
     import trimesh
@@ -136,6 +144,8 @@ def course_fast_inference(args,source,torch,started):
     sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src'))
     from image_to_3d_print.adapters.official import read_official_geometry
     output=args.output.resolve();stages={}
+    target_faces=args.export_target_faces if args.export_target_faces is not None else 100000
+    texture_size=args.texture_size if args.texture_size is not None else 2048
     def stamp():
         torch.cuda.synchronize()
         return time.perf_counter()
@@ -153,13 +163,15 @@ def course_fast_inference(args,source,torch,started):
     native_written=stamp();stages['native_export']=native_written-inferred
     glb=postprocess.to_glb(vertices=native.vertices,faces=native.faces,attr_volume=native.attrs,
         coords=native.coords,attr_layout=native.layout,voxel_size=native.voxel_size,
-        aabb=[[-.5,-.5,-.5],[.5,.5,.5]],decimation_target=100000,texture_size=2048,
+        aabb=[[-.5,-.5,-.5],[.5,.5,.5]],decimation_target=target_faces,texture_size=texture_size,
         remesh=True,remesh_band=1,remesh_project=0,verbose=True)
     glb.export(output/'fast_export.glb')
     exported=stamp();stages['geometry_uv_texture_export']=exported-native_written
     geometry=read_official_geometry(output/'fast_export.glb','y_up');geometry.export(output/'raw_mesh.ply')
     finished=stamp();stages['independent_readback']=finished-exported;stages['total']=finished-started
-    parameters={'pipeline_type':'1024_cascade','seed':42,'decimation_target':100000,'texture_size':2048,
+    parameters={'pipeline_type':'1024_cascade','seed':42,'decimation_target':target_faces,'texture_size':texture_size,
+        'export_target_source':'manual' if args.export_target_faces is not None else 'automatic_generation_ceiling',
+        'texture_size_source':'manual' if args.texture_size is not None else 'default',
         'remesh':True,'remesh_band':1,'remesh_project':0,'official_pbr_video':False}
     report={'mode':args.mode,'backend':args.backend,'inference_profile':'course_fast','seed':42,'parameters':parameters,
         'official_entry':None,'upstream_library':'trellis2.pipelines + o_voxel.postprocess.to_glb',
