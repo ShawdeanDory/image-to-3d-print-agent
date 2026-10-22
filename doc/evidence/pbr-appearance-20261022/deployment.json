@@ -1,0 +1,18 @@
+{
+  "deployment_updated": true,
+  "appearance_policy": "official-pbr-v1",
+  "changed_files": 9,
+  "previous_tasks": 16,
+  "previous_task_states_preserved": true,
+  "services": {
+    "kind": "desktop_cloud_services",
+    "api": "started",
+    "worker": "started",
+    "model_submitted": false
+  },
+  "tests": "not_run_user_requested",
+  "model_generation": "not_run",
+  "pbr_bake": "not_run",
+  "browser_validation": "not_run",
+  "material_reference_check_deployed": true
+}

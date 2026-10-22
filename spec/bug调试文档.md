@@ -1,5 +1,11 @@
 # Bug与约定问题记录
 
+## PBR-BUG-001：处理链将原始PBR降为顶点底色
+
+- 2026-10-22，工具/接口。官方/快速GLB具UV和PBR纹理，但read_official_geometry/load_mesh及MeshStore的处理PLY只保留底色；最终GLB不包含原始粗糙度/金属度纹理，减面进一步降低颜色采样密度。7e2e627为可复查基线，修复亮度不等于恢复PBR。
+- 预期关联同任务官方GLB和几何变换，将官方材质重投射到最终网格的UV后交付，几何/检查版本保持。覆盖不足/来源损坏/工具超时不能报PBR成功；无PBR来源时沿用真实顶点色并说明。
+- 用户明确免除本轮测试，由其网页验证；本轮不创建或运行失败测试，不补造修改前后质量/时间/覆盖率数值。实现及部署不代表已通过真实烘焙或人工复核。
+
 ## MESH-BUG-002：处理GLB遗漏材质造成明显变暗
 
 - 2026-10-22，工具/外观。用户核对本轮真实9992面GLB与原始99282面PLY，前者明显暗黄。实际GLB的materials为空、primitive没有material/NORMAL；本机Three.js的GLTFLoader默认metalness=1/roughness=1，PLY预览metalness=0/roughness=0.85并计算平滑法线。保存原GLB及adaptive-comparison.png作为修改前基线。

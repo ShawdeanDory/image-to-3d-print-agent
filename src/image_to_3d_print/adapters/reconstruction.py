@@ -115,9 +115,15 @@ class ReconstructionAdapter:
             raw=session.directory/'raw_mesh.ply'
             mesh=load_mesh(raw)
             metadata=json.loads((session.directory/'model.json').read_text(encoding='utf-8'))
+            appearance={}
+            if self.config.inference_profile in {'official','course_fast'}:
+                from ..artifacts.pbr import source_record
+                official=session.directory/('fast_export.glb' if self.config.inference_profile=='course_fast' else 'official_export.glb')
+                if not official.is_file():raise ToolFailure('TOOL_UNAVAILABLE','官方外观导出缺失')
+                appearance['appearance_source']=source_record(self.root,official,metadata)
             version=MeshStore(self.root).import_mesh(raw.relative_to(self.root).as_posix(),run_id,parameters={
                 'backend':self.config.backend,'input_asset_id':review.asset_id,'coordinate_system':'z_up_unitless',
-                'input_view_mapping':'unverified_until_development_calibration','execution':execution})
+                'input_view_mapping':'unverified_until_development_calibration','execution':execution,**appearance})
             session.mesh_version=version.mesh_version
             session.add('raw_mesh',self.root/version.relative_path,'raw_mesh','unitless')
             frames={}
@@ -158,8 +164,13 @@ class ReconstructionAdapter:
             if (previous.tool.run_id!=UUID(str(run_id)) or execution['exit_code']!=0 or execution['backend']!=self.config.backend
                 or execution['upstream_revision']!=REVISIONS[self.config.backend]):raise ToolFailure('STATE_CONFLICT','原执行未成功或版本不匹配')
             raw=file.parent/'raw_mesh.ply';mesh=load_mesh(raw)
+            appearance={}
+            if metadata.get('inference_profile') in {'official','course_fast'}:
+                from ..artifacts.pbr import source_record
+                official=file.parent/('fast_export.glb' if metadata['inference_profile']=='course_fast' else 'official_export.glb')
+                appearance['appearance_source']=source_record(self.root,official,metadata)
             version=MeshStore(self.root).import_mesh(raw.relative_to(self.root).as_posix(),run_id,parameters={
-                'backend':self.config.backend,'coordinate_system':'z_up_unitless','recovered_from':previous_outcome,'execution':execution})
+                'backend':self.config.backend,'coordinate_system':'z_up_unitless','recovered_from':previous_outcome,'execution':execution,**appearance})
             session.mesh_version=version.mesh_version
             session.add('raw_mesh',self.root/version.relative_path,'raw_mesh','unitless')
             session.add('original_model_log',file.parent/'process.log','log')

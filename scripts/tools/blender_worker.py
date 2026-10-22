@@ -7,7 +7,7 @@ from mathutils import Vector
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('--operation',choices=['inspect','simplify','preview'],required=True)
+    parser.add_argument('--operation',choices=['inspect','simplify','preview','pbr_export'],required=True)
     parser.add_argument('--input',type=Path,required=True);parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--addon-dir',type=Path,required=True)
     args=parser.parse_args(sys.argv[sys.argv.index('--')+1:])
@@ -45,6 +45,10 @@ def main():
         bpy.ops.object.modifier_apply(modifier=modifier.name)
         triangulate=obj.modifiers.new('triangulate','TRIANGULATE');bpy.ops.object.modifier_apply(modifier=triangulate.name)
         result.update(vertices=[[v/factor for v in vertex.co] for vertex in obj.data.vertices],faces=[list(face.vertices) for face in obj.data.polygons])
+    elif args.operation=='pbr_export':
+        sys.path.insert(0,str(Path(__file__).resolve().parent))
+        from blender_pbr import bake_pbr
+        result.update(bake_pbr(obj,parameters,args.output.parent))
     else:
         scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=8
         scene.render.resolution_x=512;scene.render.resolution_y=512;scene.render.resolution_percentage=100

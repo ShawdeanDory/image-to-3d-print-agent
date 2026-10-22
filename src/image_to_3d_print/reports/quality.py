@@ -23,6 +23,7 @@ def write_quality(store, ctx):
         'delivery':ctx.get('delivery'),'orientation_source':ctx.get('orientation_source'),
         'repair_attempt_log':ctx.get('repair_attempt_log',[]),'automation_origin':'automatic_policy' if ctx.get('workflow_policy')=='automatic_glb' else None,
         'mesh_budget':ctx.get('mesh_budget'),
+        'appearance':(ctx.get('export_data') or {}).get('appearance'),
         'active_seconds': (None if ctx.get('interrupted_active_seconds_unknown') else
             store.row(ctx['run_id'])['active_seconds'] + ctx.get('current_active_seconds', 0)),
         'known_completed_active_seconds': store.row(ctx['run_id'])['active_seconds'],
@@ -46,6 +47,8 @@ def write_quality(store, ctx):
         if ctx.get('mesh_budget'):
             b=ctx['mesh_budget'];md.append(f"自动面数：图像复杂度{b['classification']}，目标≤{b['target_faces']}面，实际{b.get('actual_faces','未生成')}面。"+(b.get('fallback_reason') or '保形验证及实际检查记录见JSON。'))
     if ctx.get('error'): md.append('停止原因：' + ctx['error']['message'])
+    appearance=(ctx.get('export_data') or {}).get('appearance')
+    if appearance:md.append('外观：'+('PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')+'；'+(appearance.get('warning') or appearance.get('reason') or '原始PBR来源与重投射参数见JSON。'))
     if ctx.get('explanation'): md.append('语言模型说明（不替代检查证据）：\n\n' + ctx['explanation'])
     md.append('结构化尺度、修改参数、逐版检查、产物与证据、资源及切片记录见同目录quality.json。')
     readable = session.directory / 'quality.md'

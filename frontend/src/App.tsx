@@ -6,6 +6,7 @@ import PendingForm,{AxisSelect} from './PendingForm';
 import ModelView from './ModelView';
 import ReconstructionTiming from './ReconstructionTiming';
 import MeshBudgetInfo from './MeshBudgetInfo';
+import MaterialInfo from './MaterialInfo';
 
 const initialRun=()=>new URL(location.href).searchParams.get('task')||localStorage.getItem('i3d:last-run')||'';
 export default function App(){
@@ -81,6 +82,7 @@ export default function App(){
     </section>
     <ReconstructionTiming value={task.resources?.reconstruction}/>
     <MeshBudgetInfo value={task.resources?.mesh_budget}/>
+    <MaterialInfo value={task.resources?.appearance}/>
     {delivery&&response.status==='succeeded'&&<section className="sheet"><h2>GLB生成完成</h2><p>打印检查：{delivery.print_check==='passed'?'已通过自动检查':delivery.print_check==='failed'?'未通过':'未完整执行'}；自动修复尝试{delivery.repair_attempts}轮。</p><p className="muted">文件已可下载。自动检查不代表已实际切片或打印。</p><button className="primary" onClick={()=>void act(()=>download(run,delivery.artifact_id,`model-${run}.glb`))}>下载GLB</button></section>}
     {task.pending&&response.schema_version!=='generation-v1'&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>打印检查报告</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>

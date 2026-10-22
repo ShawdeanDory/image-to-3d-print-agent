@@ -8,6 +8,7 @@ export interface Capabilities {
   backend_profiles?: Record<string, ('official'|'course_fast')[]>;
   workflow_policy?: 'guided'|'automatic_glb';
   face_budget_policy?: 'image-complexity-v1'|null;
+  appearance_policy?: 'official-pbr-v1';
 }
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) { super(message); }

@@ -146,6 +146,7 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     outcome=tool(ctx,'export_glb',mesh_version=ctx['mesh_version']);data=outcome.tool.data
                     if data.get('mesh_version')!=ctx['mesh_version'] or data.get('independent_readback') is not True:
                         raise ToolFailure('STATE_CONFLICT','GLB缺少本版本独立读回证据')
+                    if data.get('appearance',{}).get('warning'):ctx['warnings'].append(data['appearance']['warning'])
                     inspection=MeshInspection.model_validate(ctx['inspection']) if ctx.get('inspection') else None
                     status=print_check_for(inspection)
                     if status!='passed':ctx['warnings'].append('GLB已生成；打印检查未通过或未完整执行，不能作为打印合格证明。')

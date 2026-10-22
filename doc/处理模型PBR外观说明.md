@@ -1,0 +1,50 @@
+# 处理模型PBR外观说明
+
+日期：2026-10-22；任务MID-PBR-001；基线7e2e627。代码已接入、云端服务已更新；用户明确自行网页测试，本轮没有运行自动测试、生成模型、真实烘焙或浏览器效果验证。实际效果与新增人工复核待用户反馈。
+
+## 1.在网页如何试用
+
+1. 刷新现有5173网页，必要时Ctrl+F5重新加载发布文件。
+2. **新建TRELLIS.2任务**，照常上传图片、填写参数并提交一次。旧任务和旧下载文件不重写，不自动重跑。
+3. 等待最终导出；本次新增UV展开和CPU纹理重烘焙，可能增加后处理时间，具体耗时尚未实测。
+4. 完成后看“处理模型外观”：成功显示“PBR纹理已重烘焙至本次处理网格”；失败会显示顶点底色及回退原因，不能将此状态当PBR成功。
+5. 点击“下载GLB”，文件内嵌纹理，预览和下载使用同一处理版本。打印检查失败仍如实显示，下载不代表可打印。页面没有新增确认或下载选项，仍由按钮触发下载。
+
+## 2.这次改变什么
+
+原处理链将原始GLB转为PLY，只保留采样后的顶点底色。本次保留原始官方GLB的来源、SHA256、轴向和纹理大小，沿网格版本链读取定标/旋转/平移矩阵，把原始材质对齐到最终已检查的毫米网格，再在该网格上展开UV并使用Blender CPU重烘焙：
+
+- 底色纹理使用sRGB；粗糙度、金属度、切线法线使用非颜色数据。
+- 粗糙度/金属度按glTF的G/B通道打包，导出UV、法线和切线，纹理嵌入GLB。
+- 目标UV投射覆盖要求≥99%；不满足、工具缺失或超时会回退并记录原因。当前支持固定官方默认OPAQUE材质，其他透明模式不冒称已保留。
+- 网页增加程序生成的环境反射光，供PBR材质展示；不是官方forest.exr，不下载额外HDR资源。
+
+这是**重投射后的PBR纹理近似**，不是逐像素原样复制原UV，也不是把原始模型冒充处理模型。原始PBR文件保留；没有PBR纹理的TripoSR继续使用它实际提供的顶点色。原始几何、毫米尺度、面数策略、打印门槛和最多2次结构修复保持。
+
+本次没有把快速导出改回100万面或4K；当前TRELLIS.2仍使用既有快速2K来源，目标纹理沿用来源声明的大小。外观传递不能恢复生成时没有产生的结构。
+
+## 3.实现与接口
+
+- [reconstruction.py](../src/image_to_3d_print/adapters/reconstruction.py)：新建和已生成产物恢复时登记AppearanceSource，绑定同任务官方文件/摘要/坐标，旧版本不补写来源。
+- [pbr.py](../src/image_to_3d_print/artifacts/pbr.py)：Pydantic来源模型、同任务路径/摘要校验、版本链矩阵、嵌入资源限制、烘焙调用及明确回退。来源归属/摘要冲突直接拒绝，不能跨任务借纹理。
+- [blender_pbr.py](../scripts/tools/blender_pbr.py)和[worker](../scripts/tools/blender_worker.py)：在最终网格上展开UV，选中源模型向当前模型烘焙；CPU、单次沿用既有Blender120秒超时，不安装新依赖。
+- [export.py](../src/image_to_3d_print/artifacts/export.py)：GLB仍为米/Y朝上，独立反变换读回毫米尺寸，并核对顶点位置集合及面数；不允许材质导出替换已检查几何。
+- [automatic.py](../src/image_to_3d_print/workflow/automatic.py)及[报告](../src/image_to_3d_print/reports/quality.py)：记录appearance与回退警告；公共1.0.0/generation-v1保持，既有ToolResult.data/质量JSON/resources字典兼容增补，GET配置增补appearance_policy=official-pbr-v1。
+- [MaterialInfo.tsx](../frontend/src/MaterialInfo.tsx)和[ModelView.tsx](../frontend/src/ModelView.tsx)：显示实际外观状态，沿用同任务产物预览和按钮下载，提供PBR环境反射。
+
+appearance.status为pbr_rebaked、vertex_base_color或fallback_vertex_color；成功记录源版本/摘要、目标版本、投射覆盖率、纹理大小和通道，失败记录warning/reason。打印结论独立，不因材质成功改变。
+
+## 4.本轮实际执行
+
+用户要求不测试，本轮仅进行了改动代码阅读、9份Python的AST语法检查、Git差异检查，以及必要网页发布构建`cd frontend; npm run build`（包含TypeScript静态检查）。构建退出0，保留既有大包提示。这些操作不证明真实烘焙、外观效果或业务链通过。
+
+云端先只读核对任务/既有工具：无运行或排队任务、Blender已配置。逐项比较生产文件与7e2e627基线，备份旧源码/配置/两个SQLite库，再更新9个明确后端/工具文件并重启同部署API/单worker。仅GET配置核对发布版本，未创建模型任务；16个历史任务状态保持。源码和数据备份在云端runs/pbr-appearance-20261022-01，本机同目录保存[发布记录](evidence/pbr-appearance-20261022/deployment.json)。现有5173/9000及启动器路径保持，无新临时服务，不代开关机。
+
+## 5.待你验证的结果
+
+- 新TRELLIS.2任务最终是否显示PBR重烘焙，下载GLB能否正常显示纹理和材质。
+- 减面后眼睛、嘴、花纹等局部外观是否比旧顶点色版清晰，旋转背面有无黑斑、接缝或错位。
+- 实际烘焙用时、覆盖率、超时回退、法线贴图及非默认方向的对齐情况。
+- 取消/超时/恢复、完整回归及新增代码/结果人工复核。
+
+以上均为待验证，未填写通过、覆盖率或性能数字；旧255/261测试结果属于上轮，不能作为本次证明。收到实际任务或问题后再按具体证据修订，本轮不主动运行下一项实验。
