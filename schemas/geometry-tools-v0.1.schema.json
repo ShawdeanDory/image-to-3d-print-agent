@@ -206,6 +206,11 @@
           "default": null,
           "title": "Export Target Faces"
         },
+        "gpu_hole_repair": {
+          "default": false,
+          "title": "Gpu Hole Repair",
+          "type": "boolean"
+        },
         "inference_profile": {
           "default": "official",
           "enum": [
@@ -569,6 +574,73 @@
         "summary"
       ],
       "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "GPUHolePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "max_diameter_ratio": {
+          "default": 0.1,
+          "exclusiveMinimum": 0,
+          "maximum": 0.1,
+          "title": "Max Diameter Ratio",
+          "type": "number"
+        },
+        "max_loop_edges": {
+          "default": 512,
+          "maximum": 512,
+          "minimum": 3,
+          "title": "Max Loop Edges",
+          "type": "integer"
+        },
+        "max_patch_area_ratio": {
+          "default": 0.003,
+          "exclusiveMinimum": 0,
+          "maximum": 0.003,
+          "title": "Max Patch Area Ratio",
+          "type": "number"
+        },
+        "max_planarity_ratio": {
+          "default": 0.01,
+          "exclusiveMinimum": 0,
+          "maximum": 0.01,
+          "title": "Max Planarity Ratio",
+          "type": "number"
+        },
+        "max_rounds": {
+          "const": 2,
+          "default": 2,
+          "title": "Max Rounds",
+          "type": "integer"
+        },
+        "perimeter_ratios": {
+          "default": [
+            0.12,
+            0.3
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "const": 0.12,
+              "type": "number"
+            },
+            {
+              "const": 0.3,
+              "type": "number"
+            }
+          ],
+          "title": "Perimeter Ratios",
+          "type": "array"
+        },
+        "version": {
+          "const": "gpu-boundary-fill-v1",
+          "default": "gpu-boundary-fill-v1",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "title": "GPUHolePolicy",
       "type": "object"
     },
     "ImageComplexity": {
@@ -1404,6 +1476,11 @@
           "default": null,
           "title": "Export Target Faces"
         },
+        "gpu_hole_repair": {
+          "default": false,
+          "title": "Gpu Hole Repair",
+          "type": "boolean"
+        },
         "operation": {
           "const": "reconstruct",
           "title": "Operation",
@@ -1769,6 +1846,9 @@
     },
     {
       "$ref": "#/$defs/ImageComplexity"
+    },
+    {
+      "$ref": "#/$defs/GPUHolePolicy"
     }
   ]
 }

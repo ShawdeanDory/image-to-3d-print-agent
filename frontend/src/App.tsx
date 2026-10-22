@@ -7,6 +7,7 @@ import ModelView from './ModelView';
 import ReconstructionTiming from './ReconstructionTiming';
 import MeshBudgetInfo from './MeshBudgetInfo';
 import MaterialInfo from './MaterialInfo';
+import GPURepairInfo from './GPURepairInfo';
 
 const initialRun=()=>new URL(location.href).searchParams.get('task')||localStorage.getItem('i3d:last-run')||'';
 export default function App(){
@@ -60,7 +61,7 @@ export default function App(){
       const body:ModelTaskRequest={schema_version:'1.0.0',image_asset_id:assetRef.current.asset_id,printer_profile_id:String(data.get('profile')),
         height_value:height,height_unit:(data.get('unit')||null) as 'mm'|'cm'|null,scale_source:(source||null) as 'user_target'|'measured_object'|null,scale_evidence_id:evidence,
         orientation:{up_axis:axis||null,confirmed:false},description:String(data.get('description')||'')};
-      const created=await api.create(body,String(data.get('backend')),createKey.current,undefined,exportOptions);setRun(created.run_id);setNotice('任务已创建，后台将在副本上检查并最多修复2轮，网页交付原始GLB。');
+      const created=await api.create(body,String(data.get('backend')),createKey.current,undefined,exportOptions);setRun(created.run_id);setNotice('任务已创建，后台先GPU复查几何，最多尝试2轮受控修补；未修好项会保留在报告。');
     });
   }
   async function submit(body:Record<string,unknown>,slicer=false){await api.input(run,body,slicer);setNotice('已提交，继续原任务。');await fetchTask();}
@@ -80,7 +81,7 @@ export default function App(){
     <label>补充描述<textarea name="description" maxLength={2000} placeholder="例如：做一个高8厘米的摆件。留空则仅使用填写的约束。"/></label>
     {cap&&!cap.llm_configured&&<p className="muted">语言模型未配置。请使用结构化约束并将描述留空。</p>}
     <button className="primary wide" disabled={!connected||!draftValid||!profiles.length}>{busy?'正在保存与创建…':'创建建模任务'}<span>↗</span></button>
-  </fieldset></form></section><aside className="guide"><span className="eyebrow">工作流</span><h2>提交后自动完成</h2><ol><li><strong>准备图片</strong><p>保留清晰原图，自动进入快速重建。</p></li><li><strong>生成原始模型</strong><p>使用本次图片重建，保留原UV和材质。</p></li><li><strong>打印检查与修复</strong><p>在独立副本上定标、检查和受限修复。</p></li><li><strong>结果与下载</strong><p>交付原始GLB，另列检查副本的结论。</p></li></ol><label>恢复已有任务<input id="resume-id" placeholder="输入任务UUID"/></label><button onClick={()=>{const v=(document.getElementById('resume-id') as HTMLInputElement).value.trim();if(/^[0-9a-f-]{36}$/i.test(v))setRun(v);else setError('请输入有效任务UUID');}}>读取原任务</button></aside></div>:
+  </fieldset></form></section><aside className="guide"><span className="eyebrow">工作流</span><h2>提交后自动完成</h2><ol><li><strong>准备图片</strong><p>保留清晰原图，自动进入快速重建。</p></li><li><strong>生成原始模型</strong><p>使用本次图片重建，首次材质导出前进行GPU几何复查。</p></li><li><strong>打印检查与修复</strong><p>在独立副本上定标、检查和受限修复。</p></li><li><strong>结果与下载</strong><p>交付原始GLB，另列检查副本的结论。</p></li></ol><label>恢复已有任务<input id="resume-id" placeholder="输入任务UUID"/></label><button onClick={()=>{const v=(document.getElementById('resume-id') as HTMLInputElement).value.trim();if(/^[0-9a-f-]{36}$/i.test(v))setRun(v);else setError('请输入有效任务UUID');}}>读取原任务</button></aside></div>:
   <><div className="task-bar"><div><span className={'badge '+response?.status}>{statusNames[response?.status||'']||'正在读取'}</span><strong>{stageNames[response?.data.state.stage||'']||'读取任务'}</strong><small>任务：{run}</small></div><div className="actions"><button onClick={newTask}>新建任务</button>{response&&!['failed','cancelled','succeeded'].includes(response.status)&&<button disabled={busy} onClick={()=>void act(async()=>{await api.cancel(run);await fetchTask();})}>取消任务</button>}</div></div>
   {notice&&<p role="status" className="notice">{notice}</p>}
   {task&&response&&<div className="workspace task-workspace"><div className="main-column">
@@ -91,9 +92,10 @@ export default function App(){
       <ArtifactImages run={run} artifacts={(response.artifacts??[]).filter(a=>['input_image','foreground_image'].includes(a.kind)||a.artifact_id===task.pending?.details?.preview_artifact_id)}/>
     </section>
     <ReconstructionTiming value={task.resources?.reconstruction}/>
+    <GPURepairInfo value={task.resources?.gpu_boundary_repair}/>
     <MeshBudgetInfo value={task.resources?.mesh_budget} original={response.schema_version==='original-glb-v1'}/>
     <MaterialInfo original={Boolean(active)}/>
-    {response.status==='succeeded'&&active&&<section className="sheet"><h2>原始GLB已可下载</h2><p>保留原始外观，未应用检查副本的定标和修复；下载不代表可打印。</p><button className="primary" onClick={()=>void act(()=>download(run,active.artifact_id,`original-${run}.glb`))}>下载原始GLB</button></section>}
+    {response.status==='succeeded'&&active&&<section className="sheet"><h2>生成GLB已可下载</h2><p>保留原始外观，未应用检查副本的定标和修复；下载不代表可打印。</p><button className="primary" onClick={()=>void act(()=>download(run,active.artifact_id,`original-${run}.glb`))}>下载GLB</button></section>}
     {task.pending&&response.schema_version==='1.0.0'&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>检查副本的打印报告</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>
     {response.error&&<p className="error" role="alert"><strong>{response.error.code}</strong>：{response.error.message}</p>}

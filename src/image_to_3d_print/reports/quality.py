@@ -25,6 +25,7 @@ def write_quality(store, ctx):
         'mesh_budget':ctx.get('mesh_budget'),
         'export_options':ctx.get('export_options'),
         'appearance':(ctx.get('export_data') or {}).get('appearance'),
+        'gpu_boundary_repair':ctx.get('gpu_boundary_repair'),
         'active_seconds': (None if ctx.get('interrupted_active_seconds_unknown') else
             store.row(ctx['run_id'])['active_seconds'] + ctx.get('current_active_seconds', 0)),
         'known_completed_active_seconds': store.row(ctx['run_id'])['active_seconds'],
@@ -54,6 +55,9 @@ def write_quality(store, ctx):
             md.append(f"请求纹理：{requested or 2048}×{requested or 2048}；实际PBR与纹理状态另见外观记录，TripoSR不使用纹理分辨率。")
     if ctx.get('delivery_policy')=='original-glb-v1':
         md.append('网页交付原始GLB，原UV/贴图/坐标/文件字节保持；未应用目标毫米尺寸或副本修复，原件打印检查为not_run。副本检查不能作为原件认证。')
+    if ctx.get('gpu_boundary_repair'):
+        gpu=ctx['gpu_boundary_repair']
+        md.append(f"首次PBR导出前GPU补片：{gpu['status']}，边界{gpu['boundary_before']}→{gpu['boundary_after']}，实际{gpu['attempts']}轮。"+gpu['warning'])
     if ctx.get('error'): md.append('停止原因：' + ctx['error']['message'])
     appearance=(ctx.get('export_data') or {}).get('appearance')
     if appearance:md.append('外观：'+('原始PBR，未经重烘焙' if appearance['status']=='original_pbr' else '原始顶点色，未经重烘焙' if appearance['status']=='original_vertex_color' else 'PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')+'；'+(appearance.get('warning') or appearance.get('reason') or '原始PBR来源与重投射参数见JSON。'))

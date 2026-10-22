@@ -1,7 +1,8 @@
 """在锁定后端环境内工作，不导入服务层，不联网，不选官方固定图。"""
 import argparse,importlib.util,json,os,runpy,shutil,hashlib
 from pathlib import Path
-import sys,time
+import sys,time,subprocess
+from contextlib import nullcontext
 
 def main():
     parser=argparse.ArgumentParser()
@@ -12,6 +13,7 @@ def main():
     parser.add_argument('--profile',choices=['official','course_fast','legacy_geometry'],default='official')
     parser.add_argument('--export-target-faces',type=int,default=None)
     parser.add_argument('--texture-size',type=int,default=None)
+    parser.add_argument('--gpu-hole-repair',action='store_true')
     args=parser.parse_args()
     if args.export_target_faces is not None and not 100<=args.export_target_faces<=1000000:
         parser.error('export-target-faces必须在100～1000000之间')
@@ -87,9 +89,29 @@ def official_inference(args,source,torch,started):
     sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src'))
     from image_to_3d_print.adapters.official import read_official_geometry
     output=args.output.resolve();directory=output/'official';directory.mkdir(exist_ok=False)
-    previous_cwd=Path.cwd();previous_argv=sys.argv[:]
+    previous_cwd=Path.cwd();previous_argv=sys.argv[:];restore_extract=None;gpu_reports=[]
     try:
         if args.backend=='triposr':
+            if args.gpu_hole_repair:
+                from tsr.system import TSR
+                restore_extract=TSR.extract_mesh
+                def gpu_extract(model,*a,**k):
+                    meshes=restore_extract(model,*a,**k)
+                    for i,mesh in enumerate(meshes):
+                        original=output/f'before_gpu_repair_{i}.ply';candidate=output/f'gpu_candidate_{i}.ply';report_file=output/f'gpu_repair_{i}.json'
+                        mesh.export(original)
+                        environment=args.root/'runtime/envs/trellis2/bin/python'
+                        try:
+                            if not environment.is_file():raise FileNotFoundError('gpu_repair_environment_missing')
+                            subprocess.run([str(environment),str(Path(__file__).with_name('gpu_hole_worker.py')),
+                                '--input',str(original),'--output',str(candidate),'--report',str(report_file)],check=True)
+                            gpu_reports.append(json.loads(report_file.read_text(encoding='utf-8')))
+                            meshes[i]=trimesh.load(candidate,force='mesh',process=False)
+                        except (subprocess.CalledProcessError,OSError,ValueError) as exc:
+                            from image_to_3d_print.geometry.gpu_holes import failed_gpu_report
+                            gpu_reports.append(failed_gpu_report(exc))
+                    return meshes
+                TSR.extract_mesh=gpu_extract
             if not (Path(os.environ.get('U2NET_HOME',''))/'u2net.onnx').is_file():
                 raise RuntimeError('official_u2net_missing:先准备官方rembg权重，运行期间不自动联网')
             entry=source/'run.py'
@@ -118,6 +140,9 @@ def official_inference(args,source,torch,started):
                 'remesh':True,'remesh_band':1,'remesh_project':0,'official_pbr_video':True}
             seed=42
         torch.cuda.synchronize()
+        if gpu_reports:
+            (output/'gpu_repair.json').write_text(json.dumps(gpu_reports,indent=2)+'\n',encoding='utf-8')
+            if (output/'before_gpu_repair_0.ply').is_file():shutil.copyfile(output/'before_gpu_repair_0.ply',output/'before_gpu_repair.ply')
         shutil.copyfile(exported,output/'official_export.glb')
         geometry=read_official_geometry(output/'official_export.glb',frame)
         geometry.export(output/'raw_mesh.ply')
@@ -126,13 +151,18 @@ def official_inference(args,source,torch,started):
             'official_entry':entry.name,'official_entry_sha256':hashlib.sha256(entry.read_bytes()).hexdigest(),
             'official_export_frame':frame,'geometry_frame':'z_up','geometry_source':'official_export_readback',
             'input_dimensions':dimensions,'additional_downsampling':False,'torch':torch.__version__,
+            'gpu_boundary_repair':gpu_reports[0] if len(gpu_reports)==1 else None,
+            'post_extraction_gpu_variant':bool(gpu_reports),
             'cuda_runtime':torch.version.cuda,'device':torch.cuda.get_device_name(0),'input_file':args.input.name,
             'seconds':{'load_and_prepare':None,'inference':None,'total':time.perf_counter()-started},
-            'timing_scope':'unmodified official entry plus independent export readback; separate model times not instrumented',
+            'timing_scope':'official entry plus explicit optional GPU geometry variant and independent readback; model-only time not instrumented',
             'peak_allocated_mib':torch.cuda.max_memory_allocated()/2**20,'peak_reserved_mib':torch.cuda.max_memory_reserved()/2**20}
         (output/'model.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
         print(json.dumps(report))
     finally:
+        if restore_extract is not None:
+            from tsr.system import TSR
+            TSR.extract_mesh=restore_extract
         os.chdir(previous_cwd);sys.argv=previous_argv
 
 def course_fast_inference(args,source,torch,started):
@@ -161,10 +191,16 @@ def course_fast_inference(args,source,torch,started):
     inferred=stamp();stages['inference']=inferred-ready
     trimesh.Trimesh(vertices=native.vertices.detach().cpu().numpy(),faces=native.faces.detach().cpu().numpy(),process=False).export(output/'native_mesh.ply')
     native_written=stamp();stages['native_export']=native_written-inferred
-    glb=postprocess.to_glb(vertices=native.vertices,faces=native.faces,attr_volume=native.attrs,
-        coords=native.coords,attr_layout=native.layout,voxel_size=native.voxel_size,
-        aabb=[[-.5,-.5,-.5],[.5,.5,.5]],decimation_target=target_faces,texture_size=texture_size,
-        remesh=True,remesh_band=1,remesh_project=0,verbose=True)
+    from image_to_3d_print.geometry.gpu_holes import before_pbr_export
+    gpu_reports=[];snapshots=[]
+    with before_pbr_export(gpu_reports,snapshots) if args.gpu_hole_repair else nullcontext():
+        glb=postprocess.to_glb(vertices=native.vertices,faces=native.faces,attr_volume=native.attrs,
+            coords=native.coords,attr_layout=native.layout,voxel_size=native.voxel_size,
+            aabb=[[-.5,-.5,-.5],[.5,.5,.5]],decimation_target=target_faces,texture_size=texture_size,
+            remesh=True,remesh_band=1,remesh_project=0,verbose=True)
+    for vertices,faces in snapshots:
+        trimesh.Trimesh(vertices.detach().cpu().numpy(),faces.detach().cpu().numpy(),process=False).export(output/'before_gpu_repair.ply')
+    (output/'gpu_repair.json').write_text(json.dumps(gpu_reports,indent=2)+'\n',encoding='utf-8')
     glb.export(output/'fast_export.glb')
     exported=stamp();stages['geometry_uv_texture_export']=exported-native_written
     geometry=read_official_geometry(output/'fast_export.glb','y_up');geometry.export(output/'raw_mesh.ply')
@@ -180,6 +216,7 @@ def course_fast_inference(args,source,torch,started):
         'input_dimensions':dimensions,'additional_downsampling':False,'torch':torch.__version__,
         'cuda_runtime':torch.version.cuda,'device':torch.cuda.get_device_name(0),'input_file':args.input.name,
         'seconds':stages,'face_count':len(geometry.faces),'vertex_count':len(geometry.vertices),
+        'gpu_boundary_repair':gpu_reports[0] if len(gpu_reports)==1 else None,
         'timing_scope':'CUDA synchronized, disjoint stages; UV/remesh/baking combined inside upstream to_glb; no video; process startup separately recorded',
         'peak_allocated_mib':torch.cuda.max_memory_allocated()/2**20,'peak_reserved_mib':torch.cuda.max_memory_reserved()/2**20}
     (output/'model.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))

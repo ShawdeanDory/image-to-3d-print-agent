@@ -39,6 +39,7 @@ class ReconstructCall(Call):
     reconstruction_profile:Literal['official','course_fast']|None=None
     export_target_faces:ExportTargetFaces|None=None
     texture_size:TextureSize|None=None
+    gpu_hole_repair:StrictBool=False
 class MeshCall(Call):
     operation:Literal['clean','export','export_glb','export_original_glb','preview']
     mesh_version:Id
@@ -123,10 +124,12 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
         if op=='reconstruct':
             prepared=ToolOutcome.model_validate_json(resolve_artifact_path(root,command.prepared_outcome).read_text(encoding='utf-8'))
             config=configuration.backends.get(command.backend)
-            if any(getattr(command,k) is not None for k in ('reconstruction_profile','export_target_faces','texture_size')):
+            if command.gpu_hole_repair and not automatic_action:raise ToolFailure('STATE_CONFLICT','GPU自动修补只能由服务端新任务政策启用')
+            if command.gpu_hole_repair or any(getattr(command,k) is not None for k in ('reconstruction_profile','export_target_faces','texture_size')):
                 if config is None:raise ToolFailure('MODEL_NOT_CONFIGURED','所选后端没有配置，不自动换模型')
                 updates={k:getattr(command,k) for k in ('export_target_faces','texture_size') if getattr(command,k) is not None}
                 if command.reconstruction_profile is not None:updates['inference_profile']=command.reconstruction_profile
+                if command.gpu_hole_repair:updates['gpu_hole_repair']=True
                 config=BackendConfig.model_validate({**config.model_dump(),**updates})
             return ReconstructionAdapter(root,config).reconstruct(run,prepared,command.review,cancel_event,automatic_input=automatic_input)
         if op=='clean':return store.clean(run,command.mesh_version,count_repair_round=not automatic_action)

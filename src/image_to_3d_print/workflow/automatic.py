@@ -100,12 +100,24 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     ctx['stage']='reconstruct'
                     review=AutomaticInputAcceptance(asset_id=ctx['request']['image_asset_id'],foreground_artifact_id=ctx['prepared']['foreground_artifact_id'])
                     args={'reconstruction_profile':ctx['reconstruction_profile']} if ctx.get('reconstruction_profile') else {}
+                    if ctx.get('gpu_hole_policy')=='gpu-boundary-fill-v1':args['gpu_hole_repair']=True
                     if ctx['backend']=='trellis2_candidate':
                         args.update({k:v for k,v in (ctx.get('export_options') or {}).items() if v is not None})
                         if ctx.get('delivery_policy')=='original-glb-v1' and 'export_target_faces' not in args and ctx.get('mesh_budget'):
                             args['export_target_faces']=ctx['mesh_budget'].get('effective_target_faces',ctx['mesh_budget']['target_faces'])
                     outcome=tool(ctx,'reconstruct',backend=ctx['backend'],prepared_outcome=ctx['prepared_outcome'],review=review.model_dump(),**args)
                     ctx['reconstruction_metrics']=outcome.tool.data.get('model');ctx['next']='clean'
+                    gpu=(ctx['reconstruction_metrics'] or {}).get('gpu_boundary_repair')
+                    if gpu:
+                        ctx['gpu_boundary_repair']=gpu
+                        used=gpu.get('attempts',0)
+                        if type(used)!=int or not 0<=used<=2:raise ToolFailure('STATE_CONFLICT','GPU修补轮数证据无效')
+                        ctx['repair_attempts']=used
+                        for record in gpu.get('rounds',[]):
+                            ctx.setdefault('repair_attempt_log',[]).append({'attempt':record['round'],'mesh_version':ctx['mesh_version'],
+                                'operation':'gpu_boundary_fill','status':'applied' if record['accepted'] else 'rejected',
+                                'origin':'automatic_policy','details':record})
+                        ctx['warnings'].append(gpu['warning'])
                 elif name=='clean':
                     ctx['stage']='repair';tool(ctx,'clean',mesh_version=ctx['mesh_version']);ctx['next']='scale'
                 elif name=='scale':

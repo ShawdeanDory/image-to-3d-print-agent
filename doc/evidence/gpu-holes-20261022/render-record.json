@@ -1,0 +1,10 @@
+{
+  "source": "existing_original_glb",
+  "renderer": "4.5.14 LTS",
+  "device": "CPU",
+  "samples": 4,
+  "view_transform": "Standard",
+  "material_preserved_in_source": true,
+  "unlit_material_is_diagnostic_only": true,
+  "new_model_called": false
+}

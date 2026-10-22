@@ -1893,7 +1893,7 @@
     },
     "RuntimeTask": {
       "additionalProperties": false,
-      "description": "扩展查询；response依任务快照返回打印契约或generation-v1。",
+      "description": "扩展查询；按任务快照返回打印、处理版或原始GLB契约。",
       "properties": {
         "artifact_frames": {
           "patternProperties": {

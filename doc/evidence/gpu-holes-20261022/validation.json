@@ -1,0 +1,147 @@
+{
+  "eight_edge_boundary": {
+    "policy_version": "gpu-boundary-fill-v1",
+    "device": "NVIDIA GeForce RTX 4090 D",
+    "status": "applied",
+    "rounds": [
+      {
+        "round": 1,
+        "perimeter_ratio": 0.3,
+        "loops": 1,
+        "added_faces": 8,
+        "before_boundary_edges": 8,
+        "after_boundary_edges": 0,
+        "nonmanifold_edges": 0,
+        "accepted": true
+      }
+    ],
+    "attempts": 1,
+    "added_patches": 1,
+    "added_faces": 8,
+    "boundary_before": 8,
+    "boundary_after": 0,
+    "nonmanifold_before": 0,
+    "nonmanifold_after": 0,
+    "original_vertices_preserved": true,
+    "original_faces_preserved": true,
+    "rejected_components": {},
+    "seconds": 0.39912861213088036,
+    "closed_tunnels": "unsupported_not_repaired",
+    "semantic_hole_detection": "not_run",
+    "full_self_intersection_check": "not_run",
+    "print_certified": false,
+    "warning": "仅修补受控开放边界；带内壁的错误通孔、语义缺失和不安全边界仍可能保留，不能称为全部大洞修好。"
+  },
+  "idempotent_repeat": {
+    "policy_version": "gpu-boundary-fill-v1",
+    "device": "NVIDIA GeForce RTX 4090 D",
+    "status": "unchanged",
+    "rounds": [],
+    "attempts": 0,
+    "added_patches": 0,
+    "added_faces": 0,
+    "boundary_before": 0,
+    "boundary_after": 0,
+    "nonmanifold_before": 0,
+    "nonmanifold_after": 0,
+    "original_vertices_preserved": true,
+    "original_faces_preserved": true,
+    "rejected_components": {},
+    "seconds": 0.0018692761659622192,
+    "closed_tunnels": "unsupported_not_repaired",
+    "semantic_hole_detection": "not_run",
+    "full_self_intersection_check": "not_run",
+    "print_certified": false,
+    "warning": "仅修补受控开放边界；带内壁的错误通孔、语义缺失和不安全边界仍可能保留，不能称为全部大洞修好。"
+  },
+  "actual_uv_hook": {
+    "added_faces": 8,
+    "uv_return_count": 4,
+    "hook_restored": true,
+    "pbr_bake": "not_run"
+  },
+  "closed_design_opening": {
+    "policy_version": "gpu-boundary-fill-v1",
+    "device": "NVIDIA GeForce RTX 4090 D",
+    "status": "unchanged",
+    "rounds": [],
+    "attempts": 0,
+    "added_patches": 0,
+    "added_faces": 0,
+    "boundary_before": 0,
+    "boundary_after": 0,
+    "nonmanifold_before": 0,
+    "nonmanifold_after": 0,
+    "original_vertices_preserved": true,
+    "original_faces_preserved": true,
+    "rejected_components": {},
+    "seconds": 0.02616574615240097,
+    "closed_tunnels": "unsupported_not_repaired",
+    "semantic_hole_detection": "not_run",
+    "full_self_intersection_check": "not_run",
+    "print_certified": false,
+    "warning": "仅修补受控开放边界；带内壁的错误通孔、语义缺失和不安全边界仍可能保留，不能称为全部大洞修好。"
+  },
+  "oversized_open_box": {
+    "policy_version": "gpu-boundary-fill-v1",
+    "device": "NVIDIA GeForce RTX 4090 D",
+    "status": "unchanged",
+    "rounds": [],
+    "attempts": 0,
+    "added_patches": 0,
+    "added_faces": 0,
+    "boundary_before": 256,
+    "boundary_after": 256,
+    "nonmanifold_before": 0,
+    "nonmanifold_after": 0,
+    "original_vertices_preserved": true,
+    "original_faces_preserved": true,
+    "rejected_components": {
+      "perimeter_limit": 1
+    },
+    "seconds": 0.022706259042024612,
+    "closed_tunnels": "unsupported_not_repaired",
+    "semantic_hole_detection": "not_run",
+    "full_self_intersection_check": "not_run",
+    "print_certified": false,
+    "warning": "仅修补受控开放边界；带内壁的错误通孔、语义缺失和不安全边界仍可能保留，不能称为全部大洞修好。"
+  },
+  "invalid_index": {
+    "rejected": true
+  },
+  "cpu_fallback": {
+    "rejected": true
+  },
+  "real_glb": {
+    "policy_version": "gpu-boundary-fill-v1",
+    "device": "NVIDIA GeForce RTX 4090 D",
+    "status": "unchanged",
+    "rounds": [],
+    "attempts": 0,
+    "added_patches": 0,
+    "added_faces": 0,
+    "boundary_before": 50,
+    "boundary_after": 50,
+    "nonmanifold_before": 13737,
+    "nonmanifold_after": 13737,
+    "original_vertices_preserved": true,
+    "original_faces_preserved": true,
+    "rejected_components": {
+      "degenerate_boundary": 5,
+      "non_star_or_inconsistent_winding": 15
+    },
+    "seconds": 0.0802319161593914,
+    "closed_tunnels": "unsupported_not_repaired",
+    "semantic_hole_detection": "not_run",
+    "full_self_intersection_check": "not_run",
+    "print_certified": false,
+    "warning": "仅修补受控开放边界；带内壁的错误通孔、语义缺失和不安全边界仍可能保留，不能称为全部大洞修好。"
+  },
+  "scope": {
+    "origin": "test_fixture_and_optional_user_glb",
+    "model_generation": "not_run",
+    "pbr_bake": "not_run",
+    "semantic_completion": "not_run",
+    "gpu": "NVIDIA GeForce RTX 4090 D"
+  }
+}

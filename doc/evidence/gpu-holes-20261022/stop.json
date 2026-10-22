@@ -1,0 +1,16 @@
+{
+  "deployed_files_match": true,
+  "task_states": {
+    "cancelled": 8,
+    "failed": 1,
+    "succeeded": 9,
+    "waiting_for_input": 3
+  },
+  "original_glb_sha256": {
+    "rack": "76876ddcb7ba76561863769de2a3d7c45b305ca64a49a8ab4c3213d05b7ae189",
+    "person": "3a4e93d89e9c273fc4df6a66ba6be2b7e570e16e809ba40990afee89aec38b72"
+  },
+  "gpu": "NVIDIA GeForce RTX 4090 D, 0 MiB",
+  "model_generation": "not_run",
+  "pbr_bake": "not_run"
+}

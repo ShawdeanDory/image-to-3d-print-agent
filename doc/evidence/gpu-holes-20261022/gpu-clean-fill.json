@@ -1,0 +1,11 @@
+{
+  "original_faces": 949063,
+  "cleaned_faces": 924929,
+  "final_faces": 950476,
+  "boundaries_before_fill": 33335,
+  "boundaries_after_fill": 7788,
+  "seconds": 0.5423114858567715,
+  "gpu": "NVIDIA GeForce RTX 4090 D",
+  "method": "isolated_gpu_nonmanifold_cleanup_then_fill",
+  "production_applied": false
+}

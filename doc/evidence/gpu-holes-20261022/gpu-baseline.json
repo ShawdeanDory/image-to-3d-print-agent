@@ -1,0 +1,24 @@
+{
+  "device": "NVIDIA GeForce RTX 4090 D",
+  "boundary_edges": 50,
+  "loops": 15,
+  "loop_sizes": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+  ],
+  "seconds": 7.200944885611534,
+  "peak_allocated_mib": 16.0234375
+}

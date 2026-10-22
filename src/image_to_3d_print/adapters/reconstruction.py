@@ -7,7 +7,7 @@ import subprocess
 import time
 from typing import Literal
 from uuid import UUID
-from pydantic import Field,model_validator
+from pydantic import Field,model_validator,StrictBool
 from PIL import Image
 from ..image.assets import InputReview,AutomaticInputAcceptance
 from ..schemas.common import ContractModel
@@ -32,6 +32,7 @@ class BackendConfig(ContractModel):
     trellis_output_variant: Literal['native_geometry']|None=None
     export_target_faces: ExportTargetFaces|None=None
     texture_size: TextureSize|None=None
+    gpu_hole_repair: StrictBool=False
 
     @model_validator(mode='after')
     def fixed_official_parameters(self):
@@ -62,6 +63,7 @@ def execute_worker(config,mode,input_path,output,script,cancel_event=None):
     if config.seed is not None:argv.extend(['--seed',str(config.seed)])
     if config.export_target_faces is not None:argv.extend(['--export-target-faces',str(config.export_target_faces)])
     if config.texture_size is not None:argv.extend(['--texture-size',str(config.texture_size)])
+    if mode=='reconstruct' and config.gpu_hole_repair:argv.append('--gpu-hole-repair')
     argv=[watchdog,'--signal=TERM','--kill-after=5s',f'{config.timeout_s}s',*argv]
     environment={**os.environ,'HF_HOME':str(config.execution_root/'runtime/cache/huggingface'),
         'HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1','CUDA_VISIBLE_DEVICES':'0','OPENCV_IO_ENABLE_OPENEXR':'1',
@@ -139,6 +141,8 @@ class ReconstructionAdapter:
                 if not official.is_file():raise ToolFailure('TOOL_UNAVAILABLE','官方完整导出缺失，不能回退为原生几何')
                 if (session.directory/'native_mesh.ply').exists():
                     session.add('native_before_official_export',session.directory/'native_mesh.ply','raw_mesh','unitless')
+                for name,kind in [('before_gpu_repair.ply','raw_mesh'),('gpu_repair.json','log')]:
+                    if (session.directory/name).is_file():session.add(name.replace('.','_'),session.directory/name,kind,'unitless' if kind=='raw_mesh' else None)
                 colored=session.add('fast_glb' if self.config.inference_profile=='course_fast' else 'official_glb',official,'raw_mesh','unitless')
                 frames[colored.artifact_id]=metadata['official_export_frame']
                 if (session.directory/'official/sample.mp4').exists():
