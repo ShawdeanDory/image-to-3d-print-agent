@@ -6,21 +6,26 @@ import {PLYLoader} from 'three/addons/loaders/PLYLoader.js';
 import {STLLoader} from 'three/addons/loaders/STLLoader.js';
 import {EXRLoader} from 'three/addons/loaders/EXRLoader.js';
 import type {ArtifactRecord} from './contracts.generated';
-import {artifactBlob} from './api';
+import {artifactBlob,transferLabel,type ArtifactProgress} from './api';
 
 export default function ModelView({run,artifact,frame}:{run:string;artifact:ArtifactRecord;frame?:'z_up'|'y_up'}) {
   const host=useRef<HTMLDivElement>(null);const [error,setError]=useState('');const [ready,setReady]=useState(false);
+  const [attempt,setAttempt]=useState(0);const [progress,setProgress]=useState<ArtifactProgress|null>(null);
+  const [phase,setPhase]=useState('正在读取本任务模型…');
   useEffect(()=>{
     const container=host.current!;let disposed=false;let renderer:THREE.WebGLRenderer|undefined;
+    const controller=new AbortController();let stage='model';
     let object:THREE.Object3D|undefined;let controls:OrbitControls|undefined;let observer:ResizeObserver|undefined;
     let environment:THREE.WebGLRenderTarget|undefined;
-    setReady(false);setError('');
+    setReady(false);setError('');setProgress(null);setPhase('正在读取本任务模型…');
     const scene=new THREE.Scene();scene.background=new THREE.Color('#eeeee9');
     const camera=new THREE.PerspectiveCamera(40,1,.01,100);
     async function load() {
       try {
-        const data=await (await artifactBlob(run,artifact.artifact_id)).arrayBuffer();
+        const data=await (await artifactBlob(run,artifact.artifact_id,{signal:controller.signal,
+          onProgress:value=>{if(!disposed)setProgress(value);}})).arrayBuffer();
         if(disposed)return;
+        stage='parse';setProgress(null);setPhase('文件已读取，正在解析模型…');
         const extension=artifact.relative_path.split('.').at(-1)?.toLowerCase();
         if(extension==='glb') {
           const manager=new THREE.LoadingManager();
@@ -43,6 +48,7 @@ export default function ModelView({run,artifact,frame}:{run:string;artifact:Arti
         renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
         renderer.outputColorSpace=THREE.SRGBColorSpace;
         renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;
+        stage='hdr';setPhase('模型已解析，正在读取官方HDR环境…');
         const hdr=await new EXRLoader().loadAsync('/environment/forest.exr');
         if(disposed){hdr.dispose();return;}
         hdr.mapping=THREE.EquirectangularReflectionMapping;
@@ -59,12 +65,16 @@ export default function ModelView({run,artifact,frame}:{run:string;artifact:Arti
         const resize=()=>{if(!renderer)return;const width=container.clientWidth;const height=container.clientHeight;renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();};
         observer=new ResizeObserver(resize);observer.observe(container);resize();
         renderer.setAnimationLoop(()=>{controls?.update();renderer?.render(scene,camera);});setReady(true);
-      }catch(exc){if(!disposed)setError(exc instanceof Error?exc.message:'模型预览不可用');}
+      }catch(exc){if(!disposed){setProgress(null);setError((stage==='hdr'?'官方HDR环境读取失败：':stage==='parse'?'模型解析失败：':'')+(exc instanceof Error?exc.message:'模型预览不可用'));}}
     }
     void load();
-    return ()=>{disposed=true;observer?.disconnect();controls?.dispose();renderer?.setAnimationLoop(null);environment?.dispose();renderer?.dispose();scene.traverse(release);container.replaceChildren();};
-  },[run,artifact.artifact_id,artifact.relative_path,frame]);
-  return <div className="viewer"><div className="canvas" ref={host}/><div className="viewer-caption">{error||(!ready?'正在读取本任务模型和官方HDR…':'拖动旋转 · 滚轮缩放')}<span>{artifact.unit==='mm'?'毫米网格':'原始无单位网格'} · 官方forest.exr环境/PBR · 显示已归一，不作为尺寸测量</span></div></div>;
+    return ()=>{disposed=true;controller.abort();observer?.disconnect();controls?.dispose();renderer?.setAnimationLoop(null);environment?.dispose();renderer?.dispose();scene.traverse(release);container.replaceChildren();};
+  },[run,artifact.artifact_id,artifact.relative_path,frame,attempt]);
+  return <div className="viewer"><div className="canvas" ref={host}/><div className="viewer-caption">
+    <div role={error?'alert':'status'}>{error||(!ready?(progress?transferLabel(progress):phase):'拖动旋转 · 滚轮缩放')}</div>
+    {!ready&&!error&&progress&&<progress aria-label="模型文件读取进度" max={progress.total||undefined} value={progress.total?progress.loaded:undefined}/>}
+    {error&&<button type="button" onClick={()=>setAttempt(value=>value+1)}>重新加载预览</button>}
+    <span>{artifact.unit==='mm'?'毫米网格':'原始无单位网格'} · 官方forest.exr环境/PBR · 显示已归一，不作为尺寸测量</span></div></div>;
 }
 function release(object:THREE.Object3D){
   const mesh=object as THREE.Mesh;mesh.geometry?.dispose();

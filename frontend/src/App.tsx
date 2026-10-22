@@ -1,6 +1,6 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import type {ArtifactRecord,AssetRecord,ModelTaskRequest,PrinterProfile,RuntimeEvent,RuntimeTask} from './contracts.generated';
-import {api,ApiError,artifactBlob,download,setAccessToken,type Capabilities} from './api';
+import {api,ApiError,artifactBlob,download,setAccessToken,transferLabel,type ArtifactProgress,type Capabilities} from './api';
 import {artifactGroups,checkLabel,checkNames,checkMeasure,display,heightNumber,id,mergeEvents,stageNames,statusNames,validateImage} from './domain';
 import PendingForm,{AxisSelect} from './PendingForm';
 import ModelView from './ModelView';
@@ -16,6 +16,8 @@ export default function App(){
   const [run,setRun]=useState(initialRun);const [task,setTask]=useState<RuntimeTask|null>(null);const [events,setEvents]=useState<RuntimeEvent[]>([]);
   const [error,setError]=useState('');const [connected,setConnected]=useState(false);const [busy,setBusy]=useState(false);
   const [notice,setNotice]=useState('');
+  const [transfer,setTransfer]=useState<ArtifactProgress|null>(null);
+  const [downloadError,setDownloadError]=useState('');
   const [preview,setPreview]=useState('');const lock=useRef(false);const createKey=useRef(id('create'));const cursor=useRef(0);
   const fileRef=useRef<File|null>(null);const assetRef=useRef<AssetRecord|null>(null);
   const [fileName,setFileName]=useState('');const [draftValid,setDraftValid]=useState(false);
@@ -31,7 +33,7 @@ export default function App(){
     setTask(current);setEvents(old=>mergeEvents(old,page.events,run));cursor.current=page.next_after;setError('');setConnected(true);
   },[run]);
   useEffect(()=>{
-    cursor.current=0;setTask(null);setEvents([]);setNotice('');
+    cursor.current=0;setTask(null);setEvents([]);setNotice('');setDownloadError('');
     if(!run)return;
     localStorage.setItem('i3d:last-run',run);const url=new URL(location.href);url.searchParams.set('task',run);history.replaceState(null,'',url);
     let stopped=false;let timer:ReturnType<typeof setTimeout>;
@@ -70,6 +72,12 @@ export default function App(){
     });
   }
   async function submit(body:Record<string,unknown>,slicer=false){await api.input(run,body,slicer);setNotice('已提交，继续原任务。');await fetchTask();}
+  async function downloadFile(artifact:ArtifactRecord,name:string){
+    setTransfer({loaded:0,total:null});setDownloadError('');setNotice('');
+    try{await download(run,artifact.artifact_id,name,{onProgress:setTransfer});setNotice('文件已读取，已交给浏览器保存。');}
+    catch(exc){setDownloadError(message(exc));}
+    finally{setTransfer(null);}
+  }
   function newTask(){setChosenBackend('');setRun('');setTask(null);setEvents([]);cursor.current=0;createKey.current=id('create');assetRef.current=null;localStorage.removeItem('i3d:last-run');history.replaceState(null,'',location.pathname);}
   return <><header><a className="brand" href="/" onClick={e=>{e.preventDefault();newTask();}}><span className="brand-mark">造</span><span>造物工坊<small>图像到3D打印模型</small></span></a><div className="connection"><span className={connected?'dot online':'dot'}/>{connected?'已连接计算服务':'计算服务未连接'}<button className="text-button" onClick={()=>void connect()}>重新连接</button></div></header>
   <main><section className="intro"><div><p className="eyebrow">单张图片 · 简单摆件</p><h1>{run?'让每一步都有依据':'从一张图片，开始造物'}</h1><p className="lede">上传图片并填写参数，提交后自动生成原始GLB，在副本上检查和有限修复，保留原始外观。</p></div><div className="scope-note">适用于非功能性简单摆件<br/><strong>GLB生成完成与打印检查结果分别展示</strong></div></section>
@@ -89,6 +97,8 @@ export default function App(){
   </fieldset></form></section><aside className="guide"><span className="eyebrow">工作流</span><h2>提交后自动完成</h2><ol><li><strong>准备图片</strong><p>保留清晰原图，自动进入快速重建。</p></li><li><strong>生成原始模型</strong><p>使用本次图片重建，首次材质导出前进行GPU几何复查。</p></li><li><strong>打印检查与修复</strong><p>在独立副本上定标、检查和受限修复。</p></li><li><strong>结果与下载</strong><p>交付原始GLB，另列检查副本的结论。</p></li></ol><label>恢复已有任务<input id="resume-id" placeholder="输入任务UUID"/></label><button onClick={()=>{const v=(document.getElementById('resume-id') as HTMLInputElement).value.trim();if(/^[0-9a-f-]{36}$/i.test(v))setRun(v);else setError('请输入有效任务UUID');}}>读取原任务</button></aside></div>:
   <><div className="task-bar"><div><span className={'badge '+response?.status}>{statusNames[response?.status||'']||'正在读取'}</span><strong>{stageNames[response?.data.state.stage||'']||'读取任务'}</strong><small>任务：{run}</small></div><div className="actions"><button onClick={newTask}>新建任务</button>{response&&!['failed','cancelled','succeeded'].includes(response.status)&&<button disabled={busy} onClick={()=>void act(async()=>{await api.cancel(run);await fetchTask();})}>取消任务</button>}</div></div>
   {notice&&<p role="status" className="notice">{notice}</p>}
+  {downloadError&&<p role="alert" className="error">下载未完成：{downloadError}。可再次点击原下载按钮重试。</p>}
+  {transfer&&<div role="status" className="notice">正在下载：{transferLabel(transfer)}<br/><progress aria-label="文件下载进度" max={transfer.total||undefined} value={transfer.total?transfer.loaded:undefined}/></div>}
   {task&&response&&<div className="workspace task-workspace"><div className="main-column">
     <section className="sheet model-sheet"><div className="section-title"><div><span className="eyebrow">模型与版本</span><h2>查看本次产物</h2></div><span className="muted">原始版本始终保留</span></div>
       {active?<div className="model-single"><ModelView run={run} artifact={active} frame={task.artifact_frames?.[active.artifact_id]}/></div>:<div className="empty-model"><span>◎</span><h3>原始模型将在真实重建后显示</h3><p>当前{statusNames[response.status]}，没有原始GLB时不以处理版替代。</p></div>}
@@ -101,12 +111,12 @@ export default function App(){
     <EyeTextureInfo value={task.resources?.eye_texture} enabled={task.resources?.eye_texture_enabled===true}/>
     <MeshBudgetInfo value={task.resources?.mesh_budget} original={response.schema_version==='original-glb-v1'}/>
     <MaterialInfo original={Boolean(active)} enhanced={Boolean(enhanced)}/>
-    {response.status==='succeeded'&&active&&<section className="sheet"><h2>生成GLB已可下载</h2><p>{enhanced?'包含眼部局部底色修正，原始文件另存。':'保留原始外观。'}未应用检查副本的定标和修复；下载不代表可打印。</p><button className="primary" onClick={()=>void act(()=>download(run,active.artifact_id,`${enhanced?'eye-enhanced':'original'}-${run}.glb`))}>下载GLB</button></section>}
+    {response.status==='succeeded'&&active&&<section className="sheet"><h2>生成GLB已可下载</h2><p>{enhanced?'包含眼部局部底色修正，原始文件另存。':'保留原始外观。'}未应用检查副本的定标和修复；下载不代表可打印。</p><button className="primary" disabled={busy} onClick={()=>void act(()=>downloadFile(active,`${enhanced?'eye-enhanced':'original'}-${run}.glb`))}>{transfer?'正在下载…':'下载GLB'}</button></section>}
     {task.pending&&response.schema_version==='1.0.0'&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>检查副本的打印报告</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>
     {response.error&&<p className="error" role="alert"><strong>{response.error.code}</strong>：{response.error.message}</p>}
     {response.data.inspection?<div className="table-scroll"><table><thead><tr><th>检查项</th><th>状态</th><th>实际值</th><th>阈值 / 原因</th></tr></thead><tbody>{(response.data.inspection.checks??[]).map(c=><tr key={c.name}><td>{checkNames[c.name]||c.name}</td><td><span className={'check-status '+c.status}>{checkLabel(c.status)}</span></td><td>{c.status==='not_run'?'未知':checkMeasure(c.name,c.value,c.unit)}</td><td>{c.status==='not_run'?display(c.details?.reason):checkMeasure(c.name,c.threshold,c.unit,true)}</td></tr>)}</tbody></table></div>:<p className="empty">打印检查尚未执行。</p>}
-    <h3>本任务文件</h3><div className="downloads">{groups.files.map(a=><button key={a.artifact_id} onClick={()=>void act(()=>download(run,a.artifact_id,a.relative_path))}>{fileLabel(a)}<small>{a.mesh_version||'输入/任务'} · {a.relative_path.split('/').at(-1)}</small><span>↓</span></button>)}</div>{!groups.files.length&&<p className="empty">暂无已登记产物</p>}</section>
+    <h3>本任务文件</h3><div className="downloads">{groups.files.map(a=><button key={a.artifact_id} disabled={busy} onClick={()=>void act(()=>downloadFile(a,a.relative_path))}>{fileLabel(a)}<small>{a.mesh_version||'输入/任务'} · {a.relative_path.split('/').at(-1)}</small><span>↓</span></button>)}</div>{!groups.files.length&&<p className="empty">暂无已登记产物</p>}</section>
   </div><aside><section className="sheet trajectory"><span className="eyebrow">来自服务端</span><h2>任务轨迹</h2><p className="muted">后台自动处理，最多2轮修复。刷新页面可恢复本任务。</p><ol>{events.map(e=><li key={e.event_id}><span>{stageNames[e.stage]||e.stage}</span><strong>{eventNames[e.kind]||e.kind}</strong><small>{statusNames[e.status]||e.status} · {new Date(e.created_at).toLocaleTimeString('zh-CN')}</small></li>)}</ol></section><section className="sheet resource"><h3>运行记录</h3><dl><dt>活动时间</dt><dd>{display(task.resources?.active_seconds)}秒</dd><dt>工具调用</dt><dd>{display(task.resources?.tool_calls)}</dd><dt>语言模型调用</dt><dd>{display((task.resources?.llm as Record<string,unknown>)?.calls)}</dd><dt>打印配置</dt><dd>{response.data.printer_profile.profile_id}{response.data.printer_profile.profile_kind==='demo'?'（演示）':''}</dd></dl><p className="muted">等待不计入活动时间。费用未知时不填0。</p></section></aside></div>}</>}
   <details className="access"><summary>本地服务访问设置</summary><label>服务访问令牌（仅当前页面内存）<input type="password" autoComplete="off" onChange={e=>setAccessToken(e.target.value)} placeholder="服务启用访问保护时填写"/></label><button onClick={()=>void connect()}>验证连接</button></details>
   </main><footer><strong>造物工坊</strong><span>图像重建 · 受控修复 · 打印检查</span><span>近似形状生成，不用于精密机械复原</span></footer></>;

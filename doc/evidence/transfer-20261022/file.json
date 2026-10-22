@@ -1,0 +1,27 @@
+{
+  "run_id": "592d71e8-ffe4-44e9-9818-6f640652e36c",
+  "artifact_id": "t_7d7b0772c0dd4fca_original_glb",
+  "bytes": 68853340,
+  "sha256": "87bc5b1d22b020e267b68569bcbdb735846dd8186fce0ff86df248c813f33853",
+  "source_sha256_matches": true,
+  "independent_glb_readback": true,
+  "vertices": 760584,
+  "faces": 977891,
+  "bounds": [
+    [
+      -0.148850679397583,
+      -0.5008204579353333,
+      -0.13161909580230713
+    ],
+    [
+      0.14864715933799744,
+      0.5001953840255737,
+      0.12879355251789093
+    ]
+  ],
+  "relative_path": "runs/downloads/trellis2-592d71e8/TRELLIS2_592d71e8_original.glb",
+  "eye_texture_status": "skipped",
+  "eye_texture_reason": "正背面或轮廓配准不可靠，保持原件",
+  "model_generation": "not_run",
+  "print_certified": false
+}

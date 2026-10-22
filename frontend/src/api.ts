@@ -47,14 +47,44 @@ export const api = {
     return request<AssetRecord | {asset:AssetRecord;artifact:{artifact_id:string}}>(`${base}/assets${query}`, {method:'POST',body:data});
   },
 };
-export async function artifactBlob(run: string, id: string): Promise<Blob> {
-  const headers: Record<string,string> = {}; if(accessToken) headers.Authorization=`Bearer ${accessToken}`;
-  const result = await fetch(artifactUrl(run,id), {headers,signal:AbortSignal.timeout(30000)});
-  if (!result.ok) throw new ApiError(result.status,'ARTIFACT_UNAVAILABLE','该任务产物不可读取，请刷新任务后重试');
-  return result.blob();
+export type ArtifactProgress = {loaded:number;total:number|null};
+export type ArtifactTransferOptions = {signal?:AbortSignal;onProgress?:(progress:ArtifactProgress)=>void};
+export const ARTIFACT_TIMEOUT_MS = 10*60*1000;
+export function transferLabel(progress:ArtifactProgress):string {
+  const amount=(bytes:number)=>(bytes/1000000).toFixed(1)+'MB';
+  return progress.total&&progress.total>0
+    ?`已读取${amount(progress.loaded)}/${amount(progress.total)}（${Math.min(100,Math.floor(progress.loaded/progress.total*100))}%）`
+    :`已读取${amount(progress.loaded)}，总大小未知`;
 }
-export async function download(run: string, id: string, name: string) {
-  const url=URL.createObjectURL(await artifactBlob(run,id));
+export function artifactBlob(run: string, id: string, options:ArtifactTransferOptions={}): Promise<Blob> {
+  // 文件采用独立时限，XHR覆盖整个二进制响应体并提供真实传输进度。
+  return new Promise((resolve,reject)=>{
+    const xhr=new XMLHttpRequest();let settled=false;
+    function finish(error?:Error,blob?:Blob){
+      if(settled)return;settled=true;options.signal?.removeEventListener('abort',abort);
+      xhr.onload=xhr.onerror=xhr.ontimeout=xhr.onabort=xhr.onprogress=null;
+      if(error)reject(error);else if(blob)resolve(blob);
+    }
+    function abort(){xhr.abort();finish(new DOMException('已停止读取文件','AbortError'));}
+    xhr.open('GET',artifactUrl(run,id));xhr.responseType='blob';xhr.timeout=ARTIFACT_TIMEOUT_MS;
+    if(accessToken)xhr.setRequestHeader('Authorization',`Bearer ${accessToken}`);
+    xhr.onprogress=event=>options.onProgress?.({loaded:event.loaded,total:event.lengthComputable?event.total:null});
+    xhr.onload=()=>{
+      if(xhr.status<200||xhr.status>=300){finish(new ApiError(xhr.status,'ARTIFACT_UNAVAILABLE','该任务文件不可读取，请检查连接或访问权限后重试'));return;}
+      const blob=xhr.response as Blob;
+      options.onProgress?.({loaded:blob.size,total:blob.size});finish(undefined,blob);
+    };
+    xhr.onerror=()=>finish(new ApiError(0,'ARTIFACT_NETWORK_ERROR','文件传输中断，请检查计算服务连接后重试；无需重新生成模型'));
+    xhr.ontimeout=()=>finish(new ApiError(408,'ARTIFACT_TIMEOUT','文件读取超过10分钟，请检查连接后重试；无需重新生成模型'));
+    xhr.onabort=()=>finish(new DOMException('已停止读取文件','AbortError'));
+    options.signal?.addEventListener('abort',abort,{once:true});
+    if(options.signal?.aborted){abort();return;}
+    options.onProgress?.({loaded:0,total:null});
+    xhr.send();
+  });
+}
+export async function download(run: string, id: string, name: string, options:ArtifactTransferOptions={}) {
+  const url=URL.createObjectURL(await artifactBlob(run,id,options));
   const anchor=document.createElement('a');anchor.href=url;anchor.download=name.split('/').at(-1) || 'artifact';anchor.click();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }

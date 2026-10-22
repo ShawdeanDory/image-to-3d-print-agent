@@ -1,0 +1,18 @@
+{
+  "markdown_links": 278,
+  "errors": [],
+  "typescript_vite_build": "passed",
+  "modules": 47,
+  "bundle_kb": 872.56,
+  "local_served_bundle": {
+    "mode": "vite_preview",
+    "http": 200,
+    "asset": "/assets/index-BXPN2SNC.js",
+    "served_sha256": "b6479b849482874a1f1ba1d1195a9f6b8fc15fd09e72ec3b5014398e21e3d676",
+    "matches_local_build": true
+  },
+  "first_source_probe": "dev_src_path_returned_html_in_preview_mode; corrected_to_built_asset",
+  "browser_validation": "not_run",
+  "automated_tests": "not_run",
+  "model_generation": "not_run"
+}
