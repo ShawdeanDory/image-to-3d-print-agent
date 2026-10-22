@@ -25,5 +25,5 @@
   "http_evidence_type": "test_fixture",
   "fixture_processes_stopped": true,
   "new_teammate_machine_test": "not_run",
-  "manual_review": "pending"
+  "manual_review": "passed_by_user_2026-10-23"
 }
