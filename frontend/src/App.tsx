@@ -8,7 +8,6 @@ import ReconstructionTiming from './ReconstructionTiming';
 import MeshBudgetInfo from './MeshBudgetInfo';
 import MaterialInfo from './MaterialInfo';
 import GPURepairInfo from './GPURepairInfo';
-import EyeTextureInfo from './EyeTextureInfo';
 
 const initialRun=()=>new URL(location.href).searchParams.get('task')||localStorage.getItem('i3d:last-run')||'';
 export default function App(){
@@ -46,11 +45,7 @@ export default function App(){
   const rawModels=allGroups.models.filter(a=>a.kind==='raw_mesh'&&a.relative_path.endsWith('.glb'));
   const models=rawModels.filter((a,index)=>rawModels.findIndex(b=>b.relative_path===a.relative_path)===index);
   const groups={models,files:allGroups.files.filter(a=>!['raw_mesh','repaired_mesh','candidate_stl'].includes(a.kind)||(a.kind==='raw_mesh'&&a.relative_path.endsWith('.glb'))).filter((a,index,array)=>array.findIndex(b=>b.relative_path===a.relative_path)===index)};
-  const original=groups.models.at(-1);
-  const appearanceId=response?.schema_version==='original-glb-v1'?response.delivery?.appearance_artifact_id:null;
-  const enhanced=task?.resources?.eye_texture_enabled===true&&appearanceId
-    ?allGroups.models.find(a=>a.artifact_id===appearanceId):undefined;
-  const active=enhanced||original;
+  const active=groups.models.at(-1);
 
   async function act(fn:()=>Promise<void>){if(lock.current)return;lock.current=true;setBusy(true);setError('');try{await fn();}catch(exc){setError(message(exc));}finally{lock.current=false;setBusy(false);}}
   async function create(event:React.FormEvent<HTMLFormElement>){
@@ -102,16 +97,15 @@ export default function App(){
   {task&&response&&<div className="workspace task-workspace"><div className="main-column">
     <section className="sheet model-sheet"><div className="section-title"><div><span className="eyebrow">模型与版本</span><h2>查看本次产物</h2></div><span className="muted">原始版本始终保留</span></div>
       {active?<div className="model-single"><ModelView run={run} artifact={active} frame={task.artifact_frames?.[active.artifact_id]}/></div>:<div className="empty-model"><span>◎</span><h3>原始模型将在真实重建后显示</h3><p>当前{statusNames[response.status]}，没有原始GLB时不以处理版替代。</p></div>}
-      {active&&<p className="muted">{enhanced?'眼部局部贴图试用版：只修正眼部底色，原件另存；':'原始GLB：保留模型生成时的UV、材质和文件；'}不做全身重烘焙，未应用检查副本的目标尺寸或结构修复。</p>}
+      {active&&<p className="muted">原始GLB：保留模型生成时的UV、材质和文件，不重烘焙；未应用检查副本的目标尺寸或结构修复。</p>}
       {response.data.inspection?.dimensions_mm&&<div className="dimensions"><span>检查副本尺寸（原始GLB未应用）</span><strong>{response.data.inspection.dimensions_mm.map(n=>n.toFixed(2)).join(' × ')}<small>mm</small></strong><span>网格：{response.data.inspection.mesh_version}</span></div>}
       <ArtifactImages run={run} artifacts={(response.artifacts??[]).filter(a=>['input_image','foreground_image'].includes(a.kind)||a.artifact_id===task.pending?.details?.preview_artifact_id)}/>
     </section>
     <ReconstructionTiming value={task.resources?.reconstruction}/>
     <GPURepairInfo value={task.resources?.gpu_boundary_repair}/>
-    <EyeTextureInfo value={task.resources?.eye_texture} enabled={task.resources?.eye_texture_enabled===true}/>
     <MeshBudgetInfo value={task.resources?.mesh_budget} original={response.schema_version==='original-glb-v1'}/>
-    <MaterialInfo original={Boolean(active)} enhanced={Boolean(enhanced)}/>
-    {response.status==='succeeded'&&active&&<section className="sheet"><h2>生成GLB已可下载</h2><p>{enhanced?'包含眼部局部底色修正，原始文件另存。':'保留原始外观。'}未应用检查副本的定标和修复；下载不代表可打印。</p><button className="primary" disabled={busy} onClick={()=>void act(()=>downloadFile(active,`${enhanced?'eye-enhanced':'original'}-${run}.glb`))}>{transfer?'正在下载…':'下载GLB'}</button></section>}
+    <MaterialInfo original={Boolean(active)}/>
+    {response.status==='succeeded'&&active&&<section className="sheet"><h2>生成GLB已可下载</h2><p>保留原始外观，未应用检查副本的定标和修复；下载不代表可打印。</p><button className="primary" disabled={busy} onClick={()=>void act(()=>downloadFile(active,`original-${run}.glb`))}>{transfer?'正在下载…':'下载GLB'}</button></section>}
     {task.pending&&response.schema_version==='1.0.0'&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>检查副本的打印报告</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>
     {response.error&&<p className="error" role="alert"><strong>{response.error.code}</strong>：{response.error.message}</p>}

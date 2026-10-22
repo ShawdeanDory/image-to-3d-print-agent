@@ -1,0 +1,22 @@
+{
+  "policy": null,
+  "runtime_enabled": false,
+  "old_response_http": "200_and_valid",
+  "original_artifact_id": "t_7d7b0772c0dd4fca_original_glb",
+  "task_count": 22,
+  "task_states_preserved": true,
+  "original_sha256": "87bc5b1d22b020e267b68569bcbdb735846dd8186fce0ff86df248c813f33853",
+  "original_unchanged": true,
+  "deployed_files_match": 7,
+  "model_generation": "not_run",
+  "eye_projection": "not_run",
+  "automated_tests": "not_run",
+  "browser": "not_run",
+  "human_review": "not_separately_recorded",
+  "preprocessing_changed": false,
+  "preprocessing_file_sha256": {
+    "scripts/tools/model_worker.py": "12e0984c29737d365cc7b585459594cc59cb7853911799ad41705a0c612c9a26",
+    "src/image_to_3d_print/image/assets.py": "0e5b0cf4f46c8ec85386da3cfa872156890b49de4263c241ec41f997a9171aaa"
+  },
+  "gpu": "NVIDIA GeForce RTX 4090 D, 0 MiB"
+}

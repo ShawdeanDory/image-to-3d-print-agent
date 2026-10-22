@@ -183,7 +183,7 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     else:
                         ctx['delivery']=GenerationDelivery(artifact_id=data['artifact_id'],mesh_version=ctx['mesh_version'],
                             independent_readback=True,print_check=status,repair_attempts=ctx.get('repair_attempts',0),dimensions_mm=data['dimensions_mm'],warnings=ctx['warnings']).model_dump(mode='json')
-                    ctx['export_data']=data;ctx['next']='eye_texture' if original and ctx.get('eye_texture_policy') in {'eye-local-v1','eye-local-v2'} else 'explain' if settings.llm.configured else 'finish'
+                    ctx['export_data']=data;ctx['next']='explain' if settings.llm.configured else 'finish'
                     if ctx.get('mesh_budget'):
                         inspected_faces=len(load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path).faces)
                         actual=data['face_count'] if original else inspected_faces
@@ -193,21 +193,10 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                             target_met=actual<=target,
                             fallback_reason=None if actual<=target else '原始生成网格未达到目标面数，按原件交付，不用副本替代' if original else '目标面数未通过保形/缺陷门槛或已达2轮，保留检查较好的有效版本')
                 elif name=='eye_texture':
+                    # 只接住旧检查点，不执行原试用或重复重建。
                     ctx['stage']='export';ctx['next']='explain' if settings.llm.configured else 'finish'
-                    if not settings.eye_texture_active:
-                        ctx['eye_texture']={'policy_version':ctx['eye_texture_policy'],'status':'skipped','reason':'后台已关闭外观试用，保留原件'}
-                    elif not ctx.get('eye_texture'):
-                        original=ctx['delivery']
-                        outcome=tool(ctx,'enhance_eye_texture',mesh_version=original['mesh_version'],
-                            original_artifact_id=original['artifact_id'],source_sha256=original['source_sha256'],policy_version=ctx['eye_texture_policy'])
-                        from ..artifacts.eye_texture import EyeTextureResult
-                        result=EyeTextureResult.model_validate(outcome.tool.data['eye_texture'])
-                        if (result.mesh_version!=original['mesh_version'] or result.original_artifact_id!=original['artifact_id']
-                                or result.source_sha256!=original['source_sha256']):raise ToolFailure('STATE_CONFLICT','眼部增强来源不匹配')
-                        ctx['eye_texture']=result.model_dump(mode='json')
-                        if result.status=='applied':
-                            original['appearance_artifact_id']=result.enhanced_artifact_id
-                        ctx['warnings'].append('局部底色修正：'+result.reason)
+                    ctx['delivery']['appearance_artifact_id']=None
+                    ctx['warnings'].append('局部外观试用已回退，保留原始GLB。')
                 elif name=='explain':
                     inspection=ctx.get('inspection') or {}
                     ctx['explanation']=llm.call(ctx,store,'explain',{'mesh_version':ctx['mesh_version'],

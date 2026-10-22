@@ -67,8 +67,6 @@ class TaskService:
             ctx['export_options']={'export_target_faces':create.export_target_faces,'texture_size':create.texture_size}
             ctx['delivery_policy']='original-glb-v1'
             ctx['gpu_hole_policy']='gpu-boundary-fill-v1'
-            if ctx['backend']=='trellis2_candidate' and self.settings.eye_texture_active:
-                ctx['eye_texture_policy']='eye-local-v2'
         ctx['workflow_policy']=self.settings.workflow_policy
         if automatic:ctx['face_budget_policy']='image-complexity-v1'
         ctx['orientation_source']=orientation_source

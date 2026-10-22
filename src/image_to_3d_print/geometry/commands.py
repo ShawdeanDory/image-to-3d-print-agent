@@ -18,7 +18,6 @@ from .core import MeshStore
 from .structure import StructureRequest,propose,confirm,apply_proposal
 from .view import measure_view
 from ..export_options import ExportTargetFaces,TextureSize
-from ..artifacts.eye_texture import EyeTexturePolicy,enhance_eye_texture
 
 class Call(ContractModel):run_id:UUID
 class ImportCall(Call):
@@ -146,10 +145,7 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
         if op=='export_glb':return export_preview(root,run,command.mesh_version,configuration.inspection)
         if op=='export_original_glb':return export_original(root,run,command.mesh_version)
         if op=='enhance_eye_texture':
-            if not automatic_action:raise ToolFailure('STATE_CONFLICT','眼部增强只接受服务端试用政策')
-            policy=EyeTexturePolicy(version='eye-local-v2',timeout_s=180,max_changed_fraction=.45) if command.policy_version=='eye-local-v2' else EyeTexturePolicy()
-            return enhance_eye_texture(root,run,command.mesh_version,command.original_artifact_id,command.source_sha256,policy,
-                gpu_config=configuration.backends.get('trellis2_candidate'),cancel_event=cancel_event)
+            raise ToolFailure('TOOL_UNAVAILABLE','眼部与局部底色试用已按用户要求回退，使用原始GLB')
         if op=='preview':return preview_mesh(root,run,command.mesh_version,configuration.inspection)
         if op=='measure_view':return measure_view(root,run,command.mesh_version,command.mask_path,command.backend,configuration.view_mappings.get(command.backend))
         if op=='apply':return apply_proposal(root,run,command.proposal_id)

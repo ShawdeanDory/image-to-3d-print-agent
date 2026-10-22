@@ -33,7 +33,7 @@ class Settings(ContractModel):
     confirmation_origin: Literal['human', 'test_fixture'] = 'human'
     input_review_policy: Literal['automatic', 'manual'] = 'automatic'
     workflow_policy: Literal['guided','automatic_glb'] = 'guided'
-    eye_texture_enabled: bool = True
+    eye_texture_enabled: bool = False
     api_token_env: str = 'I3D_API_TOKEN'
     cors_origins: list[str] = Field(default_factory=list)
     llm: LLMConfig = Field(default_factory=LLMConfig)
@@ -46,8 +46,8 @@ class Settings(ContractModel):
 
     @property
     def eye_texture_active(self):
-        # 文件开关每次读取；回退无需重启服务、改检查点或重新生成。
-        return self.eye_texture_enabled and not (self.root/'eye-texture.disabled').exists()
+        # 用户已回退整项试用；旧配置字段只兼容读取，不能重新启用投射。
+        return False
 
     @classmethod
     def from_env(cls):

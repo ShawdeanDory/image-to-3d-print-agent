@@ -43,7 +43,7 @@ def create_app(settings=None):
             'workflow_policy':settings.workflow_policy,
             'face_budget_policy':'image-complexity-v1' if settings.workflow_policy=='automatic_glb' else None,
             'appearance_policy':'original-glb-v1',
-            'eye_texture_policy':'eye-local-v2' if settings.eye_texture_active else None,
+            'eye_texture_policy':None,
             'gpu_hole_policy':'gpu-boundary-fill-v1' if settings.workflow_policy=='automatic_glb' else None,
             'export_options':{'policy_version':'export-options-v1','min_target_faces':100,'max_target_faces':1000000,
                 'default_target_faces':'automatic','min_texture_size':256,'max_texture_size':4096,'default_texture_size':2048},
