@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from ..jobs.config import Settings
 from ..jobs.service import TaskService, INPUTS
-from ..runtime_contracts import CreateTask, Submission, RuntimeTask, PendingInput, EventsPage, GenerationTaskResponse
+from ..runtime_contracts import CreateTask, Submission, RuntimeTask, PendingInput, EventsPage, GenerationTaskResponse, OriginalGLBTaskResponse
 from ..schemas.task import ModelTaskRequest, ModelTaskResponse
 from ..schemas.common import Id
 from ..schemas.validation import resolve_artifact_path
@@ -42,7 +42,7 @@ def create_app(settings=None):
             'input_review_policy': settings.input_review_policy,
             'workflow_policy':settings.workflow_policy,
             'face_budget_policy':'image-complexity-v1' if settings.workflow_policy=='automatic_glb' else None,
-            'appearance_policy':'official-pbr-v1',
+            'appearance_policy':'original-glb-v1',
             'export_options':{'policy_version':'export-options-v1','min_target_faces':100,'max_target_faces':1000000,
                 'default_target_faces':'automatic','min_texture_size':256,'max_texture_size':4096,'default_texture_size':2048},
             'preview_lighting':'official-forest-hdr-v1',
@@ -66,12 +66,12 @@ def create_app(settings=None):
             return service.assets.save(payload, file.filename)
         finally: await file.close()
 
-    @app.post('/api/v1/model-tasks', status_code=202, response_model=ModelTaskResponse|GenerationTaskResponse)
+    @app.post('/api/v1/model-tasks', status_code=202, response_model=ModelTaskResponse|GenerationTaskResponse|OriginalGLBTaskResponse)
     def create(body: CreateTask | ModelTaskRequest,
             idempotency_key: Annotated[str | None, Header(min_length=1, max_length=128)] = None):
         return service.create(body, idempotency_key)
 
-    @app.get('/api/v1/model-tasks/{run_id}', response_model=ModelTaskResponse|GenerationTaskResponse)
+    @app.get('/api/v1/model-tasks/{run_id}', response_model=ModelTaskResponse|GenerationTaskResponse|OriginalGLBTaskResponse)
     def get(run_id: UUID): return service.store.row(run_id)['response']
 
     @app.get('/api/v1/model-tasks/{run_id}/runtime', response_model=RuntimeTask)
@@ -94,17 +94,17 @@ def create_app(settings=None):
         entries = service.store.events(run_id, after, limit)
         return {'events': entries, 'next_after': entries[-1]['event_id'] if entries else after}
 
-    @app.post('/api/v1/model-tasks/{run_id}/inputs', status_code=202, response_model=ModelTaskResponse|GenerationTaskResponse)
+    @app.post('/api/v1/model-tasks/{run_id}/inputs', status_code=202, response_model=ModelTaskResponse|GenerationTaskResponse|OriginalGLBTaskResponse)
     def inputs(run_id: UUID, body: Submission):
         if body.kind == 'slicer': raise ToolFailure('INVALID_ARGUMENT', '切片结果请使用专用确认接口')
         return service.submit(run_id, body)
 
-    @app.post('/api/v1/model-tasks/{run_id}/slicer-confirmation', status_code=202, response_model=ModelTaskResponse|GenerationTaskResponse)
+    @app.post('/api/v1/model-tasks/{run_id}/slicer-confirmation', status_code=202, response_model=ModelTaskResponse|GenerationTaskResponse|OriginalGLBTaskResponse)
     def slicer(run_id: UUID, body: Submission):
         if body.kind != 'slicer': raise ToolFailure('INVALID_ARGUMENT', '此接口仅接收切片确认')
         return service.submit(run_id, body)
 
-    @app.post('/api/v1/model-tasks/{run_id}/cancel', response_model=ModelTaskResponse|GenerationTaskResponse)
+    @app.post('/api/v1/model-tasks/{run_id}/cancel', response_model=ModelTaskResponse|GenerationTaskResponse|OriginalGLBTaskResponse)
     def cancel(run_id: UUID): return service.cancel(run_id)
 
     @app.get('/api/v1/model-tasks/{run_id}/artifacts/{artifact_id}')

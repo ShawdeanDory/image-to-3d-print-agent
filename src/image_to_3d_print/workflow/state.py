@@ -15,9 +15,10 @@ def response_for(ctx):
         'warnings': ctx.get('warnings', []), 'error': ctx.get('error')}
     automatic=ctx.get('workflow_policy')=='automatic_glb'
     if automatic:
-        from ..runtime_contracts import GenerationTaskResponse
-    cls=GenerationTaskResponse if automatic else ModelTaskResponse
-    extra={'schema_version':'generation-v1','delivery':ctx.get('delivery'),'orientation_source':ctx.get('orientation_source','backend_z_up')} if automatic else {}
+        from ..runtime_contracts import GenerationTaskResponse,OriginalGLBTaskResponse
+    original=automatic and ctx.get('delivery_policy')=='original-glb-v1'
+    cls=(OriginalGLBTaskResponse if original else GenerationTaskResponse) if automatic else ModelTaskResponse
+    extra={'schema_version':'original-glb-v1' if original else 'generation-v1','delivery':ctx.get('delivery'),'orientation_source':ctx.get('orientation_source','backend_z_up')} if automatic else {}
     result = cls.model_validate({
         **extra,'request_id': ctx['run_id'], 'run_id': ctx['run_id'], 'status': ctx['status'],
         'data': {'request': ctx['request'], 'state': state, 'printer_profile': ctx['profile'],

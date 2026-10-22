@@ -248,6 +248,38 @@ export type Orientation = {
   "up_axis"?: ("x" | "y" | "z" | "-x" | "-y" | "-z" | null);
 };
 
+export type OriginalGLBDelivery = {
+  "artifact_id": string;
+  "independent_readback": true;
+  "inspection_mesh_version"?: (string | null);
+  "inspection_print_check": "passed" | "failed" | "not_run";
+  "mesh_version": string;
+  "original_unchanged"?: true;
+  "print_certified"?: false;
+  "print_check"?: "not_run";
+  "repair_attempts"?: number;
+  "source_sha256": string;
+  "target_scale_applied"?: false;
+  "warnings"?: Array<string>;
+};
+
+export type OriginalGLBTaskResponse = {
+  "artifacts"?: Array<ArtifactRecord>;
+  "data": TaskData;
+  "datasets"?: Array<string>;
+  "delivery"?: (OriginalGLBDelivery | null);
+  "error"?: (ErrorInfo | null);
+  "events"?: Array<string>;
+  "evidence"?: Array<EvidenceRecord>;
+  "orientation_source"?: "user_parameter" | "backend_z_up";
+  "request_id": string;
+  "run_id": string;
+  "schema_version"?: "original-glb-v1";
+  "status": "queued" | "running" | "waiting_for_input" | "cancel_requested" | "succeeded" | "failed" | "cancelled";
+  "task_id"?: "image_to_3d_print";
+  "warnings"?: Array<string>;
+};
+
 export type ParsedRequirements = {
   "explanation"?: string;
   "height_unit"?: ("mm" | "cm" | null);
@@ -322,7 +354,7 @@ export type RuntimeTask = {
   "artifact_frames"?: Record<string, "z_up" | "y_up">;
   "pending"?: (PendingInput | null);
   "resources"?: Record<string, unknown>;
-  "response": (ModelTaskResponse | GenerationTaskResponse);
+  "response": (ModelTaskResponse | GenerationTaskResponse | OriginalGLBTaskResponse);
 };
 
 export type SlicerConfirmation = {

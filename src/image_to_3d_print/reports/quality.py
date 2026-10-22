@@ -20,7 +20,7 @@ def write_quality(store, ctx):
         'pending': ctx.get('pending'), 'slicer_confirmation': ctx.get('slicer_confirmation'),
         'human_reviews': ctx.get('human_reviews', []), 'llm': ctx['llm'],
         'delivery_target':'glb' if ctx.get('workflow_policy')=='automatic_glb' else 'print_ready_stl',
-        'delivery':ctx.get('delivery'),'orientation_source':ctx.get('orientation_source'),
+        'delivery':ctx.get('delivery'),'delivery_policy':ctx.get('delivery_policy'),'orientation_source':ctx.get('orientation_source'),
         'repair_attempt_log':ctx.get('repair_attempt_log',[]),'automation_origin':'automatic_policy' if ctx.get('workflow_policy')=='automatic_glb' else None,
         'mesh_budget':ctx.get('mesh_budget'),
         'export_options':ctx.get('export_options'),
@@ -44,7 +44,7 @@ def write_quality(store, ctx):
     if ctx.get('workflow_policy')=='automatic_glb':
         delivery=ctx.get('delivery')
         md.append(('GLB生成完成' if ctx['status']=='succeeded' and delivery else 'GLB生成未完成')+'；不代表实际打印合格。')
-        md.append(f"打印检查：{delivery['print_check'] if delivery else 'not_run'}；自动修复尝试：{ctx.get('repair_attempts',0)}轮。自动来源：automatic_policy；没有实际切片/打印确认。")
+        md.append(f"检查副本的打印检查：{delivery.get('inspection_print_check',delivery['print_check']) if delivery else 'not_run'}；自动修复尝试：{ctx.get('repair_attempts',0)}轮。自动来源：automatic_policy；没有实际切片/打印确认。")
         if ctx.get('mesh_budget'):
             b=ctx['mesh_budget'];target=b.get('effective_target_faces',b['target_faces'])
             origin='手动' if b.get('selection_source')=='manual' else '自动'
@@ -52,9 +52,11 @@ def write_quality(store, ctx):
         if ctx.get('export_options'):
             requested=ctx['export_options'].get('texture_size')
             md.append(f"请求纹理：{requested or 2048}×{requested or 2048}；实际PBR与纹理状态另见外观记录，TripoSR不使用纹理分辨率。")
+    if ctx.get('delivery_policy')=='original-glb-v1':
+        md.append('网页交付原始GLB，原UV/贴图/坐标/文件字节保持；未应用目标毫米尺寸或副本修复，原件打印检查为not_run。副本检查不能作为原件认证。')
     if ctx.get('error'): md.append('停止原因：' + ctx['error']['message'])
     appearance=(ctx.get('export_data') or {}).get('appearance')
-    if appearance:md.append('外观：'+('PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')+'；'+(appearance.get('warning') or appearance.get('reason') or '原始PBR来源与重投射参数见JSON。'))
+    if appearance:md.append('外观：'+('原始PBR，未经重烘焙' if appearance['status']=='original_pbr' else '原始顶点色，未经重烘焙' if appearance['status']=='original_vertex_color' else 'PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')+'；'+(appearance.get('warning') or appearance.get('reason') or '原始PBR来源与重投射参数见JSON。'))
     if ctx.get('explanation'): md.append('语言模型说明（不替代检查证据）：\n\n' + ctx['explanation'])
     md.append('结构化尺度、修改参数、逐版检查、产物与证据、资源及切片记录见同目录quality.json。')
     readable = session.directory / 'quality.md'

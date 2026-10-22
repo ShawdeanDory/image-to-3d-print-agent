@@ -146,6 +146,44 @@ class GenerationTaskResponse(ModelTaskResponse):
         if self.data.slicer_confirmation is not None:raise ValueError('自动GLB交付不能声称实际切片确认')
 
 
+class OriginalGLBDelivery(ContractModel):
+    artifact_id: Id
+    mesh_version: Id
+    inspection_mesh_version: Id | None = None
+    source_sha256: Annotated[str, Field(pattern=r'^[a-f0-9]{64}$')]
+    original_unchanged: Literal[True] = True
+    target_scale_applied: Literal[False] = False
+    independent_readback: Literal[True]
+    print_check: Literal['not_run'] = 'not_run'
+    inspection_print_check: Literal['passed','failed','not_run']
+    print_certified: Literal[False] = False
+    repair_attempts: Annotated[StrictInt, Field(ge=0,le=2)] = 0
+    warnings: list[Text] = Field(default_factory=list)
+
+
+class OriginalGLBTaskResponse(GenerationTaskResponse):
+    """原始文件与检查副本分别绑定版本，不沿用处理版交付语义。"""
+    schema_version: Literal['original-glb-v1'] = 'original-glb-v1'
+    delivery: OriginalGLBDelivery | None = None
+
+    def _require_complete(self, artifacts):
+        delivery=self.delivery
+        if delivery is None:raise ValueError('完成必须包含原始GLB交付')
+        artifact=artifacts.get(delivery.artifact_id)
+        if (artifact is None or artifact.kind!='raw_mesh' or artifact.mesh_version!=delivery.mesh_version
+                or not artifact.relative_path.endswith('.glb')):
+            raise ValueError('原始交付必须引用同任务实际原始GLB')
+        if delivery.inspection_mesh_version!=self.data.state.mesh_version:
+            raise ValueError('检查副本版本与任务状态不一致')
+        if not any(a.kind=='quality_report' and a.mesh_version==delivery.inspection_mesh_version for a in artifacts.values()):
+            raise ValueError('原始交付须附实际检查副本的质量报告')
+        inspection=self.data.inspection
+        if inspection is not None and inspection.mesh_version!=delivery.inspection_mesh_version:
+            raise ValueError('检查结果不能套用到其他版本')
+        if delivery.inspection_print_check!=print_check_for(inspection):raise ValueError('副本检查标签与证据不符')
+        if self.data.slicer_confirmation is not None:raise ValueError('原始交付不能声称实际切片确认')
+
+
 def print_check_for(inspection):
     if inspection is None:return 'not_run'
     if any(c.status=='fail' for c in inspection.checks):return 'failed'
@@ -154,8 +192,8 @@ def print_check_for(inspection):
 
 
 class RuntimeTask(ContractModel):
-    """扩展查询；response依任务快照返回打印契约或generation-v1。"""
-    response: ModelTaskResponse | GenerationTaskResponse
+    """扩展查询；按任务快照返回打印、处理版或原始GLB契约。"""
+    response: ModelTaskResponse | GenerationTaskResponse | OriginalGLBTaskResponse
     pending: PendingInput | None = None
     resources: dict = Field(default_factory=dict)
     artifact_frames: dict[Id, Literal['z_up', 'y_up']] = Field(default_factory=dict)

@@ -65,6 +65,7 @@ class TaskService:
         ctx['reconstruction_profile']=create.reconstruction_profile
         if automatic:
             ctx['export_options']={'export_target_faces':create.export_target_faces,'texture_size':create.texture_size}
+            ctx['delivery_policy']='original-glb-v1'
         ctx['workflow_policy']=self.settings.workflow_policy
         if automatic:ctx['face_budget_policy']='image-complexity-v1'
         ctx['orientation_source']=orientation_source

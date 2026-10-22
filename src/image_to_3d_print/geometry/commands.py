@@ -13,7 +13,7 @@ from ..image.assets import AssetStore,InputReview,AutomaticInputAcceptance
 from ..image.complexity import analyze_image
 from ..adapters.reconstruction import BackendConfig,ReconstructionAdapter
 from ..inspection.service import InspectionConfig,BedReview,ComponentReview,inspect_mesh,preview_mesh
-from ..artifacts.export import export_mesh,export_preview
+from ..artifacts.export import export_mesh,export_preview,export_original
 from .core import MeshStore
 from .structure import StructureRequest,propose,confirm,apply_proposal
 from .view import measure_view
@@ -40,7 +40,7 @@ class ReconstructCall(Call):
     export_target_faces:ExportTargetFaces|None=None
     texture_size:TextureSize|None=None
 class MeshCall(Call):
-    operation:Literal['clean','export','export_glb','preview']
+    operation:Literal['clean','export','export_glb','export_original_glb','preview']
     mesh_version:Id
 class ScaleCall(Call):
     operation:Literal['scale']
@@ -88,7 +88,7 @@ class ToolConfiguration(ContractModel):
 def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human',automatic_input=False,automatic_action=False):
     root=Path(root).resolve();command=COMMANDS.validate_python(command)
     store=MeshStore(root);assets=AssetStore(root);op=command.operation;run=command.run_id
-    tool_name={'analyze_complexity':'preprocess','import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
+    tool_name={'analyze_complexity':'preprocess','import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','export_original_glb':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
     # 包装只有原子返回值的资产/提案接口；已有ToolOutcome直接返回。
     session=None
     try:
@@ -134,6 +134,7 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
         if op=='inspect':return inspect_mesh(root,run,command.mesh_version,command.profile,command.height_mm,command.bed_review,configuration.inspection,command.component_review,automatic_bed=automatic_action)
         if op=='export':return export_mesh(root,run,command.mesh_version,configuration.inspection)
         if op=='export_glb':return export_preview(root,run,command.mesh_version,configuration.inspection)
+        if op=='export_original_glb':return export_original(root,run,command.mesh_version)
         if op=='preview':return preview_mesh(root,run,command.mesh_version,configuration.inspection)
         if op=='measure_view':return measure_view(root,run,command.mesh_version,command.mask_path,command.backend,configuration.view_mappings.get(command.backend))
         if op=='apply':return apply_proposal(root,run,command.proposal_id)

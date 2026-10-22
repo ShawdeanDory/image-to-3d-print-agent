@@ -1,0 +1,41 @@
+{
+  "python_ast_files": [
+    "scripts/tools/blender_worker.py",
+    "scripts/tools/model_worker.py",
+    "src/image_to_3d_print/api/app.py",
+    "src/image_to_3d_print/artifacts/export.py",
+    "src/image_to_3d_print/artifacts/pbr.py",
+    "src/image_to_3d_print/geometry/commands.py",
+    "src/image_to_3d_print/jobs/service.py",
+    "src/image_to_3d_print/reports/quality.py",
+    "src/image_to_3d_print/runtime_contracts.py",
+    "src/image_to_3d_print/workflow/automatic.py",
+    "src/image_to_3d_print/workflow/state.py"
+  ],
+  "count": 11,
+  "tests": "not_run_user_requested",
+  "model": "not_run",
+  "bake": "not_run",
+  "browser": "not_run",
+  "download": {
+    "run_id": "e524638a-f707-4cb3-9be2-3bc85b1d334e",
+    "file": "TRELLIS2_e524638a_original.glb",
+    "bytes": 68998464,
+    "sha256": "3a4e93d89e9c273fc4df6a66ba6be2b7e570e16e809ba40990afee89aec38b72",
+    "retrieved_existing_artifact": true,
+    "new_model_called": false
+  },
+  "baseline": "8f0975b0fa9d24d83c43bafb8fdce2782b5277ea",
+  "schema_exports": [
+    "runtime-v1",
+    "geometry-tools-v0.1",
+    "frontend_types"
+  ],
+  "frontend_build": {
+    "command": "npm run build",
+    "result": "exit0",
+    "modules": 45,
+    "js_kb": 867.63,
+    "warning": "existing_chunk_size_warning"
+  }
+}

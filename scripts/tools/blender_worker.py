@@ -46,9 +46,7 @@ def main():
         triangulate=obj.modifiers.new('triangulate','TRIANGULATE');bpy.ops.object.modifier_apply(modifier=triangulate.name)
         result.update(vertices=[[v/factor for v in vertex.co] for vertex in obj.data.vertices],faces=[list(face.vertices) for face in obj.data.polygons])
     elif args.operation=='pbr_export':
-        sys.path.insert(0,str(Path(__file__).resolve().parent))
-        from blender_pbr import bake_pbr
-        result.update(bake_pbr(obj,parameters,args.output.parent))
+        raise ValueError('PBR重烘焙已停用；请直接交付原始GLB')
     else:
         scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=8
         scene.render.resolution_x=512;scene.render.resolution_y=512;scene.render.resolution_percentage=100

@@ -170,7 +170,7 @@ def course_fast_inference(args,source,torch,started):
     geometry=read_official_geometry(output/'fast_export.glb','y_up');geometry.export(output/'raw_mesh.ply')
     finished=stamp();stages['independent_readback']=finished-exported;stages['total']=finished-started
     parameters={'pipeline_type':'1024_cascade','seed':42,'decimation_target':target_faces,'texture_size':texture_size,
-        'export_target_source':'manual' if args.export_target_faces is not None else 'automatic_generation_ceiling',
+        'export_target_source':'task_budget' if args.export_target_faces is not None else 'automatic_generation_ceiling',
         'texture_size_source':'manual' if args.texture_size is not None else 'default',
         'remesh':True,'remesh_band':1,'remesh_project':0,'official_pbr_video':False}
     report={'mode':args.mode,'backend':args.backend,'inference_profile':'course_fast','seed':42,'parameters':parameters,

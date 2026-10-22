@@ -1156,6 +1156,232 @@
       "title": "Orientation",
       "type": "object"
     },
+    "OriginalGLBDelivery": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "independent_readback": {
+          "const": true,
+          "title": "Independent Readback",
+          "type": "boolean"
+        },
+        "inspection_mesh_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inspection Mesh Version"
+        },
+        "inspection_print_check": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_run"
+          ],
+          "title": "Inspection Print Check",
+          "type": "string"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "original_unchanged": {
+          "const": true,
+          "default": true,
+          "title": "Original Unchanged",
+          "type": "boolean"
+        },
+        "print_certified": {
+          "const": false,
+          "default": false,
+          "title": "Print Certified",
+          "type": "boolean"
+        },
+        "print_check": {
+          "const": "not_run",
+          "default": "not_run",
+          "title": "Print Check",
+          "type": "string"
+        },
+        "repair_attempts": {
+          "default": 0,
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Repair Attempts",
+          "type": "integer"
+        },
+        "source_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "target_scale_applied": {
+          "const": false,
+          "default": false,
+          "title": "Target Scale Applied",
+          "type": "boolean"
+        },
+        "warnings": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "mesh_version",
+        "source_sha256",
+        "independent_readback",
+        "inspection_print_check"
+      ],
+      "title": "OriginalGLBDelivery",
+      "type": "object"
+    },
+    "OriginalGLBTaskResponse": {
+      "additionalProperties": false,
+      "description": "原始文件与检查副本分别绑定版本，不沿用处理版交付语义。",
+      "properties": {
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRecord"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "data": {
+          "$ref": "#/$defs/TaskData"
+        },
+        "datasets": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Datasets",
+          "type": "array"
+        },
+        "delivery": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OriginalGLBDelivery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorInfo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "events": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Events",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRecord"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "orientation_source": {
+          "default": "backend_z_up",
+          "enum": [
+            "user_parameter",
+            "backend_z_up"
+          ],
+          "title": "Orientation Source",
+          "type": "string"
+        },
+        "request_id": {
+          "format": "uuid",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "original-glb-v1",
+          "default": "original-glb-v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "waiting_for_input",
+            "cancel_requested",
+            "succeeded",
+            "failed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "task_id": {
+          "const": "image_to_3d_print",
+          "default": "image_to_3d_print",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "request_id",
+        "run_id",
+        "status",
+        "data"
+      ],
+      "title": "OriginalGLBTaskResponse",
+      "type": "object"
+    },
     "ParsedRequirements": {
       "additionalProperties": false,
       "properties": {
@@ -1709,6 +1935,9 @@
             },
             {
               "$ref": "#/$defs/GenerationTaskResponse"
+            },
+            {
+              "$ref": "#/$defs/OriginalGLBTaskResponse"
             }
           ],
           "title": "Response"

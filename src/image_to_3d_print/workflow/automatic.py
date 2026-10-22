@@ -8,7 +8,7 @@ from ..image.assets import AutomaticInputAcceptance
 from ..schemas.task import ModelTaskRequest
 from ..schemas.common import MeshInspection
 from ..tools import ToolFailure,ToolOutcome
-from ..runtime_contracts import GenerationDelivery,print_check_for
+from ..runtime_contracts import GenerationDelivery,OriginalGLBDelivery,print_check_for
 from ..reports.quality import write_quality
 from .state import save_context,fail
 from .llm import LanguageModel
@@ -102,6 +102,8 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     args={'reconstruction_profile':ctx['reconstruction_profile']} if ctx.get('reconstruction_profile') else {}
                     if ctx['backend']=='trellis2_candidate':
                         args.update({k:v for k,v in (ctx.get('export_options') or {}).items() if v is not None})
+                        if ctx.get('delivery_policy')=='original-glb-v1' and 'export_target_faces' not in args and ctx.get('mesh_budget'):
+                            args['export_target_faces']=ctx['mesh_budget'].get('effective_target_faces',ctx['mesh_budget']['target_faces'])
                     outcome=tool(ctx,'reconstruct',backend=ctx['backend'],prepared_outcome=ctx['prepared_outcome'],review=review.model_dump(),**args)
                     ctx['reconstruction_metrics']=outcome.tool.data.get('model');ctx['next']='clean'
                 elif name=='clean':
@@ -152,22 +154,32 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     if best:
                         ctx.update(mesh_version=best['mesh_version'],inspection=best['inspection'])
                         ctx['repair_round']=MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).repair_round
-                    outcome=tool(ctx,'export_glb',mesh_version=ctx['mesh_version']);data=outcome.tool.data
-                    if data.get('mesh_version')!=ctx['mesh_version'] or data.get('independent_readback') is not True:
+                    original=ctx.get('delivery_policy')=='original-glb-v1'
+                    outcome=tool(ctx,'export_original_glb' if original else 'export_glb',mesh_version=ctx['mesh_version']);data=outcome.tool.data
+                    inspected_version=data.get('inspection_mesh_version') if original else data.get('mesh_version')
+                    if inspected_version!=ctx['mesh_version'] or data.get('independent_readback') is not True:
                         raise ToolFailure('STATE_CONFLICT','GLB缺少本版本独立读回证据')
                     if data.get('appearance',{}).get('warning'):ctx['warnings'].append(data['appearance']['warning'])
                     inspection=MeshInspection.model_validate(ctx['inspection']) if ctx.get('inspection') else None
                     status=print_check_for(inspection)
                     if status!='passed':ctx['warnings'].append('GLB已生成；打印检查未通过或未完整执行，不能作为打印合格证明。')
-                    ctx['delivery']=GenerationDelivery(artifact_id=data['artifact_id'],mesh_version=ctx['mesh_version'],
-                        independent_readback=True,print_check=status,repair_attempts=ctx.get('repair_attempts',0),dimensions_mm=data['dimensions_mm'],warnings=ctx['warnings']).model_dump(mode='json')
+                    if original:
+                        ctx['warnings'].append('交付原始GLB，未应用目标毫米尺寸或副本修复；打印检查属于另一个副本版本。')
+                        ctx['delivery']=OriginalGLBDelivery(artifact_id=data['artifact_id'],mesh_version=data['mesh_version'],
+                            inspection_mesh_version=ctx['mesh_version'],source_sha256=data['source_sha256'],
+                            independent_readback=True,inspection_print_check=status,repair_attempts=ctx.get('repair_attempts',0),warnings=ctx['warnings']).model_dump(mode='json')
+                    else:
+                        ctx['delivery']=GenerationDelivery(artifact_id=data['artifact_id'],mesh_version=ctx['mesh_version'],
+                            independent_readback=True,print_check=status,repair_attempts=ctx.get('repair_attempts',0),dimensions_mm=data['dimensions_mm'],warnings=ctx['warnings']).model_dump(mode='json')
                     ctx['export_data']=data;ctx['next']='explain' if settings.llm.configured else 'finish'
                     if ctx.get('mesh_budget'):
-                        actual=len(load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path).faces)
+                        inspected_faces=len(load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path).faces)
+                        actual=data['face_count'] if original else inspected_faces
                         target=ctx['mesh_budget'].get('effective_target_faces',ctx['mesh_budget']['target_faces'])
-                        ctx['mesh_budget'].update(actual_faces=actual,mesh_version=ctx['mesh_version'],
+                        ctx['mesh_budget'].update(actual_faces=actual,mesh_version=data['mesh_version'] if original else ctx['mesh_version'],
+                            inspection_actual_faces=inspected_faces,
                             target_met=actual<=target,
-                            fallback_reason=None if actual<=target else '目标面数未通过保形/缺陷门槛或已达2轮，保留检查较好的有效版本')
+                            fallback_reason=None if actual<=target else '原始生成网格未达到目标面数，按原件交付，不用副本替代' if original else '目标面数未通过保形/缺陷门槛或已达2轮，保留检查较好的有效版本')
                 elif name=='explain':
                     inspection=ctx.get('inspection') or {}
                     ctx['explanation']=llm.call(ctx,store,'explain',{'mesh_version':ctx['mesh_version'],

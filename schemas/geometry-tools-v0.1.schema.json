@@ -899,6 +899,7 @@
             "clean",
             "export",
             "export_glb",
+            "export_original_glb",
             "preview"
           ],
           "title": "Operation",
@@ -1706,6 +1707,7 @@
           "confirm": "#/$defs/ConfirmCall",
           "export": "#/$defs/MeshCall",
           "export_glb": "#/$defs/MeshCall",
+          "export_original_glb": "#/$defs/MeshCall",
           "import_image": "#/$defs/ImportCall",
           "inspect": "#/$defs/InspectCall",
           "measure_view": "#/$defs/MeasureCall",

@@ -1,4 +1,4 @@
-import type { RuntimeTask, EventsPage, ModelTaskResponse, GenerationTaskResponse, ModelTaskRequest, AssetRecord, PrinterProfile, CreateTask } from './contracts.generated';
+import type { RuntimeTask, EventsPage, ModelTaskResponse, GenerationTaskResponse, OriginalGLBTaskResponse, ModelTaskRequest, AssetRecord, PrinterProfile, CreateTask } from './contracts.generated';
 
 export interface Capabilities {
   schema_version: 'runtime-v1'; default_backend: string | null; configured_backends: string[];
@@ -8,7 +8,7 @@ export interface Capabilities {
   backend_profiles?: Record<string, ('official'|'course_fast')[]>;
   workflow_policy?: 'guided'|'automatic_glb';
   face_budget_policy?: 'image-complexity-v1'|null;
-  appearance_policy?: 'official-pbr-v1';
+  appearance_policy?: 'official-pbr-v1'|'original-glb-v1';
   export_options?: {policy_version:string;min_target_faces:number;max_target_faces:number;min_texture_size:number;max_texture_size:number;default_texture_size:number};
 }
 export class ApiError extends Error {
@@ -37,11 +37,11 @@ export const api = {
   profiles: () => request<PrinterProfile[]>(`${base}/printer-profiles`),
   runtime: (id: string) => request<RuntimeTask>(`${taskUrl(id)}/runtime`),
   events: (id: string, after: number) => request<EventsPage>(`${taskUrl(id)}/events?after=${after}&limit=200`),
-  create: (body: ModelTaskRequest, backend: string, key: string, profile?: string, options:Pick<CreateTask,'export_target_faces'|'texture_size'>={}) => request<ModelTaskResponse|GenerationTaskResponse>(`${base}/model-tasks`, {
+  create: (body: ModelTaskRequest, backend: string, key: string, profile?: string, options:Pick<CreateTask,'export_target_faces'|'texture_size'>={}) => request<ModelTaskResponse|GenerationTaskResponse|OriginalGLBTaskResponse>(`${base}/model-tasks`, {
     method: 'POST', headers: {'Content-Type':'application/json', 'Idempotency-Key':key}, body: JSON.stringify({request:body, backend,...(profile?{reconstruction_profile:profile}:{}),...options}) }),
-  input: (id: string, body: Record<string, unknown>, slicer = false) => request<ModelTaskResponse|GenerationTaskResponse>(`${taskUrl(id)}/${slicer ? 'slicer-confirmation' : 'inputs'}`, {
+  input: (id: string, body: Record<string, unknown>, slicer = false) => request<ModelTaskResponse|GenerationTaskResponse|OriginalGLBTaskResponse>(`${taskUrl(id)}/${slicer ? 'slicer-confirmation' : 'inputs'}`, {
     method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) }),
-  cancel: (id: string) => request<ModelTaskResponse|GenerationTaskResponse>(`${taskUrl(id)}/cancel`, {method:'POST'}),
+  cancel: (id: string) => request<ModelTaskResponse|GenerationTaskResponse|OriginalGLBTaskResponse>(`${taskUrl(id)}/cancel`, {method:'POST'}),
   upload: async (file: File, query = '') => {
     const data = new FormData(); data.append('file',file);
     return request<AssetRecord | {asset:AssetRecord;artifact:{artifact_id:string}}>(`${base}/assets${query}`, {method:'POST',body:data});

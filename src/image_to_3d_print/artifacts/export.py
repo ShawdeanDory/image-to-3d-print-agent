@@ -2,7 +2,7 @@ from pathlib import Path
 import numpy as np
 from ..geometry.core import MeshStore,load_mesh
 from .pbr import write_processed_glb
-from ..tools import ToolFailure,ToolSession
+from ..tools import ToolFailure,ToolSession,digest
 
 def _check_same_geometry(mesh,reread):
     from scipy.spatial import cKDTree
@@ -11,6 +11,36 @@ def _check_same_geometry(mesh,reread):
         or cKDTree(mesh.vertices).query(reread.vertices)[0].max()>tolerance
         or cKDTree(reread.vertices).query(mesh.vertices)[0].max()>tolerance):
         raise ToolFailure('INVALID_ARGUMENT','GLB纹理导出改变了已检查网格的几何，停止交付')
+
+def export_original(root,run,version):
+    """只读登记同任务原GLB，不重导出、不烘焙、不套用副本尺度。"""
+    from uuid import UUID
+    from .pbr import AppearanceSource,_pbr_document
+    session=ToolSession(root,run,'export',version)
+    try:
+        root=Path(root).resolve();source=MeshStore(root).get(run,version)
+        while source.parent is not None:source=MeshStore(root).get(run,source.parent)
+        record=source.parameters.get('appearance_source')
+        if not record:raise ToolFailure('REFERENCE_NOT_FOUND','缺少本任务原始GLB来源，不以处理文件替代')
+        original=AppearanceSource.model_validate(record);file=(root/original.relative_path).resolve()
+        if not file.is_relative_to(root/f'runs/{UUID(str(run))}/tools'):
+            raise ToolFailure('STATE_CONFLICT','原始GLB来源不属于本任务')
+        if not file.is_file():raise ToolFailure('REFERENCE_NOT_FOUND','原始GLB文件不存在')
+        if digest(file)!=original.sha256:raise ToolFailure('STATE_CONFLICT','原始GLB摘要已改变')
+        document=_pbr_document(file);mesh=load_mesh(file)
+        textured=any('baseColorTexture' in m.get('pbrMetallicRoughness',{}) for m in document.get('materials',[]))
+        session.mesh_version=source.mesh_version
+        artifact=session.add('original_glb',file,'raw_mesh','unitless')
+        return session.finish({'artifact_id':artifact.artifact_id,'mesh_version':source.mesh_version,
+            'inspection_mesh_version':version,'independent_readback':True,'original_unchanged':True,
+            'target_scale_applied':False,'source_sha256':original.sha256,'face_count':len(mesh.faces),
+            'artifact_frames':{artifact.artifact_id:original.frame},
+            'appearance':{'policy_version':'original-glb-v1','status':'original_pbr' if textured else 'original_vertex_color',
+                'mesh_version':source.mesh_version,'original_unchanged':True,'pbr_available':textured,
+                'texture_size':original.texture_size if textured else None,'approximation':False}})
+    except ToolFailure as exc:return session.fail(exc.code,str(exc))
+    except (OSError,ValueError,KeyError) as exc:return session.fail('INVALID_ARGUMENT','原始GLB读取失败：'+str(exc)[:160])
+
 
 def export_mesh(root,run,version,config=None):
     session=ToolSession(root,run,'export',version)

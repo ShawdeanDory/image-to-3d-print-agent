@@ -1,6 +1,3 @@
-export default function MaterialInfo({value}:{value:unknown}){
-  if(!value||typeof value!=='object')return null;
-  const appearance=value as Record<string,unknown>;
-  if(appearance.policy_version!=='official-pbr-v1')return null;
-  return <section className="sheet"><h3>处理模型外观</h3><p>{appearance.status==='pbr_rebaked'?'PBR纹理已重烘焙至本次处理网格':'顶点底色'}</p>{appearance.status==='pbr_rebaked'&&<p className="muted">保留底色、粗糙度和金属度纹理，并烘焙法线细节。原始PBR单独保留。</p>}{typeof appearance.texture_size==='number'&&<p>实际纹理：{appearance.texture_size}×{appearance.texture_size}</p>}{typeof appearance.warning==='string'&&<p role="status">{appearance.warning}</p>}{typeof appearance.reason==='string'&&<p className="muted">{appearance.reason}</p>}</section>;
+export default function MaterialInfo({original=false}:{original?:boolean}){
+  return original?<section className="sheet"><h3>原始模型外观</h3><p>直接使用模型生成的原始GLB，不重烘焙、不重建UV、不替换材质。TripoSR保留其真实顶点色，TRELLIS.2保留原始PBR。</p></section>:null;
 }
