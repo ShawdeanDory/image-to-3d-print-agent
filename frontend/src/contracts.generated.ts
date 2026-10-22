@@ -249,6 +249,7 @@ export type Orientation = {
 };
 
 export type OriginalGLBDelivery = {
+  "appearance_artifact_id"?: (string | null);
   "artifact_id": string;
   "independent_readback": true;
   "inspection_mesh_version"?: (string | null);

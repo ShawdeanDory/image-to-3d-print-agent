@@ -148,6 +148,7 @@ class GenerationTaskResponse(ModelTaskResponse):
 
 class OriginalGLBDelivery(ContractModel):
     artifact_id: Id
+    appearance_artifact_id: Id | None = None
     mesh_version: Id
     inspection_mesh_version: Id | None = None
     source_sha256: Annotated[str, Field(pattern=r'^[a-f0-9]{64}$')]
@@ -175,6 +176,11 @@ class OriginalGLBTaskResponse(GenerationTaskResponse):
             raise ValueError('原始交付必须引用同任务实际原始GLB')
         if delivery.inspection_mesh_version!=self.data.state.mesh_version:
             raise ValueError('检查副本版本与任务状态不一致')
+        if delivery.appearance_artifact_id is not None:
+            appearance=artifacts.get(delivery.appearance_artifact_id)
+            if (appearance is None or appearance.kind!='repaired_mesh' or appearance.mesh_version!=delivery.mesh_version
+                    or not appearance.relative_path.endswith('.glb') or artifact.artifact_id not in appearance.derived_from):
+                raise ValueError('局部外观副本必须关联同任务/同原始网格及原始产物')
         if not any(a.kind=='quality_report' and a.mesh_version==delivery.inspection_mesh_version for a in artifacts.values()):
             raise ValueError('原始交付须附实际检查副本的质量报告')
         inspection=self.data.inspection

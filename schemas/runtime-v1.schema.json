@@ -1159,6 +1159,21 @@
     "OriginalGLBDelivery": {
       "additionalProperties": false,
       "properties": {
+        "appearance_artifact_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Appearance Artifact Id"
+        },
         "artifact_id": {
           "maxLength": 64,
           "minLength": 1,

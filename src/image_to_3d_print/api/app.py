@@ -43,6 +43,7 @@ def create_app(settings=None):
             'workflow_policy':settings.workflow_policy,
             'face_budget_policy':'image-complexity-v1' if settings.workflow_policy=='automatic_glb' else None,
             'appearance_policy':'original-glb-v1',
+            'eye_texture_policy':'eye-local-v1' if settings.eye_texture_active else None,
             'gpu_hole_policy':'gpu-boundary-fill-v1' if settings.workflow_policy=='automatic_glb' else None,
             'export_options':{'policy_version':'export-options-v1','min_target_faces':100,'max_target_faces':1000000,
                 'default_target_faces':'automatic','min_texture_size':256,'max_texture_size':4096,'default_texture_size':2048},
@@ -88,6 +89,7 @@ def create_app(settings=None):
                 'known_completed_active_seconds': row['active_seconds'], 'tool_calls': ctx['tool_calls'], 'llm': ctx['llm'],
                 'reconstruction':metrics,'mesh_budget':ctx.get('mesh_budget'),
                 'gpu_boundary_repair':ctx.get('gpu_boundary_repair'),
+                'eye_texture':ctx.get('eye_texture'),'eye_texture_enabled':settings.eye_texture_active,
                 'export_options':ctx.get('export_options'),
                 'appearance':(ctx.get('export_data') or {}).get('appearance')}}
 

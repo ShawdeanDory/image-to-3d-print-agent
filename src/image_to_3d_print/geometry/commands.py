@@ -18,6 +18,7 @@ from .core import MeshStore
 from .structure import StructureRequest,propose,confirm,apply_proposal
 from .view import measure_view
 from ..export_options import ExportTargetFaces,TextureSize
+from ..artifacts.eye_texture import EyeTexturePolicy,enhance_eye_texture
 
 class Call(ContractModel):run_id:UUID
 class ImportCall(Call):
@@ -43,6 +44,11 @@ class ReconstructCall(Call):
 class MeshCall(Call):
     operation:Literal['clean','export','export_glb','export_original_glb','preview']
     mesh_version:Id
+class EyeTextureCall(Call):
+    operation:Literal['enhance_eye_texture']
+    mesh_version:Id
+    original_artifact_id:Id
+    source_sha256:str=Field(pattern=r'^[a-f0-9]{64}$')
 class ScaleCall(Call):
     operation:Literal['scale']
     mesh_version:Id
@@ -73,7 +79,7 @@ class MeasureCall(Call):
     mask_path:RelativePath
     backend:Literal['triposr','trellis2_candidate']
 
-Command=Annotated[Union[ImportCall,ComplexityCall,PrepareCall,ReconstructCall,MeshCall,ScaleCall,InspectCall,ProposeCall,ConfirmCall,ApplyCall,MeasureCall],Field(discriminator='operation')]
+Command=Annotated[Union[ImportCall,ComplexityCall,PrepareCall,ReconstructCall,MeshCall,EyeTextureCall,ScaleCall,InspectCall,ProposeCall,ConfirmCall,ApplyCall,MeasureCall],Field(discriminator='operation')]
 COMMANDS=TypeAdapter(Command)
 
 class ToolConfiguration(ContractModel):
@@ -89,7 +95,7 @@ class ToolConfiguration(ContractModel):
 def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human',automatic_input=False,automatic_action=False):
     root=Path(root).resolve();command=COMMANDS.validate_python(command)
     store=MeshStore(root);assets=AssetStore(root);op=command.operation;run=command.run_id
-    tool_name={'analyze_complexity':'preprocess','import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','export_original_glb':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
+    tool_name={'analyze_complexity':'preprocess','import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','export_original_glb':'export','enhance_eye_texture':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
     # 包装只有原子返回值的资产/提案接口；已有ToolOutcome直接返回。
     session=None
     try:
@@ -138,6 +144,9 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
         if op=='export':return export_mesh(root,run,command.mesh_version,configuration.inspection)
         if op=='export_glb':return export_preview(root,run,command.mesh_version,configuration.inspection)
         if op=='export_original_glb':return export_original(root,run,command.mesh_version)
+        if op=='enhance_eye_texture':
+            if not automatic_action:raise ToolFailure('STATE_CONFLICT','眼部增强只接受服务端试用政策')
+            return enhance_eye_texture(root,run,command.mesh_version,command.original_artifact_id,command.source_sha256,EyeTexturePolicy())
         if op=='preview':return preview_mesh(root,run,command.mesh_version,configuration.inspection)
         if op=='measure_view':return measure_view(root,run,command.mesh_version,command.mask_path,command.backend,configuration.view_mappings.get(command.backend))
         if op=='apply':return apply_proposal(root,run,command.proposal_id)

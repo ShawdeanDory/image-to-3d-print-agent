@@ -26,6 +26,7 @@ def write_quality(store, ctx):
         'export_options':ctx.get('export_options'),
         'appearance':(ctx.get('export_data') or {}).get('appearance'),
         'gpu_boundary_repair':ctx.get('gpu_boundary_repair'),
+        'eye_texture':ctx.get('eye_texture'),
         'active_seconds': (None if ctx.get('interrupted_active_seconds_unknown') else
             store.row(ctx['run_id'])['active_seconds'] + ctx.get('current_active_seconds', 0)),
         'known_completed_active_seconds': store.row(ctx['run_id'])['active_seconds'],
@@ -58,6 +59,8 @@ def write_quality(store, ctx):
     if ctx.get('gpu_boundary_repair'):
         gpu=ctx['gpu_boundary_repair']
         md.append(f"首次PBR导出前GPU补片：{gpu['status']}，边界{gpu['boundary_before']}→{gpu['boundary_after']}，实际{gpu['attempts']}轮。"+gpu['warning'])
+    if ctx.get('eye_texture'):
+        eye=ctx['eye_texture'];md.append(f"眼部局部贴图试用：{eye['status']}；{eye['reason']}。原件另存；增强只改眼部底色，不修眼眶几何，不改变打印结论。")
     if ctx.get('error'): md.append('停止原因：' + ctx['error']['message'])
     appearance=(ctx.get('export_data') or {}).get('appearance')
     if appearance:md.append('外观：'+('原始PBR，未经重烘焙' if appearance['status']=='original_pbr' else '原始顶点色，未经重烘焙' if appearance['status']=='original_vertex_color' else 'PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')+'；'+(appearance.get('warning') or appearance.get('reason') or '原始PBR来源与重投射参数见JSON。'))

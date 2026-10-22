@@ -576,6 +576,193 @@
       "title": "EvidenceRecord",
       "type": "object"
     },
+    "EyeTextureCall": {
+      "additionalProperties": false,
+      "properties": {
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "operation": {
+          "const": "enhance_eye_texture",
+          "title": "Operation",
+          "type": "string"
+        },
+        "original_artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Original Artifact Id",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "operation",
+        "mesh_version",
+        "original_artifact_id",
+        "source_sha256"
+      ],
+      "title": "EyeTextureCall",
+      "type": "object"
+    },
+    "EyeTexturePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "max_changed_fraction": {
+          "default": 0.025,
+          "exclusiveMinimum": 0,
+          "maximum": 0.025,
+          "title": "Max Changed Fraction",
+          "type": "number"
+        },
+        "min_silhouette_iou": {
+          "default": 0.7,
+          "maximum": 1,
+          "minimum": 0.7,
+          "title": "Min Silhouette Iou",
+          "type": "number"
+        },
+        "min_view_margin": {
+          "default": 0.025,
+          "maximum": 1,
+          "minimum": 0.025,
+          "title": "Min View Margin",
+          "type": "number"
+        },
+        "timeout_s": {
+          "default": 90,
+          "exclusiveMinimum": 0,
+          "maximum": 90,
+          "title": "Timeout S",
+          "type": "number"
+        },
+        "version": {
+          "const": "eye-local-v1",
+          "default": "eye-local-v1",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "title": "EyeTexturePolicy",
+      "type": "object"
+    },
+    "EyeTextureResult": {
+      "additionalProperties": false,
+      "properties": {
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "enhanced_artifact_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Enhanced Artifact Id"
+        },
+        "enhanced_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Enhanced Sha256"
+        },
+        "geometry_unchanged": {
+          "const": true,
+          "default": true,
+          "title": "Geometry Unchanged",
+          "type": "boolean"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "original_artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Original Artifact Id",
+          "type": "string"
+        },
+        "other_pbr_channels_unchanged": {
+          "const": true,
+          "default": true,
+          "title": "Other Pbr Channels Unchanged",
+          "type": "boolean"
+        },
+        "policy_version": {
+          "const": "eye-local-v1",
+          "default": "eye-local-v1",
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "applied",
+            "skipped",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "uv_unchanged": {
+          "const": true,
+          "default": true,
+          "title": "Uv Unchanged",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status",
+        "reason",
+        "source_sha256",
+        "original_artifact_id",
+        "mesh_version"
+      ],
+      "title": "EyeTextureResult",
+      "type": "object"
+    },
     "GPUHolePolicy": {
       "additionalProperties": false,
       "properties": {
@@ -1782,6 +1969,7 @@
           "apply": "#/$defs/ApplyCall",
           "clean": "#/$defs/MeshCall",
           "confirm": "#/$defs/ConfirmCall",
+          "enhance_eye_texture": "#/$defs/EyeTextureCall",
           "export": "#/$defs/MeshCall",
           "export_glb": "#/$defs/MeshCall",
           "export_original_glb": "#/$defs/MeshCall",
@@ -1811,6 +1999,9 @@
         },
         {
           "$ref": "#/$defs/MeshCall"
+        },
+        {
+          "$ref": "#/$defs/EyeTextureCall"
         },
         {
           "$ref": "#/$defs/ScaleCall"
@@ -1849,6 +2040,12 @@
     },
     {
       "$ref": "#/$defs/GPUHolePolicy"
+    },
+    {
+      "$ref": "#/$defs/EyeTexturePolicy"
+    },
+    {
+      "$ref": "#/$defs/EyeTextureResult"
     }
   ]
 }

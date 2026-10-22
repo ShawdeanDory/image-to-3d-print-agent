@@ -1,0 +1,132 @@
+{
+  "initial_deployment": {
+    "deployment_updated": true,
+    "changed_files": 12,
+    "previous_tasks": 21,
+    "previous_task_states_preserved": true,
+    "services": {
+      "kind": "desktop_cloud_services",
+      "api": "started",
+      "worker": "started",
+      "model_submitted": false
+    },
+    "export_options": {
+      "policy_version": "export-options-v1",
+      "min_target_faces": 100,
+      "max_target_faces": 1000000,
+      "default_target_faces": "automatic",
+      "min_texture_size": 256,
+      "max_texture_size": 4096,
+      "default_texture_size": 2048
+    },
+    "preview_lighting": "official-forest-hdr-v1",
+    "appearance_policy": "original-glb-v1",
+    "gpu_hole_policy": "gpu-boundary-fill-v1",
+    "eye_texture_policy": "eye-local-v1",
+    "tests": "not_run",
+    "eye_projection": "not_run",
+    "model_generation": "not_run",
+    "pbr_bake": "not_run",
+    "browser_validation": "not_run"
+  },
+  "final_source_patches": [
+    {
+      "deployment_updated": true,
+      "changed_files": 1,
+      "previous_tasks": 21,
+      "previous_task_states_preserved": true,
+      "services": {
+        "kind": "desktop_cloud_services",
+        "api": "started",
+        "worker": "started",
+        "model_submitted": false
+      },
+      "export_options": {
+        "policy_version": "export-options-v1",
+        "min_target_faces": 100,
+        "max_target_faces": 1000000,
+        "default_target_faces": "automatic",
+        "min_texture_size": 256,
+        "max_texture_size": 4096,
+        "default_texture_size": 2048
+      },
+      "preview_lighting": "official-forest-hdr-v1",
+      "appearance_policy": "original-glb-v1",
+      "gpu_hole_policy": "gpu-boundary-fill-v1",
+      "eye_texture_policy": "eye-local-v1",
+      "tests": "not_run",
+      "eye_projection": "not_run",
+      "model_generation": "not_run",
+      "pbr_bake": "not_run",
+      "browser_validation": "not_run"
+    },
+    {
+      "deployment_updated": true,
+      "changed_files": 1,
+      "previous_tasks": 21,
+      "previous_task_states_preserved": true,
+      "services": {
+        "kind": "desktop_cloud_services",
+        "api": "started",
+        "worker": "started",
+        "model_submitted": false
+      },
+      "export_options": {
+        "policy_version": "export-options-v1",
+        "min_target_faces": 100,
+        "max_target_faces": 1000000,
+        "default_target_faces": "automatic",
+        "min_texture_size": 256,
+        "max_texture_size": 4096,
+        "default_texture_size": 2048
+      },
+      "preview_lighting": "official-forest-hdr-v1",
+      "appearance_policy": "original-glb-v1",
+      "gpu_hole_policy": "gpu-boundary-fill-v1",
+      "eye_texture_policy": "eye-local-v1",
+      "tests": "not_run",
+      "eye_projection": "not_run",
+      "model_generation": "not_run",
+      "pbr_bake": "not_run",
+      "browser_validation": "not_run"
+    }
+  ],
+  "verified_source_files": [
+    "schemas/geometry-tools-v0.1.schema.json",
+    "schemas/runtime-v1.schema.json",
+    "scripts/tools/export_tool_schemas.py",
+    "scripts/tools/set_eye_texture.py",
+    "src/image_to_3d_print/api/app.py",
+    "src/image_to_3d_print/artifacts/eye_texture.py",
+    "src/image_to_3d_print/geometry/commands.py",
+    "src/image_to_3d_print/jobs/config.py",
+    "src/image_to_3d_print/jobs/service.py",
+    "src/image_to_3d_print/reports/quality.py",
+    "src/image_to_3d_print/runtime_contracts.py",
+    "src/image_to_3d_print/workflow/automatic.py"
+  ],
+  "task_states": [
+    [
+      "cancelled",
+      8
+    ],
+    [
+      "failed",
+      1
+    ],
+    [
+      "succeeded",
+      9
+    ],
+    [
+      "waiting_for_input",
+      3
+    ]
+  ],
+  "gpu_memory_mib": "0",
+  "model_generation": "not_run",
+  "eye_projection": "not_run",
+  "browser": "not_run",
+  "automated_tests": "not_run",
+  "rollback_switch": "not_run"
+}
