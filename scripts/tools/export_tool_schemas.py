@@ -8,10 +8,11 @@ from image_to_3d_print.geometry.commands import Command,ToolConfiguration
 from image_to_3d_print.tools import ToolOutcome
 from image_to_3d_print.geometry.core import MeshVersion
 from image_to_3d_print.geometry.structure import Proposal
+from image_to_3d_print.image.complexity import ImageComplexity
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
-    schema=TypeAdapter(Union[Command,ToolConfiguration,ToolOutcome,MeshVersion,Proposal]).json_schema()
+    schema=TypeAdapter(Union[Command,ToolConfiguration,ToolOutcome,MeshVersion,Proposal,ImageComplexity]).json_schema()
     schema['$id']='geometry-tools-v0.1.schema.json'
     content=json.dumps(schema,ensure_ascii=False,indent=2,sort_keys=True)+'\n'
     target=ROOT/'schemas/geometry-tools-v0.1.schema.json'

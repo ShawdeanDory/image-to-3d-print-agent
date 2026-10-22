@@ -1,0 +1,10 @@
+{
+  "validation_mode": "existing_real_mesh_replay",
+  "run_id": "2ccbf4de-d91c-420e-8875-1a06d8f08539",
+  "new_reconstruction": false,
+  "downloads_before_click": 0,
+  "downloads_after_refresh": 0,
+  "downloads_after_click": 1,
+  "mutations": [],
+  "passed": true
+}

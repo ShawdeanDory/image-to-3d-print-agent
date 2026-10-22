@@ -1,0 +1,137 @@
+{
+  "validation_mode": "existing_real_mesh_replay",
+  "run_id": "2ccbf4de-d91c-420e-8875-1a06d8f08539",
+  "source_run": "9e10c058-029e-47d3-991b-d6b44718e73d",
+  "new_reconstruction": false,
+  "source_sha256": "7b84ed742bd5298a0ea53b564100a14ebfd682ce8a3d340777ee8e20a16bc3b1",
+  "source_unchanged": true,
+  "seconds": 37.140687085688114,
+  "status": "succeeded",
+  "mesh_budget": {
+    "actual_faces": 9992,
+    "attempted_targets": [
+      10000
+    ],
+    "classification": "simple",
+    "fallback_reason": null,
+    "features": {
+      "contour_compactness": 3.2013503122177207,
+      "foreground_fraction": 0.2526498538011696,
+      "interior_edge_density": 0.026252983293556086,
+      "significant_components": 1,
+      "significant_holes": 0
+    },
+    "mask_method": "uniform_border",
+    "mesh_version": "m_c572dbdb2ee8404f9ef5bb03",
+    "policy_version": "image-complexity-v1",
+    "reasons": [
+      "按前景轮廓、组件、孔洞和内部边缘估计；纹理不等于几何细节，须由网格保形验证"
+    ],
+    "semantic_recognition": false,
+    "target_faces": 10000,
+    "target_met": true
+  },
+  "repair_attempt_log": [
+    {
+      "adaptive_budget": true,
+      "attempt": 1,
+      "mesh_version": "m_241cbf2344b2423f9058f2f4",
+      "operation": "simplify",
+      "origin": "automatic_policy",
+      "status": "applied",
+      "target_faces": 10000
+    }
+  ],
+  "delivery": {
+    "artifact_id": "t_49b0f89992d240f9_glb",
+    "dimensions_mm": [
+      12.599752426147461,
+      9.976611137390137,
+      10.001980646979064
+    ],
+    "independent_readback": true,
+    "mesh_version": "m_c572dbdb2ee8404f9ef5bb03",
+    "print_certified": false,
+    "print_check": "failed",
+    "repair_attempts": 1,
+    "warnings": [
+      "没有适用的受控修复操作，保留当前有效网格。",
+      "GLB已生成；打印检查未通过或未完整执行，不能作为打印合格证明。",
+      "GLB已生成；打印检查未通过或未完整执行，不能作为打印合格证明。"
+    ]
+  },
+  "operations": [
+    "analyze_complexity",
+    "inspect",
+    "propose",
+    "confirm",
+    "apply",
+    "inspect",
+    "export_glb",
+    "export_glb"
+  ],
+  "llm_calls": 0,
+  "appearance_fix": {
+    "policy": "processed-base-color-v1",
+    "metallic_factor": 0,
+    "roughness_factor": 0.85,
+    "vertex_colors": "linear_float32_from_srgb",
+    "smooth_normals": true,
+    "geometry_unchanged": true,
+    "new_reconstruction": false
+  },
+  "geometry": {
+    "vertex_count": 5000,
+    "face_count": 9992,
+    "component_count": 2,
+    "watertight": true,
+    "normals_consistent": true,
+    "boundary_edge_count": 0,
+    "non_manifold_edge_count": 0,
+    "non_manifold_vertex_count": 0,
+    "dimensions": [
+      12.599752426147461,
+      9.976611137390137,
+      10.001980646979064
+    ],
+    "volume": 936.5049321250553
+  },
+  "preservation": {
+    "fixed_three_view_iou": [
+      0.9912329375208079,
+      0.993077259132305,
+      0.9926261225085785
+    ],
+    "max_relative_dimension_change": 0.00038402784538126244,
+    "preservation_pass": true,
+    "adaptive_budget": true,
+    "target_faces": 10000,
+    "appearance": {
+      "status": "available",
+      "method": "nearest_source_vertex_base_color",
+      "approximation": true,
+      "max_distance_source_units": 0.11569642341945331,
+      "pbr_material_preserved": false,
+      "source_version": "m_241cbf2344b2423f9058f2f4"
+    },
+    "before_checks": {
+      "self_intersection_faces": 0,
+      "thin_faces_low": 1921,
+      "thin_faces_high": 2023
+    },
+    "after_checks": {
+      "self_intersection_faces": 0,
+      "thin_faces_low": 374,
+      "thin_faces_high": 378
+    },
+    "printing_pass": false,
+    "printing_gate": "需对批准后的具体新版本完整检查及独立预览/切片，提案不是合格交付",
+    "requires_human_confirmation": false
+  },
+  "print_check": "failed",
+  "print_certified": false,
+  "download": {
+    "bytes": 321456,
+    "sha256": "6d59726564473c73276a2f8c28a0cb572cafb8563d9025f9b1e3ecd7a2a8554e"
+  }
+}

@@ -60,6 +60,7 @@ class TaskService:
             create.backend or self.settings.default_backend)
         ctx['reconstruction_profile']=create.reconstruction_profile
         ctx['workflow_policy']=self.settings.workflow_policy
+        if automatic:ctx['face_budget_policy']='image-complexity-v1'
         ctx['orientation_source']=orientation_source
         if automatic and ctx['backend']=='trellis2_candidate':ctx['reconstruction_profile']='course_fast'
         ctx['evidence_origin'] = 'test_fixture' if self.settings.confirmation_origin == 'test_fixture' else 'runtime'

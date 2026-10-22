@@ -12,6 +12,8 @@ test('真实API/CPU几何fixture：一次提交、自动修复、刷新不下载
   await page.getByLabel('目标高度',{exact:true}).fill('10');
   await page.getByRole('button',{name:'创建建模任务'}).dblclick();
   await expect(page.getByRole('heading',{name:'GLB生成完成'})).toBeVisible({timeout:30000});
+  await expect(page.getByRole('heading',{name:'自动面数预算'})).toBeVisible();
+  await expect(page.getByText('目标不超过10,000面',{exact:false})).toBeVisible();
   expect(posts.filter(p=>p.endsWith('/model-tasks'))).toHaveLength(1);
   expect(posts.some(p=>/\/(inputs|slicer-confirmation)$/.test(p))).toBe(false);
   await expect(page.locator('.confirmation')).toHaveCount(0);

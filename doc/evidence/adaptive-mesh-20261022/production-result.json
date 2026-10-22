@@ -1,0 +1,15 @@
+{
+  "ready": true,
+  "changed_files": 13,
+  "old_tasks_preserved": 12,
+  "workflow_policy": "automatic_glb",
+  "face_budget_policy": "image-complexity-v1",
+  "service_result": {
+    "kind": "desktop_cloud_services",
+    "api": "started",
+    "worker": "started",
+    "model_submitted": false
+  },
+  "new_model_calls": 0,
+  "time": 1792630631.3758628
+}

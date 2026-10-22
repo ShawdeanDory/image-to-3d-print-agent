@@ -57,6 +57,18 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
         if facts['face_count']>100000:options.append({'operation':'simplify','target_faces':100000,'min_wall_mm':float(ctx['profile']['min_wall_mm'])})
         return next((o for o in options if (source.mesh_version,o['operation']) not in tried),None)
 
+    def budget_request(ctx):
+        budget=ctx.get('mesh_budget')
+        if not budget:return None
+        mesh=load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path)
+        target=budget['target_faces']
+        if len(mesh.faces)<=target:return None
+        tried=budget.setdefault('attempted_targets',[])
+        candidate=next((t for t in (10000,30000,100000) if t>=target and t<len(mesh.faces) and t not in tried),None)
+        if candidate is None:return None
+        tried.append(candidate)
+        return {'operation':'simplify','target_faces':candidate,'min_wall_mm':float(ctx['profile']['min_wall_mm'])}
+
     def node(name):
         def execute(state):
             ctx=copy.deepcopy(state['ctx']);ctx['next']='finish'
@@ -71,6 +83,12 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     report=next(a for a in outcome.artifacts if a.artifact_id.endswith('_report'))
                     ctx['prepared_outcome']=str((root/report.relative_path).parent.relative_to(root)/'outcome.json').replace('\\','/')
                     ctx['prepared']=outcome.tool.data;ctx['next']='reconstruct'
+                    if ctx.get('face_budget_policy')=='image-complexity-v1':
+                        analyzed=tool(ctx,'analyze_complexity',asset_id=ctx['request']['image_asset_id'])
+                        if analyzed.tool.data.get('asset_id')!=ctx['request']['image_asset_id']:
+                            raise ToolFailure('STATE_CONFLICT','复杂度分析不属于本次图片')
+                        from ..image.complexity import ImageComplexity
+                        ctx['mesh_budget']=ImageComplexity.model_validate(analyzed.tool.data['analysis']).model_dump(mode='json')
                 elif name=='reconstruct':
                     ctx['stage']='reconstruct'
                     review=AutomaticInputAcceptance(asset_id=ctx['request']['image_asset_id'],foreground_artifact_id=ctx['prepared']['foreground_artifact_id'])
@@ -87,25 +105,30 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     inspection=MeshInspection.model_validate(outcome.tool.data['inspection'])
                     if inspection.mesh_version!=ctx['mesh_version']:raise ToolFailure('STATE_CONFLICT','检查版本不匹配')
                     ctx['inspection']=inspection.model_dump(mode='json');ctx.setdefault('inspection_history',[]).append(ctx['inspection'])
-                    score=(sum(c.status=='not_run' for c in inspection.checks),sum(c.status=='fail' for c in inspection.checks),inspection.boundary_edge_count+inspection.non_manifold_edge_count+inspection.non_manifold_vertex_count)
+                    faces=len(load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path).faces)
+                    score=(sum(c.status=='not_run' for c in inspection.checks),sum(c.status=='fail' for c in inspection.checks),inspection.boundary_edge_count+inspection.non_manifold_edge_count+inspection.non_manifold_vertex_count,faces)
                     if not ctx.get('best_checked') or tuple(ctx['best_checked']['score'])>score:
                         ctx['best_checked']={'score':list(score),'mesh_version':ctx['mesh_version'],'inspection':ctx['inspection']}
                     ctx['next']='plan'
                 elif name=='plan':
                     inspection=MeshInspection.model_validate(ctx['inspection']) if ctx.get('inspection') else None
-                    if inspection is not None and inspection.ready_for_print or ctx.get('repair_attempts',0)>=2:
+                    request=budget_request(ctx) if ctx.get('repair_attempts',0)<2 else None
+                    adaptive=request is not None
+                    if (inspection is not None and inspection.ready_for_print and not adaptive) or ctx.get('repair_attempts',0)>=2:
                         ctx['next']='deliver'
                     else:
-                        request=choose_repair(ctx)
+                        request=request or choose_repair(ctx)
                         if request is None:
                             ctx['warnings'].append('没有适用的受控修复操作，保留当前有效网格。');ctx['next']='deliver'
                         else:
                             ctx['repair_attempts']=ctx.get('repair_attempts',0)+1
-                            ctx.setdefault('repair_attempt_log',[]).append({'attempt':ctx['repair_attempts'],'mesh_version':ctx['mesh_version'],'operation':request['operation'],'status':'planned','origin':'automatic_policy'})
+                            ctx.setdefault('repair_attempt_log',[]).append({'attempt':ctx['repair_attempts'],'mesh_version':ctx['mesh_version'],'operation':request['operation'],'target_faces':request.get('target_faces'),'adaptive_budget':adaptive,'status':'planned','origin':'automatic_policy'})
+                            ctx['adaptive_proposal']=adaptive
                             ctx['auto_request']=request;ctx['next']='propose'
                 elif name=='propose':
                     ctx['stage']='repair'
-                    result=tool(ctx,'propose',mesh_version=ctx['mesh_version'],request=ctx['auto_request'])
+                    extra={'adaptive_budget':True} if ctx.get('adaptive_proposal') else {}
+                    result=tool(ctx,'propose',mesh_version=ctx['mesh_version'],request=ctx['auto_request'],**extra)
                     ctx['proposal']=result.tool.data['proposal'];ctx['next']='confirm'
                 elif name=='confirm':
                     ctx['stage']='repair'
@@ -129,6 +152,11 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     ctx['delivery']=GenerationDelivery(artifact_id=data['artifact_id'],mesh_version=ctx['mesh_version'],
                         independent_readback=True,print_check=status,repair_attempts=ctx.get('repair_attempts',0),dimensions_mm=data['dimensions_mm'],warnings=ctx['warnings']).model_dump(mode='json')
                     ctx['export_data']=data;ctx['next']='explain' if settings.llm.configured else 'finish'
+                    if ctx.get('mesh_budget'):
+                        actual=len(load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path).faces)
+                        ctx['mesh_budget'].update(actual_faces=actual,mesh_version=ctx['mesh_version'],
+                            target_met=actual<=ctx['mesh_budget']['target_faces'],
+                            fallback_reason=None if actual<=ctx['mesh_budget']['target_faces'] else '低面数未通过保形/缺陷门槛或已达2轮，保留检查较好的有效版本')
                 elif name=='explain':
                     inspection=ctx.get('inspection') or {}
                     ctx['explanation']=llm.call(ctx,store,'explain',{'mesh_version':ctx['mesh_version'],

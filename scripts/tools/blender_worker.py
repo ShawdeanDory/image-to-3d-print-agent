@@ -41,7 +41,7 @@ def main():
                 elif abs(angle-45)<=1e-5:critical.append(face.index)
         result.update(overhang_faces=overhang,critical_overhang_faces=critical)
     elif args.operation=='simplify':
-        modifier=obj.modifiers.new('confirmed_decimation','DECIMATE');modifier.ratio=parameters['target_faces']/len(mesh.polygons)
+        modifier=obj.modifiers.new('confirmed_decimation','DECIMATE');modifier.ratio=max(1,parameters['target_faces']-8)/len(mesh.polygons)
         bpy.ops.object.modifier_apply(modifier=modifier.name)
         triangulate=obj.modifiers.new('triangulate','TRIANGULATE');bpy.ops.object.modifier_apply(modifier=triangulate.name)
         result.update(vertices=[[v/factor for v in vertex.co] for vertex in obj.data.vertices],faces=[list(face.vertices) for face in obj.data.polygons])

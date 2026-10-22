@@ -7,6 +7,7 @@ export interface Capabilities {
   input_review_policy?: 'automatic' | 'manual';
   backend_profiles?: Record<string, ('official'|'course_fast')[]>;
   workflow_policy?: 'guided'|'automatic_glb';
+  face_budget_policy?: 'image-complexity-v1'|null;
 }
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) { super(message); }

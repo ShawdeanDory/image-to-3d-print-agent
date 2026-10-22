@@ -1,6 +1,7 @@
 from pathlib import Path
 import numpy as np
 from ..geometry.core import MeshStore,load_mesh
+from ..geometry.appearance import export_base_color_glb
 from ..tools import ToolFailure,ToolSession
 
 def export_mesh(root,run,version):
@@ -13,7 +14,7 @@ def export_mesh(root,run,version):
         # glTF规范为米、Y朝上；STL文件本身无单位，按毫米数值写入。
         rotation=np.array([[1,0,0],[0,0,1],[0,-1,0]])
         gltf=mesh.copy();gltf.vertices=(mesh.vertices@rotation.T)*.001
-        glb=session.directory/'model.glb';gltf.export(glb)
+        glb=session.directory/'model.glb';glb.write_bytes(export_base_color_glb(gltf))
         stl_read=load_mesh(stl);glb_read=load_mesh(glb)
         glb_read.vertices=(glb_read.vertices*1000)@rotation
         tolerance=max(.01,float(mesh.extents.max())*1e-5)
@@ -40,7 +41,7 @@ def export_preview(root,run,version):
         if source.unit!='mm':raise ToolFailure('INVALID_ARGUMENT','GLB交付需要明确的毫米尺度')
         rotation=np.array([[1,0,0],[0,0,1],[0,-1,0]])
         visual=mesh.copy();visual.vertices=(visual.vertices@rotation.T)*.001
-        glb=session.directory/'model.glb';visual.export(glb)
+        glb=session.directory/'model.glb';glb.write_bytes(export_base_color_glb(visual))
         reread=load_mesh(glb);reread.vertices=(reread.vertices*1000)@rotation
         if not np.allclose(mesh.extents,reread.extents,atol=max(.01,float(mesh.extents.max())*1e-5),rtol=0):
             raise ToolFailure('INVALID_ARGUMENT','GLB独立重读尺寸不一致')

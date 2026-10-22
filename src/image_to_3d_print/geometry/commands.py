@@ -1,14 +1,16 @@
 """供工作流调用的统一工具门面；不包含HTTP和Agent状态机。"""
 from pathlib import Path
+import hashlib
 from typing import Annotated,Literal,Union
 from uuid import UUID
-from pydantic import Field,TypeAdapter,model_validator
+from pydantic import Field,TypeAdapter,model_validator,StrictBool
 from ..schemas.common import ContractModel,Id,RelativePath,Text
 from ..schemas.task import ModelTaskRequest
 from ..schemas.validation import resolve_artifact_path
 from ..schemas import PrinterProfile
 from ..tools import ToolSession,ToolFailure,ToolOutcome
 from ..image.assets import AssetStore,InputReview,AutomaticInputAcceptance
+from ..image.complexity import analyze_image
 from ..adapters.reconstruction import BackendConfig,ReconstructionAdapter
 from ..inspection.service import InspectionConfig,BedReview,ComponentReview,inspect_mesh,preview_mesh
 from ..artifacts.export import export_mesh,export_preview
@@ -20,6 +22,9 @@ class Call(ContractModel):run_id:UUID
 class ImportCall(Call):
     operation:Literal['import_image']
     source:RelativePath
+class ComplexityCall(Call):
+    operation:Literal['analyze_complexity']
+    asset_id:Id
 class PrepareCall(Call):
     operation:Literal['prepare_image']
     asset_id:Id
@@ -49,6 +54,7 @@ class ProposeCall(Call):
     operation:Literal['propose']
     mesh_version:Id
     request:StructureRequest
+    adaptive_budget:StrictBool=False
 class ConfirmCall(Call):
     operation:Literal['confirm']
     proposal_id:Id
@@ -63,7 +69,7 @@ class MeasureCall(Call):
     mask_path:RelativePath
     backend:Literal['triposr','trellis2_candidate']
 
-Command=Annotated[Union[ImportCall,PrepareCall,ReconstructCall,MeshCall,ScaleCall,InspectCall,ProposeCall,ConfirmCall,ApplyCall,MeasureCall],Field(discriminator='operation')]
+Command=Annotated[Union[ImportCall,ComplexityCall,PrepareCall,ReconstructCall,MeshCall,ScaleCall,InspectCall,ProposeCall,ConfirmCall,ApplyCall,MeasureCall],Field(discriminator='operation')]
 COMMANDS=TypeAdapter(Command)
 
 class ToolConfiguration(ContractModel):
@@ -79,12 +85,14 @@ class ToolConfiguration(ContractModel):
 def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human',automatic_input=False,automatic_action=False):
     root=Path(root).resolve();command=COMMANDS.validate_python(command)
     store=MeshStore(root);assets=AssetStore(root);op=command.operation;run=command.run_id
-    tool_name={'import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
+    tool_name={'analyze_complexity':'preprocess','import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
     # 包装只有原子返回值的资产/提案接口；已有ToolOutcome直接返回。
     session=None
     try:
         if confirmation_origin not in {'human','test_fixture','automatic_policy'} or (confirmation_origin=='automatic_policy' and not automatic_action):
             raise ToolFailure('INVALID_ARGUMENT','服务端确认来源无效')
+        if op=='propose' and command.adaptive_budget and not (automatic_action and confirmation_origin=='automatic_policy'):
+            raise ToolFailure('STATE_CONFLICT','低面数预算只能由已启用的服务端自动策略批准')
         if op=='confirm' and human_action is not True and not (automatic_action and confirmation_origin=='automatic_policy'):
             raise ToolFailure('STATE_CONFLICT','结构修改确认只能由已核对当前等待项的人工接口提交，不能由模型工具自行批准')
         if op=='reconstruct' and isinstance(command.review,AutomaticInputAcceptance) and automatic_input is not True:
@@ -94,6 +102,13 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
             op=='inspect' and any(review is not None and review.confirmed for review in [command.bed_review,command.component_review]))
         if needs_confirmation and human_action is not True and not (automatic_action and confirmation_origin=='automatic_policy'):
             raise ToolFailure('STATE_CONFLICT','图片、姿态或打印复核须由服务端核对实际人工输入后调用，模型不能自行声明已确认')
+        if op=='analyze_complexity':
+            from PIL import Image
+            session=ToolSession(root,run,tool_name)
+            asset=assets.get(command.asset_id);path=resolve_artifact_path(root,asset.relative_path)
+            with Image.open(path) as image:analysis=analyze_image(image)
+            return session.finish({'asset_id':command.asset_id,'input_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
+                'analysis':analysis.model_dump(mode='json')})
         if op=='import_image':
             session=ToolSession(root,run,tool_name)
             source=resolve_artifact_path(root,command.source);asset=assets.save(source.read_bytes(),source.name)
@@ -119,7 +134,7 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
         if op=='apply':return apply_proposal(root,run,command.proposal_id)
         session=ToolSession(root,run,tool_name,getattr(command,'mesh_version',None))
         if op=='propose':
-            record=propose(root,run,command.mesh_version,command.request,configuration.inspection)
+            record=propose(root,run,command.mesh_version,command.request,configuration.inspection,adaptive_budget=command.adaptive_budget)
             session.add('preview',root/record.preview_path,'repaired_mesh')
             session.add('preview_glb',root/record.preview_glb_path,'repaired_mesh')
             return session.finish({'proposal':record.model_dump(mode='json'),'pending_input_type':'repair_confirmation'})

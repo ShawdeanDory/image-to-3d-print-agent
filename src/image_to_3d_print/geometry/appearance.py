@@ -20,3 +20,34 @@ def transfer_vertex_colors(source,target):
     target.visual.vertex_colors=colors[indices]
     return {'status':'available','method':'nearest_source_vertex_base_color','approximation':True,
         'max_distance_source_units':float(distances.max()),'pbr_material_preserved':False}
+
+
+def export_base_color_glb(mesh):
+    """处理PLY的sRGB底色按glTF线性顶点色导出，原始纹理材质不覆盖。"""
+    from trimesh.exchange.gltf import export_glb
+    if mesh.visual.kind not in {'vertex','face'}:
+        return export_glb(mesh,include_normals=True)
+
+    def colors_to_linear(buffers,tree):
+        accessors=list(tree['accessors'].values());keys=list(buffers)
+        for item in tree['meshes']:
+            for primitive in item['primitives']:
+                index=primitive['attributes'].get('COLOR_0')
+                if index is None:continue
+                accessor=accessors[index];key=keys[accessor['bufferView']]
+                rgba=np.frombuffer(buffers[key],dtype=np.uint8).reshape(-1,4).astype(np.float32)/255
+                rgb=rgba[:,:3]
+                rgba[:,:3]=np.where(rgb<=.04045,rgb/12.92,((rgb+.055)/1.055)**2.4)
+                buffers[key]=rgba.astype('<f4').tobytes()
+                accessor.update(componentType=5126,min=rgba.min(axis=0).tolist(),max=rgba.max(axis=0).tolist())
+                accessor.pop('normalized',None)
+
+    def explicit_material(tree):
+        materials=tree.setdefault('materials',[]);index=len(materials)
+        materials.append({'name':'processed_base_color','doubleSided':True,
+            'pbrMetallicRoughness':{'baseColorFactor':[1.,1.,1.,1.],
+                'metallicFactor':0.,'roughnessFactor':.85}})
+        for item in tree['meshes']:
+            for primitive in item['primitives']:primitive['material']=index
+
+    return export_glb(mesh,include_normals=True,buffer_postprocessor=colors_to_linear,tree_postprocessor=explicit_material)

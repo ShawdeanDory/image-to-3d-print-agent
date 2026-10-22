@@ -88,7 +88,7 @@ def preservation(before,after):
         and (not old['watertight'] or new['watertight']) and (not old['normals_consistent'] or new['normals_consistent']))
     return {'fixed_three_view_iou':scores,'max_relative_dimension_change':relative,'preservation_pass':good,'before':old,'after':new}
 
-def propose(root,run,version,request:StructureRequest,config=None):
+def propose(root,run,version,request:StructureRequest,config=None,*,adaptive_budget=False):
     store=MeshStore(root);source=store.get(run,version)
     if source.repair_round>=2:raise ToolFailure('REPAIR_LIMIT_REACHED','已达到两轮修复上限')
     mesh=load_mesh(Path(root)/source.relative_path)
@@ -108,11 +108,14 @@ def propose(root,run,version,request:StructureRequest,config=None):
         changes={'removed_component_indices':selected,'components':[{'index':i,'faces':len(p.faces),'bounds':p.bounds.tolist()} for i,p in enumerate(parts)]}
     else:
         if source.unit!='mm':raise ToolFailure('INVALID_ARGUMENT','简化保形及薄壁复查需要先确认毫米尺度')
-        if len(mesh.faces)<=100000 or request.target_faces>=len(mesh.faces):raise ToolFailure('INVALID_ARGUMENT','只有超过10万面且目标更小时才允许简化')
+        if (not adaptive_budget and len(mesh.faces)<=100000) or request.target_faces>=len(mesh.faces):raise ToolFailure('INVALID_ARGUMENT','源网格无需简化或未启用低面数自动预算')
         result=blender_call(config,'simplify',mesh,session.directory,{'unit':source.unit,'target_faces':request.target_faces})
         import trimesh
         preview=trimesh.Trimesh(vertices=result['vertices'],faces=result['faces'],process=False)
         changes=preservation(mesh,preview)
+        if len(preview.faces)>request.target_faces:changes['preservation_pass']=False
+        changes['adaptive_budget']=adaptive_budget
+        changes['target_faces']=request.target_faces
         changes['appearance']=transfer_vertex_colors(mesh,preview)
         changes['appearance']['source_version']=version
         # 简化还须在同一工具/尺度下复查自交和壁厚，不只比较面数。
@@ -126,15 +129,18 @@ def propose(root,run,version,request:StructureRequest,config=None):
         if changes['before_checks'].get('status')!='not_run' and any(changes['after_checks'][key]>0 and changes['before_checks'][key]==0 for key in changes['before_checks']):changes['preservation_pass']=False
         changes['printing_pass']=False
         changes['printing_gate']='需对批准后的具体新版本完整检查及独立预览/切片，提案不是合格交付'
-        if not changes['preservation_pass']:raise ToolFailure('INVALID_ARGUMENT','简化未通过保形/拓扑/尺寸/打印缺陷回归，不接受此版本')
+        if not changes['preservation_pass']:
+            (session.directory/'rejected-simplification.json').write_text(json.dumps(changes,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            raise ToolFailure('INVALID_ARGUMENT',f"简化未通过保形/拓扑/尺寸/打印缺陷回归：最小轮廓IoU={min(changes['fixed_three_view_iou']):.4f}，最大外形变化={changes['max_relative_dimension_change']:.4%}；保留源版本")
     if 'before' not in changes:changes['before']=topology(mesh)
     if 'after' not in changes:changes['after']=topology(preview)
-    changes['requires_human_confirmation']=True
+    changes['requires_human_confirmation']=not adaptive_budget
     proposal_id='p_'+uuid4().hex[:24];folder=new_directory(root,f'runs/{UUID(str(run))}/proposals/{proposal_id}')
     path=folder/'preview.ply';preview.export(path)
     glb=folder/'preview.glb';visual=preview.copy()
     visual.vertices=(visual.vertices@np.array([[1,0,0],[0,0,1],[0,-1,0]]).T)*(.001 if source.unit=='mm' else 1.)
-    visual.export(glb)
+    from .appearance import export_base_color_glb
+    glb.write_bytes(export_base_color_glb(visual))
     record=Proposal(proposal_id=proposal_id,run_id=run,source_version=version,source_sha256=source.sha256,request=request,
         preview_path=path.relative_to(Path(root).resolve()).as_posix(),preview_sha256=digest(path),
         preview_glb_path=glb.relative_to(Path(root).resolve()).as_posix(),preview_glb_sha256=digest(glb),changes=changes)

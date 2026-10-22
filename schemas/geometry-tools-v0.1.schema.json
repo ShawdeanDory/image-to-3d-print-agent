@@ -301,6 +301,35 @@
       "title": "BedReview",
       "type": "object"
     },
+    "ComplexityCall": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "operation": {
+          "const": "analyze_complexity",
+          "title": "Operation",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "operation",
+        "asset_id"
+      ],
+      "title": "ComplexityCall",
+      "type": "object"
+    },
     "ComponentReview": {
       "additionalProperties": false,
       "properties": {
@@ -512,6 +541,82 @@
         "summary"
       ],
       "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "ImageComplexity": {
+      "additionalProperties": false,
+      "properties": {
+        "classification": {
+          "enum": [
+            "simple",
+            "medium",
+            "complex",
+            "uncertain"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "features": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "title": "Features",
+          "type": "object"
+        },
+        "mask_method": {
+          "enum": [
+            "alpha",
+            "uniform_border",
+            "unavailable"
+          ],
+          "title": "Mask Method",
+          "type": "string"
+        },
+        "policy_version": {
+          "const": "image-complexity-v1",
+          "default": "image-complexity-v1",
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "reasons": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "semantic_recognition": {
+          "const": false,
+          "default": false,
+          "title": "Semantic Recognition",
+          "type": "boolean"
+        },
+        "target_faces": {
+          "enum": [
+            10000,
+            30000,
+            100000
+          ],
+          "title": "Target Faces",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "classification",
+        "target_faces",
+        "mask_method",
+        "reasons"
+      ],
+      "title": "ImageComplexity",
       "type": "object"
     },
     "ImportCall": {
@@ -1210,6 +1315,11 @@
     "ProposeCall": {
       "additionalProperties": false,
       "properties": {
+        "adaptive_budget": {
+          "default": false,
+          "title": "Adaptive Budget",
+          "type": "boolean"
+        },
         "mesh_version": {
           "maxLength": 64,
           "minLength": 1,
@@ -1534,6 +1644,7 @@
     {
       "discriminator": {
         "mapping": {
+          "analyze_complexity": "#/$defs/ComplexityCall",
           "apply": "#/$defs/ApplyCall",
           "clean": "#/$defs/MeshCall",
           "confirm": "#/$defs/ConfirmCall",
@@ -1553,6 +1664,9 @@
       "oneOf": [
         {
           "$ref": "#/$defs/ImportCall"
+        },
+        {
+          "$ref": "#/$defs/ComplexityCall"
         },
         {
           "$ref": "#/$defs/PrepareCall"
@@ -1594,6 +1708,9 @@
     },
     {
       "$ref": "#/$defs/Proposal"
+    },
+    {
+      "$ref": "#/$defs/ImageComplexity"
     }
   ]
 }
