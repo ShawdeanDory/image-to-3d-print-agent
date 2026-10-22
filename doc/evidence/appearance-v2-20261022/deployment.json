@@ -1,0 +1,31 @@
+{
+  "deployment_updated": true,
+  "changed_files": 9,
+  "previous_tasks": 22,
+  "previous_task_states_preserved": true,
+  "services_before": [],
+  "services": {
+    "kind": "desktop_cloud_services",
+    "api": "started",
+    "worker": "started",
+    "model_submitted": false
+  },
+  "export_options": {
+    "policy_version": "export-options-v1",
+    "min_target_faces": 100,
+    "max_target_faces": 1000000,
+    "default_target_faces": "automatic",
+    "min_texture_size": 256,
+    "max_texture_size": 4096,
+    "default_texture_size": 2048
+  },
+  "preview_lighting": "official-forest-hdr-v1",
+  "appearance_policy": "original-glb-v1",
+  "gpu_hole_policy": "gpu-boundary-fill-v1",
+  "eye_texture_policy": "eye-local-v2",
+  "tests": "not_run",
+  "eye_projection": "existing_mesh_replay_applied",
+  "model_generation": "not_run",
+  "pbr_bake": "not_run",
+  "browser_validation": "not_run"
+}

@@ -1,0 +1,20 @@
+{
+  "deployed_files_match": 9,
+  "task_states": {
+    "cancelled": 8,
+    "failed": 1,
+    "succeeded": 10,
+    "waiting_for_input": 3
+  },
+  "gpu": "NVIDIA GeForce RTX 4090 D, 0 MiB",
+  "eye_texture_policy": "eye-local-v2",
+  "installed_versions": {
+    "nvdiffrast": "0.4.0",
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "pillow": "12.3.0"
+  },
+  "model_generation": "not_run",
+  "new_image_e2e": "not_run",
+  "browser": "not_run"
+}

@@ -1,0 +1,12 @@
+{
+  "original_bytes": 68853340,
+  "enhanced_bytes": 94094680,
+  "source_sha_matches": true,
+  "output_sha_matches": true,
+  "original_bin_prefix_unchanged": true,
+  "non_basecolor_definitions_unchanged": true,
+  "python_ast_files": 8,
+  "all_parsed": true,
+  "full_automated_tests": "not_run",
+  "browser": "not_run"
+}

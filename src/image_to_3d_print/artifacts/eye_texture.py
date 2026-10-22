@@ -21,15 +21,21 @@ from ..tools import ToolFailure, ToolSession, digest
 
 
 class EyeTexturePolicy(ContractModel):
-    version: Literal['eye-local-v1'] = 'eye-local-v1'
-    timeout_s: float = Field(default=90, gt=0, le=90)
+    version: Literal['eye-local-v1','eye-local-v2'] = 'eye-local-v1'
+    timeout_s: float = Field(default=90, gt=0, le=180)
     min_silhouette_iou: float = Field(default=.70, ge=.70, le=1)
     min_view_margin: float = Field(default=.025, ge=.025, le=1)
-    max_changed_fraction: float = Field(default=.025, gt=0, le=.025)
+    max_changed_fraction: float = Field(default=.025, gt=0, le=.45)
+
+    @model_validator(mode='after')
+    def legacy_limits(self):
+        if self.version=='eye-local-v1' and (self.timeout_s>90 or self.max_changed_fraction>.025):
+            raise ValueError('v1仍保持90秒和2.5%眼部纹素预算')
+        return self
 
 
 class EyeTextureResult(ContractModel):
-    policy_version: Literal['eye-local-v1'] = 'eye-local-v1'
+    policy_version: Literal['eye-local-v1','eye-local-v2'] = 'eye-local-v1'
     status: Literal['applied', 'skipped', 'failed']
     reason: str
     source_sha256: str = Field(pattern=r'^[a-f0-9]{64}$')
@@ -204,6 +210,9 @@ class EmbeddedGLB:
         output.write_bytes(struct.pack('<4sII',b'glTF',2,28+len(text)+len(binary))+struct.pack('<II',len(text),0x4e4f534a)+text+struct.pack('<II',len(binary),0x004e4942)+binary)
         # 独立解析并逐字节确认原二进制及非底色定义没有变。
         reread=EmbeddedGLB(output)
+        self.assert_patch_only(reread)
+
+    def assert_patch_only(self,reread):
         if reread.bin[:len(self.bin)]!=self.bin:raise Declined('原始几何/UV二进制发生变化')
         allowed=copy.deepcopy(reread.doc)
         allowed['bufferViews']=allowed['bufferViews'][:-1];allowed['images']=allowed['images'][:-1];allowed['textures']=allowed['textures'][:-1]
@@ -340,14 +349,66 @@ def project_eyes(glb,rgb,mask,source_eyes,face,policy,checkpoint):
         'camera_scope':'appearance_estimate_not_approved_quality_mapping'}
 
 
-def enhance_eye_texture(root,run,version,original_artifact_id,expected_sha,policy=None):
+def _enhance_v2(session,result,file,original,prepared,frame,policy,gpu_config,cancel_event):
+    import os
+    import subprocess
+    import shutil
+    from pathlib import Path
+    from ..tools import stop_process_group
+    if os.name!='posix' or gpu_config is None or gpu_config.backend!='trellis2_candidate' or not gpu_config.python.is_file():
+        raise ToolFailure('TOOL_UNAVAILABLE','未配置同实例候选GPU环境，外观修正不静默切换机器')
+    directory=session.directory;output=directory/'appearance-enhanced.glb';report=directory/'appearance-result.json'
+    policy_file=directory/'appearance-policy.json';policy_file.write_text(policy.model_dump_json(indent=2)+'\n',encoding='utf-8')
+    script=Path(__file__).resolve().parents[3]/'scripts/tools/appearance_worker.py'
+    if not script.is_file():raise ToolFailure('TOOL_UNAVAILABLE','缺少外观worker')
+    args=[str(gpu_config.python),str(script),'--source',str(file),'--original',str(original),'--prepared',str(prepared),
+          '--output',str(output),'--report',str(report),'--policy',str(policy_file)]
+    watchdog=shutil.which('timeout')
+    if watchdog is None:raise ToolFailure('TOOL_UNAVAILABLE','Linux缺少外观worker超时守护')
+    args=[watchdog,'--signal=TERM','--kill-after=5s',str(policy.timeout_s)+'s',*args]
+    environment={**os.environ,'CUDA_VISIBLE_DEVICES':'0','OMP_NUM_THREADS':'4','HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'}
+    environment.pop('PYTHONPATH',None);environment.pop('PYTHONHOME',None)
+    started=time.monotonic();error=None
+    with (directory/'process.log').open('w',encoding='utf-8') as log:
+        process=subprocess.Popen(args,stdout=log,stderr=subprocess.STDOUT,env=environment,start_new_session=True)
+        try:
+            while process.poll() is None:
+                if cancel_event is not None and cancel_event.is_set():error=('STATE_CONFLICT','任务已取消，停止外观worker')
+                elif time.monotonic()-started>policy.timeout_s:error=('TOOL_TIMEOUT','外观worker达到技术超时')
+                if error:stop_process_group(process);break
+                time.sleep(.1)
+        except BaseException:
+            stop_process_group(process);raise
+    if error:raise ToolFailure(*error)
+    if process.returncode or not report.is_file():raise ToolFailure('TOOL_UNAVAILABLE','外观worker失败，详细信息见本任务日志')
+    data=json.loads(report.read_text(encoding='utf-8'))
+    details={**data['details'],'input_sha256':digest(original),'prepared_sha256':digest(prepared),
+             'policy':policy.model_dump(mode='json'),'process_exit_code':process.returncode,'process_seconds':time.monotonic()-started}
+    if digest(file)!=result.source_sha256:raise ToolFailure('STATE_CONFLICT','执行中原始文件摘要改变')
+    for name in ('alignment.json','appearance-result.json','appearance-policy.json'):
+        if (directory/name).is_file():session.add(name.replace('.','_'),directory/name,'inspection_report',parents=[result.original_artifact_id])
+    # 在父进程再次独立检查，不信任worker的applied标志。
+    if data['status']=='applied':
+        before,after=EmbeddedGLB(file),EmbeddedGLB(output)
+        if after.bin[:len(before.bin)]!=before.bin:raise ToolFailure('STATE_CONFLICT','原始BIN保持检查失败')
+        before.assert_patch_only(after)
+        artifact=session.add('appearance_glb',output,'repaired_mesh','unitless',parents=[result.original_artifact_id])
+        result=EyeTextureResult.model_validate({**result.model_dump(),'status':'applied','reason':data['reason'],
+            'enhanced_artifact_id':artifact.artifact_id,'enhanced_sha256':digest(output),'details':details})
+        return session.finish({'eye_texture':result.model_dump(mode='json'),'artifact_frames':{artifact.artifact_id:frame}})
+    result=EyeTextureResult.model_validate({**result.model_dump(),'status':data['status'],'reason':data['reason'],'details':details})
+    if result.status=='failed':return session.fail('TOOL_UNAVAILABLE',result.reason,{'eye_texture':result.model_dump(mode='json')})
+    return session.finish({'eye_texture':result.model_dump(mode='json')})
+
+
+def enhance_eye_texture(root,run,version,original_artifact_id,expected_sha,policy=None,*,gpu_config=None,cancel_event=None):
     from pathlib import Path
     from ..geometry.core import MeshStore
     from ..image.assets import AssetStore
     from .pbr import AppearanceSource
     from ..schemas.validation import resolve_artifact_path
     policy=policy or EyeTexturePolicy();session=ToolSession(root,run,'export',version)
-    result=EyeTextureResult(status='skipped',reason='未执行',source_sha256=expected_sha,
+    result=EyeTextureResult(policy_version=policy.version,status='skipped',reason='未执行',source_sha256=expected_sha,
         original_artifact_id=original_artifact_id,mesh_version=version)
     started=time.monotonic()
     def checkpoint():
@@ -364,6 +425,8 @@ def enhance_eye_texture(root,run,version,original_artifact_id,expected_sha,polic
         asset=AssetStore(root).get(record.parameters['input_asset_id']);original=resolve_artifact_path(root,asset.relative_path)
         prepared=file.parent/'backend_input.png'
         if not prepared.is_file():raise Declined('缺少同任务官方准备图，不猜测另一张图片')
+        if policy.version=='eye-local-v2':
+            return _enhance_v2(session,result,file,original,prepared,source.frame,policy,gpu_config,cancel_event)
         rgb,mask,eyes,face=_prepare_input(original,prepared);checkpoint()
         import PIL, scipy
         result=result.model_copy(update={'details':{'input_asset_id':asset.asset_id,

@@ -598,6 +598,15 @@
           "title": "Original Artifact Id",
           "type": "string"
         },
+        "policy_version": {
+          "default": "eye-local-v1",
+          "enum": [
+            "eye-local-v1",
+            "eye-local-v2"
+          ],
+          "title": "Policy Version",
+          "type": "string"
+        },
         "run_id": {
           "format": "uuid",
           "title": "Run Id",
@@ -625,7 +634,7 @@
         "max_changed_fraction": {
           "default": 0.025,
           "exclusiveMinimum": 0,
-          "maximum": 0.025,
+          "maximum": 0.45,
           "title": "Max Changed Fraction",
           "type": "number"
         },
@@ -646,13 +655,16 @@
         "timeout_s": {
           "default": 90,
           "exclusiveMinimum": 0,
-          "maximum": 90,
+          "maximum": 180,
           "title": "Timeout S",
           "type": "number"
         },
         "version": {
-          "const": "eye-local-v1",
           "default": "eye-local-v1",
+          "enum": [
+            "eye-local-v1",
+            "eye-local-v2"
+          ],
           "title": "Version",
           "type": "string"
         }
@@ -723,8 +735,11 @@
           "type": "boolean"
         },
         "policy_version": {
-          "const": "eye-local-v1",
           "default": "eye-local-v1",
+          "enum": [
+            "eye-local-v1",
+            "eye-local-v2"
+          ],
           "title": "Policy Version",
           "type": "string"
         },

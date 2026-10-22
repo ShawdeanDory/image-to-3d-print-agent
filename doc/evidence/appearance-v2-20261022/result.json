@@ -1,0 +1,494 @@
+{
+  "vertices": 760584,
+  "faces": 977891,
+  "finite": true,
+  "indices_valid": true,
+  "output_bytes": 94094680,
+  "output_sha256": "a97b60cb3110c422d0edfae7cbebf7f0271b31e1cfd575d4fa4dcf4d07030d80",
+  "source_unchanged": true,
+  "old_task_states_preserved": true,
+  "old_tasks": 22,
+  "status": "applied",
+  "details": {
+    "method": "cuda_triangle_visible_projection_v2",
+    "gpu": "NVIDIA GeForce RTX 4090 D",
+    "torch": "2.6.0+cu124",
+    "opencv": "4.10.0",
+    "candidates": [
+      {
+        "yaw": -30.0,
+        "pitch": -10.0,
+        "iou": 0.8041245600675078,
+        "color_error": 0.5408029496245218,
+        "face_error": 0.42284496936540805,
+        "eye_pair_detected": false,
+        "score": 0.35868719849612796
+      },
+      {
+        "yaw": -30.0,
+        "pitch": 0.0,
+        "iou": 0.8048972652443449,
+        "color_error": 0.5395060587280687,
+        "face_error": 0.42445313631754306,
+        "eye_pair_detected": false,
+        "score": 0.35961033523276714
+      },
+      {
+        "yaw": -30.0,
+        "pitch": 10.0,
+        "iou": 0.8151527748908751,
+        "color_error": 0.5412907000948802,
+        "face_error": 0.419756797982122,
+        "eye_pair_detected": false,
+        "score": 0.3705280105449482
+      },
+      {
+        "yaw": -15.0,
+        "pitch": -10.0,
+        "iou": 0.8372102744163689,
+        "color_error": 0.5402529404259249,
+        "face_error": 0.4324727410098375,
+        "eye_pair_detected": true,
+        "score": 0.508705697828667
+      },
+      {
+        "yaw": -15.0,
+        "pitch": 0.0,
+        "iou": 0.8479495134975411,
+        "color_error": 0.5399527069072807,
+        "face_error": 0.4324741364194284,
+        "eye_pair_detected": true,
+        "score": 0.5196095769517368
+      },
+      {
+        "yaw": -15.0,
+        "pitch": 10.0,
+        "iou": 0.8573608579543046,
+        "color_error": 0.5405032285500639,
+        "face_error": 0.42620947532812303,
+        "eye_pair_detected": false,
+        "score": 0.4109107658869264
+      },
+      {
+        "yaw": 0.0,
+        "pitch": -10.0,
+        "iou": 0.8838873696803965,
+        "color_error": 0.540077082888038,
+        "face_error": 0.4247646615592855,
+        "eye_pair_detected": true,
+        "score": 0.5581773425462256
+      },
+      {
+        "yaw": 0.0,
+        "pitch": 0.0,
+        "iou": 0.8980032379924446,
+        "color_error": 0.5389720022624435,
+        "face_error": 0.4237720146790118,
+        "eye_pair_detected": true,
+        "score": 0.5732484316104466
+      },
+      {
+        "yaw": 0.0,
+        "pitch": 10.0,
+        "iou": 0.9004780342194632,
+        "color_error": 0.5406495127476885,
+        "face_error": 0.4210602759622367,
+        "eye_pair_detected": false,
+        "score": 0.4557497056214517
+      },
+      {
+        "yaw": 15.0,
+        "pitch": -10.0,
+        "iou": 0.893460690668626,
+        "color_error": 0.5457849271029361,
+        "face_error": 0.43390686102692044,
+        "eye_pair_detected": true,
+        "score": 0.561411579402589
+      },
+      {
+        "yaw": 15.0,
+        "pitch": 0.0,
+        "iou": 0.9044687146462449,
+        "color_error": 0.5443429299653857,
+        "face_error": 0.4344230007764973,
+        "eye_pair_detected": true,
+        "score": 0.5730320528935088
+      },
+      {
+        "yaw": 15.0,
+        "pitch": 10.0,
+        "iou": 0.9046613398358407,
+        "color_error": 0.5441775452319292,
+        "face_error": 0.42651663889956853,
+        "eye_pair_detected": false,
+        "score": 0.45608286634343076
+      },
+      {
+        "yaw": 30.0,
+        "pitch": -10.0,
+        "iou": 0.8600056144593924,
+        "color_error": 0.5478437740117222,
+        "face_error": 0.43203688081055974,
+        "eye_pair_detected": true,
+        "score": 0.5274786304692493
+      },
+      {
+        "yaw": 30.0,
+        "pitch": 0.0,
+        "iou": 0.858326841513027,
+        "color_error": 0.5458096855280623,
+        "face_error": 0.43483327794394594,
+        "eye_pair_detected": true,
+        "score": 0.5259398671922116
+      },
+      {
+        "yaw": 30.0,
+        "pitch": 10.0,
+        "iou": 0.8587316355453621,
+        "color_error": 0.5440868183596761,
+        "face_error": 0.4293195626794829,
+        "eye_pair_detected": false,
+        "score": 0.4092220385097213
+      },
+      {
+        "yaw": 150.0,
+        "pitch": -10.0,
+        "iou": 0.8176726561036041,
+        "color_error": 0.5542402443424576,
+        "face_error": 0.40580037664783425,
+        "eye_pair_detected": false,
+        "score": 0.37081038988851045
+      },
+      {
+        "yaw": 150.0,
+        "pitch": 0.0,
+        "iou": 0.8101971221824835,
+        "color_error": 0.5509675765731129,
+        "face_error": 0.4067803427324863,
+        "eye_pair_detected": false,
+        "score": 0.36479183511090124
+      },
+      {
+        "yaw": 150.0,
+        "pitch": 10.0,
+        "iou": 0.8108180672876351,
+        "color_error": 0.5502788503431293,
+        "face_error": 0.4054983766648772,
+        "eye_pair_detected": true,
+        "score": 0.486240267766207
+      },
+      {
+        "yaw": 165.0,
+        "pitch": -10.0,
+        "iou": 0.8556489341433985,
+        "color_error": 0.5551519502737595,
+        "face_error": 0.40400683506788654,
+        "eye_pair_detected": false,
+        "score": 0.4089129692190704
+      },
+      {
+        "yaw": 165.0,
+        "pitch": 0.0,
+        "iou": 0.848873307849887,
+        "color_error": 0.551904270602382,
+        "face_error": 0.40649669070297595,
+        "eye_pair_detected": false,
+        "score": 0.40305211727253526
+      },
+      {
+        "yaw": 165.0,
+        "pitch": 10.0,
+        "iou": 0.8377004956188963,
+        "color_error": 0.5486016844203356,
+        "face_error": 0.40629990820685896,
+        "eye_pair_detected": false,
+        "score": 0.393764601315311
+      },
+      {
+        "yaw": 180.0,
+        "pitch": -10.0,
+        "iou": 0.8912421170444028,
+        "color_error": 0.5514360206988513,
+        "face_error": 0.4038398477301762,
+        "eye_pair_detected": false,
+        "score": 0.4466083589544729
+      },
+      {
+        "yaw": 180.0,
+        "pitch": 0.0,
+        "iou": 0.8918709510793534,
+        "color_error": 0.5491987829342666,
+        "face_error": 0.4039732225872435,
+        "eye_pair_detected": false,
+        "score": 0.4484209925599716
+      },
+      {
+        "yaw": 180.0,
+        "pitch": 10.0,
+        "iou": 0.8784535094259239,
+        "color_error": 0.5474831791151438,
+        "face_error": 0.40464267003340976,
+        "eye_pair_detected": false,
+        "score": 0.43571282640090137
+      },
+      {
+        "yaw": 195.0,
+        "pitch": -10.0,
+        "iou": 0.8839652907865556,
+        "color_error": 0.5489187045533207,
+        "face_error": 0.4052695430366753,
+        "eye_pair_detected": false,
+        "score": 0.44021566321939287
+      },
+      {
+        "yaw": 195.0,
+        "pitch": 0.0,
+        "iou": 0.8848116803411074,
+        "color_error": 0.5489205378413047,
+        "face_error": 0.4052927343777017,
+        "eye_pair_detected": false,
+        "score": 0.4410529274961942
+      },
+      {
+        "yaw": 195.0,
+        "pitch": 10.0,
+        "iou": 0.8729989099536196,
+        "color_error": 0.5475184761136674,
+        "face_error": 0.40513632365875113,
+        "eye_pair_detected": false,
+        "score": 0.4300660348105396
+      },
+      {
+        "yaw": 210.0,
+        "pitch": -10.0,
+        "iou": 0.8462959779993124,
+        "color_error": 0.555123111104474,
+        "face_error": 0.4018356788469075,
+        "eye_pair_detected": false,
+        "score": 0.40033577929543407
+      },
+      {
+        "yaw": 210.0,
+        "pitch": 0.0,
+        "iou": 0.8452414208049509,
+        "color_error": 0.5545434349325511,
+        "face_error": 0.40263354709082727,
+        "eye_pair_detected": false,
+        "score": 0.3993207901102583
+      },
+      {
+        "yaw": 210.0,
+        "pitch": 10.0,
+        "iou": 0.8456279468495499,
+        "color_error": 0.5541484475281356,
+        "face_error": 0.4017272842435385,
+        "eye_pair_detected": false,
+        "score": 0.40024175122383676
+      },
+      {
+        "yaw": -6.0,
+        "pitch": -5.0,
+        "iou": 0.8672980738533574,
+        "color_error": 0.5380595533100765,
+        "face_error": 0.42998741568249754,
+        "eye_pair_detected": true,
+        "score": 0.5408697240439412
+      },
+      {
+        "yaw": -6.0,
+        "pitch": 0.0,
+        "iou": 0.8776604838020343,
+        "color_error": 0.5381720129799138,
+        "face_error": 0.4290042977975504,
+        "eye_pair_detected": true,
+        "score": 0.5515143724339391
+      },
+      {
+        "yaw": -6.0,
+        "pitch": 5.0,
+        "iou": 0.8806670810915093,
+        "color_error": 0.5389139292493682,
+        "face_error": 0.426099176872114,
+        "eye_pair_detected": false,
+        "score": 0.4351297080991169
+      },
+      {
+        "yaw": 0.0,
+        "pitch": -5.0,
+        "iou": 0.889199715951884,
+        "color_error": 0.5391102810289855,
+        "face_error": 0.4265434845996839,
+        "eye_pair_detected": true,
+        "score": 0.5633988417760525
+      },
+      {
+        "yaw": 0.0,
+        "pitch": 0.0,
+        "iou": 0.8980032379924446,
+        "color_error": 0.5389720022624435,
+        "face_error": 0.4237720146790118,
+        "eye_pair_detected": true,
+        "score": 0.5732484316104466
+      },
+      {
+        "yaw": 0.0,
+        "pitch": 5.0,
+        "iou": 0.9010610653962754,
+        "color_error": 0.5402774184742188,
+        "face_error": 0.422368488344738,
+        "eye_pair_detected": true,
+        "score": 0.5760795143147968
+      },
+      {
+        "yaw": 6.0,
+        "pitch": -5.0,
+        "iou": 0.9081342001695984,
+        "color_error": 0.5405155833981983,
+        "face_error": 0.43070937275433735,
+        "eye_pair_detected": true,
+        "score": 0.5801023488365713
+      },
+      {
+        "yaw": 6.0,
+        "pitch": 0.0,
+        "iou": 0.9172883130480304,
+        "color_error": 0.539876927610346,
+        "face_error": 0.4270198095804718,
+        "eye_pair_detected": true,
+        "score": 0.5908990695091749
+      },
+      {
+        "yaw": 6.0,
+        "pitch": 5.0,
+        "iou": 0.9197383676415899,
+        "color_error": 0.5410402920563145,
+        "face_error": 0.42412222290518437,
+        "eye_pair_detected": true,
+        "score": 0.5937234289938024
+      }
+    ],
+    "best": {
+      "yaw": 6.0,
+      "pitch": 5.0,
+      "iou": 0.9197383676415899,
+      "color_error": 0.5410402920563145,
+      "face_error": 0.42412222290518437,
+      "eye_pair_detected": true,
+      "score": 0.5937234289938024
+    },
+    "opposite_margin": 0.10748316122759538,
+    "input_mapping_inliers": 198,
+    "input_mapping_median_residual_px": 0.12526811155776288,
+    "source_eye_boxes": [
+      [
+        465.0,
+        86.68,
+        489.0,
+        100.32
+      ],
+      [
+        512.9,
+        88.92,
+        550.1,
+        100.08
+      ]
+    ],
+    "face_box": [
+      447.025,
+      44.949999999999996,
+      561.475,
+      173.02499999999998
+    ],
+    "new_model_called": false,
+    "target_eye_boxes": [
+      [
+        462.0,
+        81.0,
+        495.0,
+        115.0
+      ],
+      [
+        521.0,
+        95.0,
+        549.0,
+        116.0
+      ]
+    ],
+    "modified_texels": 1281513,
+    "texture_size": [
+      4096,
+      4096
+    ],
+    "changed_fraction": 0.07638412714004517,
+    "per_eye_supported_pixels": [
+      1897,
+      1163
+    ],
+    "source_eye_centers": [
+      [
+        475.6853448275862,
+        100.28017241379311
+      ],
+      [
+        528.7445887445888,
+        102.05194805194805
+      ]
+    ],
+    "eye_common_scale": 1.0648474389944118,
+    "uv_padding_texels": 315761,
+    "supported_uv_texels": 964029,
+    "input_height_mapping_max_px": 26.95751953125,
+    "uv_overlap_texels_excluded": 85,
+    "eyes": "applied",
+    "visible_skin_clothing": "applied",
+    "back_and_occluded": "unchanged",
+    "hair": "visible_palette_transfer",
+    "hair_detail": "source_palette_with_original_strand_contrast",
+    "other_pbr_channels": "unchanged",
+    "geometry_unchanged": true,
+    "uv_unchanged": true,
+    "original_bin_prefix_unchanged": true,
+    "elapsed_s": 19.4147438891232,
+    "input_sha256": "f5445943231a0bb37c40db6bb68748c1e38531e43310484e4022611bf64d6e4b",
+    "prepared_sha256": "958591d2dd29e628a0a2f7d8d4b753de3bd6a08ac467b7b90ea4eb61dd0a2a5f",
+    "policy": {
+      "version": "eye-local-v2",
+      "timeout_s": 180.0,
+      "min_silhouette_iou": 0.7,
+      "min_view_margin": 0.025,
+      "max_changed_fraction": 0.45
+    },
+    "process_exit_code": 0,
+    "process_seconds": 22.04396629706025,
+    "camera_scope": "appearance_estimate_not_approved_quality_mapping"
+  },
+  "baseline_commit": "506de27bfa277a3428d84f387844e27fe87b1135",
+  "source_sha256": "87bc5b1d22b020e267b68569bcbdb735846dd8186fce0ff86df248c813f33853",
+  "task_id": "592d71e8-ffe4-44e9-9818-6f640652e36c",
+  "model_generation": "not_run",
+  "full_automated_tests": "not_run",
+  "browser": "not_run",
+  "human_review": "user_confirmed_pass",
+  "print_certified": false,
+  "preprocessing": {
+    "upstream_revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+    "pipeline_source_matches_HEAD": true,
+    "max_input_side": 1024,
+    "additional_project_downsampling": false,
+    "source_dimensions": [
+      1192,
+      2980
+    ],
+    "prepared_dimensions": [
+      998,
+      998
+    ]
+  },
+  "limitations": [
+    "back_and_occluded_unchanged",
+    "skirt_pattern_deformation",
+    "remaining_hair_face_boundary_artifacts",
+    "appearance_camera_not_quality_mapping"
+  ],
+  "human_review_scope": "report_section_6_new_code_and_existing_mesh_result_not_unrun_browser_or_print"
+}
