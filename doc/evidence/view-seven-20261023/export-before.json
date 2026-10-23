@@ -1,0 +1,72 @@
+[
+  {
+    "task": "b614e847-21c6-4f4e-8b1b-282c21c7a12e",
+    "before": {
+      "has_normal": false,
+      "normal_count": null,
+      "color_component_type": 5121,
+      "images": 0,
+      "materials": []
+    }
+  },
+  {
+    "task": "9285b61d-4cb0-4956-9559-894aa98310e9",
+    "before": {
+      "has_normal": false,
+      "normal_count": null,
+      "color_component_type": 5121,
+      "images": 0,
+      "materials": []
+    }
+  },
+  {
+    "task": "cdd10795-a8e8-44a5-874d-88a231c8f2c7",
+    "before": {
+      "has_normal": false,
+      "normal_count": null,
+      "color_component_type": 5121,
+      "images": 0,
+      "materials": []
+    }
+  },
+  {
+    "task": "e7caaaac-4207-489f-b125-a19fa024bd5e",
+    "before": {
+      "has_normal": false,
+      "normal_count": null,
+      "color_component_type": 5121,
+      "images": 0,
+      "materials": []
+    }
+  },
+  {
+    "task": "0d92b552-0f30-498a-a3f8-799fdc847b15",
+    "before": {
+      "has_normal": false,
+      "normal_count": null,
+      "color_component_type": 5121,
+      "images": 0,
+      "materials": []
+    }
+  },
+  {
+    "task": "fec7619d-6430-4475-b01b-151279918646",
+    "before": {
+      "has_normal": false,
+      "normal_count": null,
+      "color_component_type": 5121,
+      "images": 0,
+      "materials": []
+    }
+  },
+  {
+    "task": "da159af6-6cab-4cb6-8a69-28181d107418",
+    "before": {
+      "has_normal": false,
+      "normal_count": null,
+      "color_component_type": 5121,
+      "images": 0,
+      "materials": []
+    }
+  }
+]

@@ -1,0 +1,184 @@
+[
+  {
+    "index": 1,
+    "run_id": "b614e847-21c6-4f4e-8b1b-282c21c7a12e",
+    "normal_count": 46801,
+    "zero_normal_fallback_count": 0,
+    "normal_finite_unit": true,
+    "linear_float_color_matches_source_srgb": true,
+    "positions_indices_unchanged": true,
+    "source_sha256_matches": true,
+    "material": [
+      {
+        "name": "processed_base_color",
+        "doubleSided": true,
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 0.0,
+          "roughnessFactor": 0.85
+        }
+      }
+    ]
+  },
+  {
+    "index": 2,
+    "run_id": "9285b61d-4cb0-4956-9559-894aa98310e9",
+    "normal_count": 85419,
+    "zero_normal_fallback_count": 0,
+    "normal_finite_unit": true,
+    "linear_float_color_matches_source_srgb": true,
+    "positions_indices_unchanged": true,
+    "source_sha256_matches": true,
+    "material": [
+      {
+        "name": "processed_base_color",
+        "doubleSided": true,
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 0.0,
+          "roughnessFactor": 0.85
+        }
+      }
+    ]
+  },
+  {
+    "index": 3,
+    "run_id": "cdd10795-a8e8-44a5-874d-88a231c8f2c7",
+    "normal_count": 483944,
+    "zero_normal_fallback_count": 24,
+    "normal_finite_unit": true,
+    "linear_float_color_matches_source_srgb": true,
+    "positions_indices_unchanged": true,
+    "source_sha256_matches": true,
+    "material": [
+      {
+        "name": "processed_base_color",
+        "doubleSided": true,
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 0.0,
+          "roughnessFactor": 0.85
+        }
+      }
+    ]
+  },
+  {
+    "index": 4,
+    "run_id": "e7caaaac-4207-489f-b125-a19fa024bd5e",
+    "normal_count": 479376,
+    "zero_normal_fallback_count": 0,
+    "normal_finite_unit": true,
+    "linear_float_color_matches_source_srgb": true,
+    "positions_indices_unchanged": true,
+    "source_sha256_matches": true,
+    "material": [
+      {
+        "name": "processed_base_color",
+        "doubleSided": true,
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 0.0,
+          "roughnessFactor": 0.85
+        }
+      }
+    ]
+  },
+  {
+    "index": 5,
+    "run_id": "0d92b552-0f30-498a-a3f8-799fdc847b15",
+    "normal_count": 464762,
+    "zero_normal_fallback_count": 1,
+    "normal_finite_unit": true,
+    "linear_float_color_matches_source_srgb": true,
+    "positions_indices_unchanged": true,
+    "source_sha256_matches": true,
+    "material": [
+      {
+        "name": "processed_base_color",
+        "doubleSided": true,
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 0.0,
+          "roughnessFactor": 0.85
+        }
+      }
+    ]
+  },
+  {
+    "index": 6,
+    "run_id": "fec7619d-6430-4475-b01b-151279918646",
+    "normal_count": 46645,
+    "zero_normal_fallback_count": 0,
+    "normal_finite_unit": true,
+    "linear_float_color_matches_source_srgb": true,
+    "positions_indices_unchanged": true,
+    "source_sha256_matches": true,
+    "material": [
+      {
+        "name": "processed_base_color",
+        "doubleSided": true,
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 0.0,
+          "roughnessFactor": 0.85
+        }
+      }
+    ]
+  },
+  {
+    "index": 7,
+    "run_id": "da159af6-6cab-4cb6-8a69-28181d107418",
+    "normal_count": 473411,
+    "zero_normal_fallback_count": 0,
+    "normal_finite_unit": true,
+    "linear_float_color_matches_source_srgb": true,
+    "positions_indices_unchanged": true,
+    "source_sha256_matches": true,
+    "material": [
+      {
+        "name": "processed_base_color",
+        "doubleSided": true,
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "metallicFactor": 0.0,
+          "roughnessFactor": 0.85
+        }
+      }
+    ]
+  }
+]

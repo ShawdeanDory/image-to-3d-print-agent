@@ -1,0 +1,228 @@
+{
+  "scope": "first exported GLB versus final cloud inspection copy; native generation before first export is outside this comparison",
+  "results": [
+    {
+      "index": 1,
+      "run_id": "b614e847-21c6-4f4e-8b1b-282c21c7a12e",
+      "original_faces": 94088,
+      "copy_faces": 94035,
+      "removed_face_count": 53,
+      "max_vertex_displacement_after_inverse_scale": 2.1610248805985055e-08,
+      "tolerance_source_units": 2.0029040575027464e-06,
+      "all_copy_vertices_match_original": true,
+      "new_triangles_after_clean_scale": 0,
+      "removed_unique_triangles": 17,
+      "basic_clean_records": [
+        {
+          "duplicate_and_degenerate_faces_removed": 53,
+          "normals_repaired": true,
+          "scope": "preprocessing"
+        }
+      ],
+      "operations": [
+        "prepare_image",
+        "analyze_complexity",
+        "reconstruct",
+        "clean",
+        "scale",
+        "inspect",
+        "propose",
+        "export_original_glb"
+      ],
+      "no_simplify_operation": true,
+      "original_and_cloud_copy_source_sha256_match": true,
+      "conclusion": "positions preserved after inverse scale; final copy uses original triangles with only cleaning removals"
+    },
+    {
+      "index": 2,
+      "run_id": "9285b61d-4cb0-4956-9559-894aa98310e9",
+      "original_faces": 170510,
+      "copy_faces": 170506,
+      "removed_face_count": 4,
+      "max_vertex_displacement_after_inverse_scale": 3.4780510542443177e-08,
+      "tolerance_source_units": 1.9316125512123107e-06,
+      "all_copy_vertices_match_original": true,
+      "new_triangles_after_clean_scale": 0,
+      "removed_unique_triangles": 4,
+      "basic_clean_records": [
+        {
+          "duplicate_and_degenerate_faces_removed": 4,
+          "normals_repaired": true,
+          "scope": "preprocessing"
+        }
+      ],
+      "operations": [
+        "prepare_image",
+        "analyze_complexity",
+        "reconstruct",
+        "clean",
+        "scale",
+        "inspect",
+        "export_original_glb"
+      ],
+      "no_simplify_operation": true,
+      "original_and_cloud_copy_source_sha256_match": true,
+      "conclusion": "positions preserved after inverse scale; final copy uses original triangles with only cleaning removals"
+    },
+    {
+      "index": 3,
+      "run_id": "cdd10795-a8e8-44a5-874d-88a231c8f2c7",
+      "original_faces": 988685,
+      "copy_faces": 986650,
+      "removed_face_count": 2035,
+      "max_vertex_displacement_after_inverse_scale": 3.4017398715142996e-08,
+      "tolerance_source_units": 2.0009039640426635e-06,
+      "all_copy_vertices_match_original": true,
+      "new_triangles_after_clean_scale": 0,
+      "removed_unique_triangles": 15,
+      "basic_clean_records": [
+        {
+          "duplicate_and_degenerate_faces_removed": 2035,
+          "normals_repaired": true,
+          "scope": "preprocessing"
+        }
+      ],
+      "operations": [
+        "prepare_image",
+        "analyze_complexity",
+        "reconstruct",
+        "clean",
+        "scale",
+        "inspect",
+        "propose",
+        "export_original_glb"
+      ],
+      "no_simplify_operation": true,
+      "original_and_cloud_copy_source_sha256_match": true,
+      "conclusion": "positions preserved after inverse scale; final copy uses original triangles with only cleaning removals"
+    },
+    {
+      "index": 4,
+      "run_id": "e7caaaac-4207-489f-b125-a19fa024bd5e",
+      "original_faces": 976165,
+      "copy_faces": 975163,
+      "removed_face_count": 1002,
+      "max_vertex_displacement_after_inverse_scale": 3.645322220299085e-08,
+      "tolerance_source_units": 1.99496591091156e-06,
+      "all_copy_vertices_match_original": true,
+      "new_triangles_after_clean_scale": 0,
+      "removed_unique_triangles": 8,
+      "basic_clean_records": [
+        {
+          "duplicate_and_degenerate_faces_removed": 1002,
+          "normals_repaired": true,
+          "scope": "preprocessing"
+        }
+      ],
+      "operations": [
+        "prepare_image",
+        "analyze_complexity",
+        "reconstruct",
+        "clean",
+        "scale",
+        "inspect",
+        "propose",
+        "export_original_glb"
+      ],
+      "no_simplify_operation": true,
+      "original_and_cloud_copy_source_sha256_match": true,
+      "conclusion": "positions preserved after inverse scale; final copy uses original triangles with only cleaning removals"
+    },
+    {
+      "index": 5,
+      "run_id": "0d92b552-0f30-498a-a3f8-799fdc847b15",
+      "original_faces": 946568,
+      "copy_faces": 945883,
+      "removed_face_count": 685,
+      "max_vertex_displacement_after_inverse_scale": 3.558356336251821e-08,
+      "tolerance_source_units": 2.002931237220764e-06,
+      "all_copy_vertices_match_original": true,
+      "new_triangles_after_clean_scale": 0,
+      "removed_unique_triangles": 5,
+      "basic_clean_records": [
+        {
+          "duplicate_and_degenerate_faces_removed": 685,
+          "normals_repaired": true,
+          "scope": "preprocessing"
+        }
+      ],
+      "operations": [
+        "prepare_image",
+        "analyze_complexity",
+        "reconstruct",
+        "clean",
+        "scale",
+        "inspect",
+        "propose",
+        "export_original_glb"
+      ],
+      "no_simplify_operation": true,
+      "original_and_cloud_copy_source_sha256_match": true,
+      "conclusion": "positions preserved after inverse scale; final copy uses original triangles with only cleaning removals"
+    },
+    {
+      "index": 6,
+      "run_id": "fec7619d-6430-4475-b01b-151279918646",
+      "original_faces": 96822,
+      "copy_faces": 95821,
+      "removed_face_count": 1001,
+      "max_vertex_displacement_after_inverse_scale": 4.2346245466945953e-08,
+      "tolerance_source_units": 2.0027402639389038e-06,
+      "all_copy_vertices_match_original": true,
+      "new_triangles_after_clean_scale": 0,
+      "removed_unique_triangles": 8,
+      "basic_clean_records": [
+        {
+          "duplicate_and_degenerate_faces_removed": 1001,
+          "normals_repaired": true,
+          "scope": "preprocessing"
+        }
+      ],
+      "operations": [
+        "prepare_image",
+        "analyze_complexity",
+        "reconstruct",
+        "clean",
+        "scale",
+        "inspect",
+        "propose",
+        "export_original_glb"
+      ],
+      "no_simplify_operation": true,
+      "original_and_cloud_copy_source_sha256_match": true,
+      "conclusion": "positions preserved after inverse scale; final copy uses original triangles with only cleaning removals"
+    },
+    {
+      "index": 7,
+      "run_id": "da159af6-6cab-4cb6-8a69-28181d107418",
+      "original_faces": 997209,
+      "copy_faces": 992873,
+      "removed_face_count": 4336,
+      "max_vertex_displacement_after_inverse_scale": 3.382722266054468e-08,
+      "tolerance_source_units": 1.989472150802612e-06,
+      "all_copy_vertices_match_original": true,
+      "new_triangles_after_clean_scale": 0,
+      "removed_unique_triangles": 5,
+      "basic_clean_records": [
+        {
+          "duplicate_and_degenerate_faces_removed": 4336,
+          "normals_repaired": true,
+          "scope": "preprocessing"
+        }
+      ],
+      "operations": [
+        "prepare_image",
+        "analyze_complexity",
+        "reconstruct",
+        "clean",
+        "scale",
+        "inspect",
+        "propose",
+        "export_original_glb"
+      ],
+      "no_simplify_operation": true,
+      "original_and_cloud_copy_source_sha256_match": true,
+      "conclusion": "positions preserved after inverse scale; final copy uses original triangles with only cleaning removals"
+    }
+  ]
+}
