@@ -242,6 +242,13 @@
     "frontend": "6 passed; TypeScript/Vite build passed",
     "workflow": "52 passed,11 existing failed; unchanged failure set; 2 new policy tests passed"
   },
-  "manual_review": "pending",
-  "browser_new_task_test": "not_run"
+  "manual_review": "passed",
+  "browser_new_task_test": "not_run",
+  "manual_review_record": {
+    "date": "2026-10-25",
+    "origin": "human_user",
+    "statement": "已核对，本轮人工复核通过",
+    "scope": "本轮新增主要代码与结果；不代表打印认证或历史GLB待人工通过"
+  },
+  "implementation_commit": "f5da2f90895b75b38cba3040d9eb77731dc1aa8d"
 }
