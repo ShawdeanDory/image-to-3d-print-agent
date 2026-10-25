@@ -1,0 +1,19 @@
+{
+  "deployed": true,
+  "policy": "glb-preserve-v1",
+  "files": 9,
+  "task_count": 33,
+  "old_task_states_preserved": true,
+  "services_before": [],
+  "services_after": [],
+  "model_environment_cpu_imports": [
+    "triposr",
+    "trellis2_candidate"
+  ],
+  "model_runs": 0,
+  "llm_calls": 0,
+  "rebakes": 0,
+  "gpu_runs": 0,
+  "statistics_readback_followup_files": 2,
+  "final_linux_tests": "197 passed"
+}

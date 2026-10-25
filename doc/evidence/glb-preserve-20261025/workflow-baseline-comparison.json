@@ -1,0 +1,21 @@
+{
+  "baseline_failed_count": 11,
+  "current_failed_count": 11,
+  "new_failures": [],
+  "resolved_failures": [],
+  "baseline_result": "11 failed, 50 passed",
+  "current_result": "11 failed, 50 passed",
+  "failures": [
+    "tests/workflow/test_adaptive_mesh.py::test_old_policy_does_not_gain_new_analysis",
+    "tests/workflow/test_adaptive_mesh.py::test_simple_budget_applied_or_original_preserved[False]",
+    "tests/workflow/test_adaptive_mesh.py::test_simple_budget_applied_or_original_preserved[True]",
+    "tests/workflow/test_adaptive_mesh.py::test_simple_budget_applied_or_original_preserved[first]",
+    "tests/workflow/test_automatic_generation.py::test_false_print_label_and_legacy_print_success_are_rejected",
+    "tests/workflow/test_automatic_generation.py::test_hole_repair_has_automatic_origin_and_preserves_original",
+    "tests/workflow/test_automatic_generation.py::test_http_idempotency_refresh_and_cancel",
+    "tests/workflow/test_automatic_generation.py::test_missing_checker_remains_unknown_but_glb_is_delivered",
+    "tests/workflow/test_automatic_generation.py::test_one_submission_finishes_glb_even_when_print_check_fails[False]",
+    "tests/workflow/test_automatic_generation.py::test_one_submission_finishes_glb_even_when_print_check_fails[True]",
+    "tests/workflow/test_automatic_generation.py::test_two_ineffective_repairs_stop_and_deliver_glb"
+  ]
+}

@@ -4,6 +4,13 @@ from ..geometry.core import MeshStore,load_mesh
 from .pbr import write_processed_glb
 from ..tools import ToolFailure,ToolSession,digest
 
+def _read_mm(file):
+    from ..geometry.glb_preserve import GLBDocument
+    mesh=load_mesh(file)
+    if 'i3d' not in GLBDocument(file).tree.get('extras',{}):
+        mesh.vertices=(mesh.vertices*1000)@np.array([[1,0,0],[0,0,1],[0,-1,0]])
+    return mesh
+
 def _check_same_geometry(mesh,reread):
     from scipy.spatial import cKDTree
     tolerance=max(.01,float(mesh.extents.max())*1e-5)
@@ -53,8 +60,7 @@ def export_mesh(root,run,version,config=None):
         rotation=np.array([[1,0,0],[0,0,1],[0,-1,0]])
         glb=session.directory/'model.glb'
         appearance=write_processed_glb(root,run,version,mesh,glb,session,config)
-        stl_read=load_mesh(stl);glb_read=load_mesh(glb)
-        glb_read.vertices=(glb_read.vertices*1000)@rotation
+        stl_read=load_mesh(stl);glb_read=_read_mm(glb)
         _check_same_geometry(mesh,glb_read)
         tolerance=max(.01,float(mesh.extents.max())*1e-5)
         for loaded in [stl_read,glb_read]:
@@ -81,7 +87,7 @@ def export_preview(root,run,version,config=None):
         rotation=np.array([[1,0,0],[0,0,1],[0,-1,0]])
         glb=session.directory/'model.glb'
         appearance=write_processed_glb(root,run,version,mesh,glb,session,config)
-        reread=load_mesh(glb);reread.vertices=(reread.vertices*1000)@rotation
+        reread=_read_mm(glb)
         if not np.allclose(mesh.extents,reread.extents,atol=max(.01,float(mesh.extents.max())*1e-5),rtol=0):
             raise ToolFailure('INVALID_ARGUMENT','GLB独立重读尺寸不一致')
         _check_same_geometry(mesh,reread)

@@ -2,6 +2,25 @@
 import numpy as np
 
 
+def smooth_vertex_normals(mesh):
+    """查看法线有限且单位长度；退化/孤立点不改变几何。"""
+    normals=np.asarray(mesh.vertex_normals).copy()
+    invalid=~np.isfinite(normals).all(axis=1)|(np.linalg.norm(normals,axis=1)<1e-10)
+    if invalid.any():
+        faces=np.asarray(mesh.faces);face_normals=np.asarray(mesh.face_normals)
+        valid=np.isfinite(face_normals).all(axis=1)&(np.linalg.norm(face_normals,axis=1)>1e-10)
+        replacements=np.zeros_like(normals);replacements[faces[valid].reshape(-1)]=np.repeat(face_normals[valid],3,axis=0)
+        normals[invalid]=replacements[invalid]
+        remaining=np.linalg.norm(normals,axis=1)<1e-10
+        if remaining.any():
+            from scipy.spatial import cKDTree
+            good=~remaining
+            if good.any():normals[remaining]=normals[good][cKDTree(np.asarray(mesh.vertices)[good]).query(np.asarray(mesh.vertices)[remaining])[1]]
+            else:normals[:]=[0,0,1]
+    normals/=np.linalg.norm(normals,axis=1)[:,None]
+    return normals
+
+
 def vertex_colors(mesh):
     if mesh.visual.kind=='texture':
         visual=mesh.visual.to_color()
@@ -25,6 +44,7 @@ def transfer_vertex_colors(source,target):
 def export_base_color_glb(mesh):
     """处理PLY的sRGB底色按glTF线性顶点色导出，原始纹理材质不覆盖。"""
     from trimesh.exchange.gltf import export_glb
+    mesh=mesh.copy();mesh.vertex_normals=smooth_vertex_normals(mesh)
     if mesh.visual.kind not in {'vertex','face'}:
         return export_glb(mesh,include_normals=True)
 

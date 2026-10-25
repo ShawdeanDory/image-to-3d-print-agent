@@ -1,0 +1,215 @@
+{
+  "results": [
+    {
+      "index": 1,
+      "run": "b614e847-21c6-4f4e-8b1b-282c21c7a12e",
+      "messages": [
+        "加载完成",
+        "加载完成"
+      ],
+      "shading": [
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 64725,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ],
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 64568,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "run": "9285b61d-4cb0-4956-9559-894aa98310e9",
+      "messages": [
+        "加载完成",
+        "加载完成"
+      ],
+      "shading": [
+        [
+          {
+            "normalPresent": false,
+            "flatShading": true,
+            "vertexCount": 85419,
+            "baseColorMap": false,
+            "metalnessMap": false,
+            "roughnessMap": false
+          }
+        ],
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 85419,
+            "baseColorMap": false,
+            "metalnessMap": false,
+            "roughnessMap": false
+          }
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "run": "cdd10795-a8e8-44a5-874d-88a231c8f2c7",
+      "messages": [
+        "加载完成",
+        "加载完成"
+      ],
+      "shading": [
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 893206,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ],
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 887146,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "run": "e7caaaac-4207-489f-b125-a19fa024bd5e",
+      "messages": [
+        "加载完成",
+        "加载完成"
+      ],
+      "shading": [
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 797895,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ],
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 794900,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "run": "0d92b552-0f30-498a-a3f8-799fdc847b15",
+      "messages": [
+        "加载完成",
+        "加载完成"
+      ],
+      "shading": [
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 736023,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ],
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 734040,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "run": "fec7619d-6430-4475-b01b-151279918646",
+      "messages": [
+        "加载完成",
+        "加载完成"
+      ],
+      "shading": [
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 101241,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ],
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 98262,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "run": "da159af6-6cab-4cb6-8a69-28181d107418",
+      "messages": [
+        "加载完成",
+        "加载完成"
+      ],
+      "shading": [
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 988003,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ],
+        [
+          {
+            "normalPresent": true,
+            "flatShading": false,
+            "vertexCount": 975007,
+            "baseColorMap": true,
+            "metalnessMap": true,
+            "roughnessMap": true
+          }
+        ]
+      ]
+    }
+  ],
+  "errors": []
+}

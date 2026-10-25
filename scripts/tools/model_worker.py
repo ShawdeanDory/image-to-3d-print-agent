@@ -15,6 +15,7 @@ def main():
     parser.add_argument('--texture-size',type=int,default=None)
     parser.add_argument('--gpu-hole-repair',action='store_true')
     args=parser.parse_args()
+    sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src'))
     if args.export_target_faces is not None and not 100<=args.export_target_faces<=1000000:
         parser.error('export-target-faces必须在100～1000000之间')
     if args.texture_size is not None and not 256<=args.texture_size<=4096:
@@ -59,7 +60,8 @@ def main():
         with torch.inference_mode():
             codes=model([image],device='cuda:0');torch.cuda.synchronize();inferred=time.perf_counter()
             mesh=model.extract_mesh(codes,has_vertex_color=False,resolution=128)[0]
-        mesh.export(args.output/'raw_mesh.ply')
+        from image_to_3d_print.geometry.glb_preserve import write_plain_glb
+        write_plain_glb(mesh,args.output/'raw_mesh.glb','unitless')
         parameters={'mc_resolution':128,'chunk_size':2048,'foreground_ratio':.85,'background':'gray','coordinates':'native_z_up'}
     else:
         from trellis2.pipelines import Trellis2ImageTo3DPipeline
@@ -70,7 +72,8 @@ def main():
             output=model.run(prepared,seed=args.seed or 0,preprocess_image=False,pipeline_type='1024_cascade')[0]
         torch.cuda.synchronize();inferred=time.perf_counter()
         mesh=trimesh.Trimesh(vertices=output.vertices.detach().cpu().numpy(),faces=output.faces.detach().cpu().numpy(),process=False)
-        mesh.export(args.output/'raw_mesh.ply')
+        from image_to_3d_print.geometry.glb_preserve import write_plain_glb
+        write_plain_glb(mesh,args.output/'raw_mesh.glb','unitless')
         parameters={'pipeline_type':'1024_cascade','preprocessing':'official_alpha_crop_black_composite','coordinates':'native_z_up_no_glb_axis_conversion',
             'upstream_internal_processing':'pipeline decoding unchanged; no PBR video or postprocess.to_glb'}
     torch.cuda.synchronize()
@@ -144,8 +147,8 @@ def official_inference(args,source,torch,started):
             (output/'gpu_repair.json').write_text(json.dumps(gpu_reports,indent=2)+'\n',encoding='utf-8')
             if (output/'before_gpu_repair_0.ply').is_file():shutil.copyfile(output/'before_gpu_repair_0.ply',output/'before_gpu_repair.ply')
         shutil.copyfile(exported,output/'official_export.glb')
-        geometry=read_official_geometry(output/'official_export.glb',frame)
-        geometry.export(output/'raw_mesh.ply')
+        from image_to_3d_print.geometry.glb_preserve import prepare_inspection_glb
+        prepare_inspection_glb(output/'official_export.glb',output/'raw_mesh.glb',frame)
         with Image.open(args.input) as image:dimensions=list(image.size)
         report={'mode':args.mode,'backend':args.backend,'inference_profile':'official','seed':seed,'parameters':parameters,
             'official_entry':entry.name,'official_entry_sha256':hashlib.sha256(entry.read_bytes()).hexdigest(),
@@ -203,7 +206,8 @@ def course_fast_inference(args,source,torch,started):
     (output/'gpu_repair.json').write_text(json.dumps(gpu_reports,indent=2)+'\n',encoding='utf-8')
     glb.export(output/'fast_export.glb')
     exported=stamp();stages['geometry_uv_texture_export']=exported-native_written
-    geometry=read_official_geometry(output/'fast_export.glb','y_up');geometry.export(output/'raw_mesh.ply')
+    from image_to_3d_print.geometry.glb_preserve import prepare_inspection_glb
+    geometry=prepare_inspection_glb(output/'fast_export.glb',output/'raw_mesh.glb','y_up')
     finished=stamp();stages['independent_readback']=finished-exported;stages['total']=finished-started
     parameters={'pipeline_type':'1024_cascade','seed':42,'decimation_target':target_faces,'texture_size':texture_size,
         'export_target_source':'task_budget' if args.export_target_faces is not None else 'automatic_generation_ceiling',
@@ -212,10 +216,10 @@ def course_fast_inference(args,source,torch,started):
     report={'mode':args.mode,'backend':args.backend,'inference_profile':'course_fast','seed':42,'parameters':parameters,
         'official_entry':None,'upstream_library':'trellis2.pipelines + o_voxel.postprocess.to_glb',
         'official_export_frame':'y_up','geometry_frame':'z_up','geometry_source':'fast_export_readback',
-        'appearance':{'original':'pbr_glb','processed':'vertex_base_color_approximation'},
+        'appearance':{'original':'pbr_glb','processed':'original_uv_pbr_preserved'},
         'input_dimensions':dimensions,'additional_downsampling':False,'torch':torch.__version__,
         'cuda_runtime':torch.version.cuda,'device':torch.cuda.get_device_name(0),'input_file':args.input.name,
-        'seconds':stages,'face_count':len(geometry.faces),'vertex_count':len(geometry.vertices),
+        'seconds':stages,'face_count':geometry['face_count'],'vertex_count':geometry['vertex_count'],
         'gpu_boundary_repair':gpu_reports[0] if len(gpu_reports)==1 else None,
         'timing_scope':'CUDA synchronized, disjoint stages; UV/remesh/baking combined inside upstream to_glb; no video; process startup separately recorded',
         'peak_allocated_mib':torch.cuda.max_memory_allocated()/2**20,'peak_reserved_mib':torch.cuda.max_memory_reserved()/2**20}

@@ -121,7 +121,7 @@ class ReconstructionAdapter:
                 'input_asset_id':review.asset_id,'foreground_artifact_id':fg.artifact_id,'input_sha256':digest(input_path),'review':review.model_dump()},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
             script=Path(__file__).resolve().parents[3]/'scripts/tools/model_worker.py'
             execution=execute_worker(self.config,'reconstruct',input_path,session.directory,script,cancel_event)
-            raw=session.directory/'raw_mesh.ply'
+            raw=session.directory/'raw_mesh.glb'
             mesh=load_mesh(raw)
             metadata=json.loads((session.directory/'model.json').read_text(encoding='utf-8'))
             appearance={}
@@ -174,7 +174,14 @@ class ReconstructionAdapter:
             metadata=json.loads((file.parent/'model.json').read_text(encoding='utf-8'))
             if (previous.tool.run_id!=UUID(str(run_id)) or execution['exit_code']!=0 or execution['backend']!=self.config.backend
                 or execution['upstream_revision']!=REVISIONS[self.config.backend]):raise ToolFailure('STATE_CONFLICT','原执行未成功或版本不匹配')
-            raw=file.parent/'raw_mesh.ply';mesh=load_mesh(raw)
+            raw=file.parent/'raw_mesh.glb'
+            # 历史成功任务只有PLY时，使用已保存的原GLB恢复检查入口，不重跑模型。
+            if not raw.exists() and metadata.get('inference_profile') in {'official','course_fast'}:
+                from ..geometry.glb_preserve import prepare_inspection_glb
+                original=file.parent/('fast_export.glb' if metadata['inference_profile']=='course_fast' else 'official_export.glb')
+                prepare_inspection_glb(original,raw,metadata['official_export_frame'])
+            if not raw.exists():raw=file.parent/'raw_mesh.ply'
+            mesh=load_mesh(raw)
             appearance={}
             if metadata.get('inference_profile') in {'official','course_fast'}:
                 from ..artifacts.pbr import source_record

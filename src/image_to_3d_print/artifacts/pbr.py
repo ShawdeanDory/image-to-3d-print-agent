@@ -36,7 +36,15 @@ def _pbr_document(file):
 
 
 def write_processed_glb(root,run,version,mesh,file,session,config=None):
-    """历史独立处理导出仅保留顶点色；重烘焙入口已停用。"""
+    """GLB检查版本直接保留原材质导出；不重烘焙。"""
+    from pathlib import Path
+    from ..geometry.core import MeshStore
+    from ..geometry.glb_preserve import preserve_glb,display_matrix
+    source=MeshStore(root).get(run,version);path=Path(root)/source.relative_path
+    if path.suffix.lower()=='.glb':
+        facts=preserve_glb(path,mesh,file,logical_to_output=display_matrix(source.unit),unit=source.unit)
+        return {'policy_version':'glb-preserve-v1','status':facts['appearance'],'mesh_version':version,
+            'approximation':bool(facts['untextured_patch_faces']),'pbr_available':bool(facts['source_images_sha256']),**facts}
     from ..geometry.appearance import export_base_color_glb
     file.write_bytes(export_base_color_glb(_gltf_mesh(mesh)))
     return {'policy_version':'official-pbr-v1','status':'vertex_base_color','mesh_version':version,

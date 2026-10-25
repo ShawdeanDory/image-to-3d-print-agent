@@ -1,0 +1,218 @@
+{
+  "policy": "glb-preserve-v1",
+  "model_runs": 0,
+  "rebakes": 0,
+  "results": [
+    {
+      "index": 1,
+      "run_id": "b614e847-21c6-4f4e-8b1b-282c21c7a12e",
+      "file": "01_b614e847/inspection-pbr.glb",
+      "preservation": {
+        "policy": "glb-preserve-v1",
+        "retained_faces": 94035,
+        "new_patch_faces": 0,
+        "source_images_sha256": [
+          "c9f40c40710736e2836acb403383c86c1ac8ead0dfaf94eb07b691dc276eaa76",
+          "021888431961ac46ae4465e15c61d6b24affdf03ecae5aecb278eb3d30ace9a2"
+        ],
+        "uv_preserved": true,
+        "original_materials_preserved": true,
+        "texture_bytes_preserved": true,
+        "rebaked": false,
+        "appearance": "original_pbr"
+      },
+      "verification": {
+        "checked_face_count": 94035,
+        "geometry_unchanged": true,
+        "max_mm_error": 2.07369618745035e-05,
+        "uv_corner_material_pairs_match_original": true,
+        "materials_and_images_identical": true,
+        "image_sha256": [
+          "c9f40c40710736e2836acb403383c86c1ac8ead0dfaf94eb07b691dc276eaa76",
+          "021888431961ac46ae4465e15c61d6b24affdf03ecae5aecb278eb3d30ace9a2"
+        ],
+        "has_pbr_textures": true
+      }
+    },
+    {
+      "index": 2,
+      "run_id": "9285b61d-4cb0-4956-9559-894aa98310e9",
+      "file": "02_9285b61d/inspection-pbr.glb",
+      "preservation": {
+        "policy": "glb-preserve-v1",
+        "retained_faces": 170506,
+        "new_patch_faces": 0,
+        "source_images_sha256": [],
+        "uv_preserved": true,
+        "original_materials_preserved": true,
+        "texture_bytes_preserved": true,
+        "rebaked": false,
+        "appearance": "original_vertex_color"
+      },
+      "verification": {
+        "checked_face_count": 170506,
+        "geometry_unchanged": true,
+        "max_mm_error": 1.7069837883386736e-05,
+        "uv_corner_material_pairs_match_original": true,
+        "materials_and_images_identical": true,
+        "image_sha256": [],
+        "has_pbr_textures": false
+      }
+    },
+    {
+      "index": 3,
+      "run_id": "cdd10795-a8e8-44a5-874d-88a231c8f2c7",
+      "file": "03_cdd10795/inspection-pbr.glb",
+      "preservation": {
+        "policy": "glb-preserve-v1",
+        "retained_faces": 986650,
+        "new_patch_faces": 0,
+        "source_images_sha256": [
+          "a63334d85bdd9248d93ae48c0ebe088069231ff8ade5939d25674d5e663dee21",
+          "2faca742e2f543020d88ee151771b06acf0ac64f20b9e2127bd73461accceb1e"
+        ],
+        "uv_preserved": true,
+        "original_materials_preserved": true,
+        "texture_bytes_preserved": true,
+        "rebaked": false,
+        "appearance": "original_pbr"
+      },
+      "verification": {
+        "checked_face_count": 986650,
+        "geometry_unchanged": true,
+        "max_mm_error": 1.961563412812547e-05,
+        "uv_corner_material_pairs_match_original": true,
+        "materials_and_images_identical": true,
+        "image_sha256": [
+          "a63334d85bdd9248d93ae48c0ebe088069231ff8ade5939d25674d5e663dee21",
+          "2faca742e2f543020d88ee151771b06acf0ac64f20b9e2127bd73461accceb1e"
+        ],
+        "has_pbr_textures": true
+      }
+    },
+    {
+      "index": 4,
+      "run_id": "e7caaaac-4207-489f-b125-a19fa024bd5e",
+      "file": "04_e7caaaac/inspection-pbr.glb",
+      "preservation": {
+        "policy": "glb-preserve-v1",
+        "retained_faces": 975163,
+        "new_patch_faces": 0,
+        "source_images_sha256": [
+          "cfaf88a60de8b777a92c1b38e0cd4d0745b6a696b78d7e72e6e19c2c0ca80de4",
+          "3041eabd2c484194016323c0cca445bdef27c9fd5e02d96a19440f5bcd20af2b"
+        ],
+        "uv_preserved": true,
+        "original_materials_preserved": true,
+        "texture_bytes_preserved": true,
+        "rebaked": false,
+        "appearance": "original_pbr"
+      },
+      "verification": {
+        "checked_face_count": 975163,
+        "geometry_unchanged": true,
+        "max_mm_error": 3.5540365953450914e-05,
+        "uv_corner_material_pairs_match_original": true,
+        "materials_and_images_identical": true,
+        "image_sha256": [
+          "cfaf88a60de8b777a92c1b38e0cd4d0745b6a696b78d7e72e6e19c2c0ca80de4",
+          "3041eabd2c484194016323c0cca445bdef27c9fd5e02d96a19440f5bcd20af2b"
+        ],
+        "has_pbr_textures": true
+      }
+    },
+    {
+      "index": 5,
+      "run_id": "0d92b552-0f30-498a-a3f8-799fdc847b15",
+      "file": "05_0d92b552/inspection-pbr.glb",
+      "preservation": {
+        "policy": "glb-preserve-v1",
+        "retained_faces": 945883,
+        "new_patch_faces": 0,
+        "source_images_sha256": [
+          "034f622bbc20c07c2f0ac469b972c8d76372d9ae2738abe67e86fa80ff58d5d2",
+          "4590470ad70aa40061555f07c9bbffdb6e063d3018c5dfcbff0c69adeb2e08b1"
+        ],
+        "uv_preserved": true,
+        "original_materials_preserved": true,
+        "texture_bytes_preserved": true,
+        "rebaked": false,
+        "appearance": "original_pbr"
+      },
+      "verification": {
+        "checked_face_count": 945883,
+        "geometry_unchanged": true,
+        "max_mm_error": 6.238462564865866e-05,
+        "uv_corner_material_pairs_match_original": true,
+        "materials_and_images_identical": true,
+        "image_sha256": [
+          "034f622bbc20c07c2f0ac469b972c8d76372d9ae2738abe67e86fa80ff58d5d2",
+          "4590470ad70aa40061555f07c9bbffdb6e063d3018c5dfcbff0c69adeb2e08b1"
+        ],
+        "has_pbr_textures": true
+      }
+    },
+    {
+      "index": 6,
+      "run_id": "fec7619d-6430-4475-b01b-151279918646",
+      "file": "06_fec7619d/inspection-pbr.glb",
+      "preservation": {
+        "policy": "glb-preserve-v1",
+        "retained_faces": 95821,
+        "new_patch_faces": 0,
+        "source_images_sha256": [
+          "518fb32c10c89b78e8443f89ebb223936bfb5e55a30cd44a36d658e42dcaf70a",
+          "0752a8fc9955d5b1d2b8f72aa0a0d7a17e514fba4fc055bcbd13e743eb138ab7"
+        ],
+        "uv_preserved": true,
+        "original_materials_preserved": true,
+        "texture_bytes_preserved": true,
+        "rebaked": false,
+        "appearance": "original_pbr"
+      },
+      "verification": {
+        "checked_face_count": 95821,
+        "geometry_unchanged": true,
+        "max_mm_error": 4.131788644812343e-06,
+        "uv_corner_material_pairs_match_original": true,
+        "materials_and_images_identical": true,
+        "image_sha256": [
+          "518fb32c10c89b78e8443f89ebb223936bfb5e55a30cd44a36d658e42dcaf70a",
+          "0752a8fc9955d5b1d2b8f72aa0a0d7a17e514fba4fc055bcbd13e743eb138ab7"
+        ],
+        "has_pbr_textures": true
+      }
+    },
+    {
+      "index": 7,
+      "run_id": "da159af6-6cab-4cb6-8a69-28181d107418",
+      "file": "07_da159af6/inspection-pbr.glb",
+      "preservation": {
+        "policy": "glb-preserve-v1",
+        "retained_faces": 992873,
+        "new_patch_faces": 0,
+        "source_images_sha256": [
+          "ceb316facf1a5d69107ec00428a74a2d332ed81f406fb26274bcfea987c97186",
+          "c8a358211438a229a1f5e1ee30b1105aafb0cc763f5d15b7d4793ee710d4ea27"
+        ],
+        "uv_preserved": true,
+        "original_materials_preserved": true,
+        "texture_bytes_preserved": true,
+        "rebaked": false,
+        "appearance": "original_pbr"
+      },
+      "verification": {
+        "checked_face_count": 992873,
+        "geometry_unchanged": true,
+        "max_mm_error": 3.295317931386791e-05,
+        "uv_corner_material_pairs_match_original": true,
+        "materials_and_images_identical": true,
+        "image_sha256": [
+          "ceb316facf1a5d69107ec00428a74a2d332ed81f406fb26274bcfea987c97186",
+          "c8a358211438a229a1f5e1ee30b1105aafb0cc763f5d15b7d4793ee710d4ea27"
+        ],
+        "has_pbr_textures": true
+      }
+    }
+  ]
+}

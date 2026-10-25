@@ -27,6 +27,18 @@ class MeshVersion(ContractModel):
 def load_mesh(path):
     try:
         mesh=trimesh.load(path,force='mesh',process=False)
+        glb_colors=None
+        if Path(path).suffix.lower()=='.glb':
+            from .glb_preserve import GLBDocument
+            document=GLBDocument(path);mesh.apply_transform(document.logical_matrix)
+            # Trimesh遇到材质+COLOR_0可能只返回TextureVisuals，需明确读取顶点色。
+            if len(document.primitives)==1 and 'COLOR_0' in document.primitives[0]['attributes'] and not document.has_uv:
+                index=document.primitives[0]['attributes']['COLOR_0'];a=document.tree['accessors'][index]
+                rgba=document.accessor(index).astype(float)
+                if a.get('normalized'):rgba/=np.iinfo(document.accessor(index).dtype).max
+                if rgba.shape[1]==3:rgba=np.column_stack([rgba,np.ones(len(rgba))])
+                rgb=rgba[:,:3];rgba[:,:3]=np.where(rgb<=.0031308,rgb*12.92,1.055*np.maximum(rgb,0)**(1/2.4)-.055)
+                glb_colors=np.round(np.clip(rgba,0,1)*255).astype(np.uint8)
         v=np.asarray(mesh.vertices);f=np.asarray(mesh.faces)
         if (v.ndim!=2 or v.shape[1]!=3 or not len(v) or not np.isfinite(v).all()
             or f.ndim!=2 or f.shape[1]!=3 or not len(f) or f.min()<0 or f.max()>=len(v)):
@@ -35,7 +47,7 @@ def load_mesh(path):
         # 仅合并数值完全相同的顶点，消除STL每面重复顶点，不做近似焊接。
         unique,first,inverse=np.unique(v,axis=0,return_index=True,return_inverse=True)
         result=trimesh.Trimesh(vertices=unique,faces=inverse[f],process=False)
-        colors=vertex_colors(mesh)
+        colors=glb_colors if glb_colors is not None else vertex_colors(mesh)
         if colors is not None:result.visual.vertex_colors=colors[first]
         return result
     except (OSError,ValueError,AttributeError,TypeError,IndexError) as exc:
@@ -141,9 +153,27 @@ class MeshStore:
         if original_path:
             target=folder/('original'+Path(original_path).suffix.lower());shutil.copyfile(original_path,target)
         else:
-            target=folder/'mesh.ply';mesh.export(target)
+            from .glb_preserve import preserve_glb,write_plain_glb,display_matrix,GLBDocument
+            target=folder/'mesh.glb'
+            if parent:
+                previous=self.get(run,parent);source=self.root/previous.relative_path
+            else:source=None
+            parameters=dict(parameters or {})
+            if source is not None and source.suffix.lower()=='.glb':
+                doc=GLBDocument(source);matrix=doc.logical_matrix
+                if operation=='orient_scale_place':matrix=np.asarray(parameters['matrix'])@matrix
+                if operation!='simplify' or doc.has_uv or doc.tree.get('images'):
+                    appearance=preserve_glb(source,mesh,target,source_to_logical=matrix,
+                        logical_to_output=display_matrix(unit),unit=unit,allow_new_faces=True)
+                else:
+                    write_plain_glb(mesh,target,unit)
+                    appearance={'policy':'glb-preserve-v1','appearance':'vertex_color_or_plain','pbr_available':False}
+                parameters['glb_preservation']=appearance
+            else:
+                write_plain_glb(mesh,target,unit)
+                parameters['glb_preservation']={'policy':'glb-preserve-v1','appearance':'legacy_geometry_or_vertex_color','pbr_available':False}
             read=load_mesh(target)
-            if not np.allclose(mesh.extents,read.extents,atol=1e-5,rtol=1e-6):
+            if len(mesh.faces)!=len(read.faces) or not np.allclose(mesh.extents,read.extents,atol=1e-5,rtol=1e-6):
                 raise ToolFailure('INVALID_ARGUMENT','新网格独立读回尺寸不一致')
         record=MeshVersion(run_id=run,mesh_version=version,relative_path=target.relative_to(self.root).as_posix(),
             sha256=digest(target),unit=unit,parent=parent,operation=operation,parameters=parameters or {},repair_round=repair_round)

@@ -137,11 +137,13 @@ def propose(root,run,version,request:StructureRequest,config=None,*,adaptive_bud
     if 'after' not in changes:changes['after']=topology(preview)
     changes['requires_human_confirmation']=not adaptive_budget
     proposal_id='p_'+uuid4().hex[:24];folder=new_directory(root,f'runs/{UUID(str(run))}/proposals/{proposal_id}')
-    path=folder/'preview.ply';preview.export(path)
-    glb=folder/'preview.glb';visual=preview.copy()
-    visual.vertices=(visual.vertices@np.array([[1,0,0],[0,0,1],[0,-1,0]]).T)*(.001 if source.unit=='mm' else 1.)
-    from .appearance import export_base_color_glb
-    glb.write_bytes(export_base_color_glb(visual))
+    path=folder/'preview.glb';glb=path
+    from .glb_preserve import GLBDocument,preserve_glb,write_plain_glb,display_matrix
+    source_path=Path(root)/source.relative_path
+    document=GLBDocument(source_path) if source_path.suffix.lower()=='.glb' else None
+    if document is not None and (request.operation!='simplify' or document.has_uv or document.tree.get('images')):
+        changes['appearance']=preserve_glb(source_path,preview,path,logical_to_output=display_matrix(source.unit),unit=source.unit,allow_new_faces=True)
+    else:write_plain_glb(preview,path,source.unit)
     record=Proposal(proposal_id=proposal_id,run_id=run,source_version=version,source_sha256=source.sha256,request=request,
         preview_path=path.relative_to(Path(root).resolve()).as_posix(),preview_sha256=digest(path),
         preview_glb_path=glb.relative_to(Path(root).resolve()).as_posix(),preview_glb_sha256=digest(glb),changes=changes)

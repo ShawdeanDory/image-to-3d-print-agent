@@ -1,0 +1,38 @@
+{
+  "source_unchanged": true,
+  "model_runs": 0,
+  "llm_calls": 0,
+  "rebakes": 0,
+  "source_faces": 94088,
+  "final_faces": 94035,
+  "inspection_file_type": ".glb",
+  "intermediate_ply_files": 0,
+  "uv_material_texture_preserved": true,
+  "logical_dimensions_mm": [
+    332.27765560150146,
+    332.2770893573761,
+    100.00000149011612
+  ],
+  "blender_inspection_executed": true,
+  "print_verdict": "blocked",
+  "export_appearance": {
+    "policy_version": "glb-preserve-v1",
+    "status": "original_pbr",
+    "mesh_version": "m_ea690ac4d85f4fa78b3bc101",
+    "approximation": false,
+    "pbr_available": true,
+    "policy": "glb-preserve-v1",
+    "retained_faces": 94035,
+    "new_patch_faces": 0,
+    "untextured_patch_faces": 0,
+    "source_images_sha256": [
+      "c9f40c40710736e2836acb403383c86c1ac8ead0dfaf94eb07b691dc276eaa76",
+      "021888431961ac46ae4465e15c61d6b24affdf03ecae5aecb278eb3d30ace9a2"
+    ],
+    "uv_preserved": true,
+    "original_materials_preserved": true,
+    "texture_bytes_preserved": true,
+    "rebaked": false,
+    "appearance": "original_pbr"
+  }
+}
