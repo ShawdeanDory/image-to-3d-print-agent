@@ -1,6 +1,7 @@
 {
   "root": "/root/autodl-tmp/image-to-3d-print-agent/runs/agent-application",
   "default_backend": "trellis2_candidate",
+  "new_task_backends": ["trellis2_candidate"],
   "background_backend": "trellis2_candidate",
   "operator_name": "course_operator",
   "confirmation_origin": "human",
@@ -18,7 +19,8 @@
       },
       "trellis2_candidate": {
         "backend": "trellis2_candidate",
-        "inference_profile": "official",
+        "inference_profile": "course_fast",
+        "execution_mode": "resident",
         "timeout_s": 1200,
         "python": "/root/autodl-tmp/image-to-3d-print-agent/runtime/envs/trellis2/bin/python",
         "execution_root": "/root/autodl-tmp/image-to-3d-print-agent"

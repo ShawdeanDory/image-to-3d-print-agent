@@ -1,5 +1,14 @@
 # Bug与约定问题记录
 
+## RESIDENT-BUG-001：每任务重新加载及本轮固定验证
+
+- 基线dc549d4：execute_worker每次新建模型进程，course_fast_inference每次from_pretrained/cuda；历史99.152529秒仅为旧图加载准备，不当作本轮实测值。新配置失败回归先实际报execution_mode extra_forbidden。
+- 本轮加入worker拥有的Linux驻留进程、固定IPC和懒加载pipeline缓存，默认per_task保持；取消/超时/断连/父worker退出回收，不自动重试失败请求。新任务仅启用TRELLIS.2，旧幂等请求先返回原任务，避免部署策略变化破坏历史重试。
+- Windows首轮协议socketpair测试触发仓库离线防联网规则，未运行协议断言；改为内存帧读取fixture，真实SO_PEERCRED/Unix IPC只在Linux、只允许本轮/tmp/i3d-test-套接字验证，不放开公网或加载模型库。
+- 首次真实GPU比较：逐任务175.423秒有效，驻留首请求在加载前因Python3.10缺少hashlib.file_digest而退出；模型环境与backend的Python版本不同。保留gpu-benchmark失败产物，改为分块SHA256并增加缺少该API的回归，再用独立目录复测；不能把backend环境通过当成模型环境兼容通过。
+- Linux扩展回归初轮168通过/9失败，9项均缺验证包中的evals或既有scripts/p1、desktop_launcher文件；先保留linux-related.log，再补齐原样测试资料并重跑，不修改业务断言或放开网络。
+- 修订后同轮174.732/176.614/68.903秒真实通过，同模型加载1次；本机结果归档首次未设UTF-8造成GBK解码失败，启用PYTHONUTF8后归档，不改变原始实证。Linux177通过，11旧工作流失败集合保持，首次失败日志保留。
+
 ## GLB-BUG-008：检查中转丢UV/PBR及本轮兼容问题
 
 - 基线：原GLB经read_official_geometry抽成顶点底色、raw_mesh.ply和mesh.ply，UV接缝/材质/纹理未进入检查持久版本。预期磁盘版本保持GLB/UV/PBR，内存检查精确焊接位置，不能把UV接缝当作真实边界。

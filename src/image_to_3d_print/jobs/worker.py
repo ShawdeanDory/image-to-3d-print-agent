@@ -11,6 +11,7 @@ from .store import Store
 from .processes import SingleWorker, kill_tree, stop_owned_runner
 from ..workflow.state import save_context, fail
 from ..reports.quality import write_quality
+from .model_pool import ResidentModels
 
 
 class Worker:
@@ -18,6 +19,8 @@ class Worker:
         self.settings = settings.model_copy(update={'root': settings.root.resolve()})
         self.store = Store(self.settings.root)
         self.stopping = False
+        self.models = ResidentModels(self.settings)
+        self.settings = self.models.settings
 
     def recover_interrupted(self):
         with self.store.connect() as db:
@@ -38,6 +41,14 @@ class Worker:
     def run_once(self):
         row = self.store.claim()
         if row is None: return False
+        try:
+            self.models.ensure()
+        except (OSError, RuntimeError, ValueError):
+            ctx=row['context']
+            fail(ctx,'MODEL_NOT_CONFIGURED','驻留模型监听未就绪，本次任务停止、不自动重试')
+            write_quality(self.store,ctx)
+            save_context(self.store,ctx,'resident_unavailable')
+            return True
         run = row['run']
         remaining = self.settings.active_timeout_s - row['active_seconds']
         ctx = row['context']
@@ -69,11 +80,13 @@ class Worker:
                     elif time.perf_counter() - started >= remaining: reason = 'timeout'
                     elif current['context'].get('llm_deadline_monotonic', float('inf')) <= time.monotonic(): reason = 'llm_timeout'
                     if reason:
+                        self.models.stop()
                         kill_tree(process.pid)
                         process.wait(timeout=10)
                         break
                     time.sleep(.05)
             except BaseException:
+                self.models.stop()
                 kill_tree(process.pid)
                 process.wait(timeout=10)
                 raise
@@ -83,6 +96,7 @@ class Worker:
         row = self.store.row(run)
         ctx = row['context']
         if reason or process.returncode or row['status'] in {'running', 'cancel_requested'}:
+            self.models.stop()
             if reason == 'cancelled' or row['status'] == 'cancel_requested': ctx.update(status='cancelled', pending=None, error=None)
             elif reason == 'timeout': fail(ctx, 'TOOL_TIMEOUT', '任务累计活动时间超时，计算进程树已停止')
             elif reason == 'llm_timeout': fail(ctx, 'TOOL_TIMEOUT', '语言模型总请求超时，计算进程树已停止')
@@ -93,6 +107,8 @@ class Worker:
                 if ctx['llm']['records']: ctx['llm']['records'][-1]['status'] = 'interrupted_usage_unknown'
             write_quality(self.store, ctx)
             save_context(self.store, ctx, 'worker_stopped')
+        elif row['status'] in {'failed','cancelled'}:
+            self.models.stop()
         return True
 
     def queue_automatic_input_reviews(self):
@@ -108,12 +124,16 @@ class Worker:
 
     def serve(self, once=False):
         with SingleWorker(self.store.root):
-            self.recover_interrupted()
-            self.queue_automatic_input_reviews()
-            while not self.stopping:
-                worked = self.run_once()
-                if once: break
-                if not worked: time.sleep(.25)
+            try:
+                self.models.ensure()
+                self.recover_interrupted()
+                self.queue_automatic_input_reviews()
+                while not self.stopping:
+                    worked = self.run_once()
+                    if once: break
+                    if not worked: time.sleep(.25)
+            finally:
+                self.models.stop()
 
 
 def main():

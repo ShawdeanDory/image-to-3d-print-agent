@@ -27,6 +27,7 @@ class Settings(ContractModel):
     root: Path
     tools: ToolConfiguration = Field(default_factory=ToolConfiguration)
     default_backend: Backend | None = None
+    new_task_backends: list[Backend] | None = None
     background_backend: Backend | None = None
     profile_files: list[Path] = Field(default_factory=list)
     operator_name: Text = 'local_operator'

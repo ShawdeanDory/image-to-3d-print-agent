@@ -168,7 +168,7 @@ def official_inference(args,source,torch,started):
             TSR.extract_mesh=restore_extract
         os.chdir(previous_cwd);sys.argv=previous_argv
 
-def course_fast_inference(args,source,torch,started):
+def course_fast_inference(args,source,torch,started,*,pipeline_cache=None,resident_context=None):
     """同一官方库/权重的显式工程变体；不伪称未改example.py。"""
     from PIL import Image,ImageOps
     import trimesh
@@ -182,7 +182,14 @@ def course_fast_inference(args,source,torch,started):
     def stamp():
         torch.cuda.synchronize()
         return time.perf_counter()
-    pipeline=Trellis2ImageTo3DPipeline.from_pretrained('microsoft/TRELLIS.2-4B');pipeline.cuda()
+    reused=pipeline_cache is not None and pipeline_cache.get('pipeline') is not None
+    if reused:
+        pipeline=pipeline_cache['pipeline']
+    else:
+        pipeline=Trellis2ImageTo3DPipeline.from_pretrained('microsoft/TRELLIS.2-4B');pipeline.cuda()
+        if pipeline_cache is not None:
+            pipeline_cache['pipeline']=pipeline
+            pipeline_cache['weight_load_count']=pipeline_cache.get('weight_load_count',0)+1
     loaded=stamp();stages['load_and_prepare']=loaded-started
     with Image.open(args.input) as original:
         dimensions=list(original.size);image=ImageOps.exif_transpose(original).copy()
@@ -223,7 +230,10 @@ def course_fast_inference(args,source,torch,started):
         'gpu_boundary_repair':gpu_reports[0] if len(gpu_reports)==1 else None,
         'timing_scope':'CUDA synchronized, disjoint stages; UV/remesh/baking combined inside upstream to_glb; no video; process startup separately recorded',
         'peak_allocated_mib':torch.cuda.max_memory_allocated()/2**20,'peak_reserved_mib':torch.cuda.max_memory_reserved()/2**20}
+    if resident_context is not None:
+        report['resident']={**resident_context,'model_reused':reused,'weight_load_count':pipeline_cache['weight_load_count']}
     (output/'model.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
+    return report
 
 
 if __name__=='__main__':main()

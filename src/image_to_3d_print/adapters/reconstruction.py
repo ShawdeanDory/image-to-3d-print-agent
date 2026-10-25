@@ -33,9 +33,13 @@ class BackendConfig(ContractModel):
     export_target_faces: ExportTargetFaces|None=None
     texture_size: TextureSize|None=None
     gpu_hole_repair: StrictBool=False
+    execution_mode: Literal['per_task','resident']='per_task'
+    resident_socket: Path|None=None
 
     @model_validator(mode='after')
     def fixed_official_parameters(self):
+        if self.execution_mode=='resident' and (self.backend!='trellis2_candidate' or self.inference_profile!='course_fast'):
+            raise ValueError('驻留复用仅支持明确的TRELLIS.2快速入口')
         if (self.export_target_faces is not None or self.texture_size is not None) and self.inference_profile!='course_fast':
             raise ValueError('手动模型导出参数仅用于TRELLIS.2快速入口，不改写官方固定入口')
         if self.inference_profile=='course_fast' and self.backend!='trellis2_candidate':
@@ -56,6 +60,9 @@ def execute_worker(config,mode,input_path,output,script,cancel_event=None):
     entry='run.py' if config.backend=='triposr' else 'example.py'
     if config.inference_profile=='official' and subprocess.run(['git','-C',str(source),'diff','--quiet','HEAD','--',entry]).returncode:
         raise ToolFailure('MODEL_NOT_CONFIGURED','官方入口存在未提交修改，拒绝称为官方流程')
+    if mode=='reconstruct' and config.execution_mode=='resident':
+        from .resident import execute_resident
+        return execute_resident(config,input_path,output,revision,cancel_event)
     watchdog=shutil.which('timeout')
     if watchdog is None:raise ToolFailure('TOOL_UNAVAILABLE','Linux缺少工具超时守护程序')
     argv=[str(config.python),str(script),'--mode',mode,'--root',str(config.execution_root),'--backend',config.backend,

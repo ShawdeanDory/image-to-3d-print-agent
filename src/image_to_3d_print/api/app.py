@@ -36,7 +36,7 @@ def create_app(settings=None):
     @app.get('/api/v1/configuration')
     def configuration():
         return {'schema_version': 'runtime-v1', 'default_backend': settings.default_backend,
-            'configured_backends': list(settings.tools.backends), 'inspection_configured': settings.tools.inspection is not None,
+            'configured_backends': [name for name in settings.tools.backends if settings.new_task_backends is None or name in settings.new_task_backends], 'inspection_configured': settings.tools.inspection is not None,
             'llm_configured': settings.llm.configured, 'llm_model': settings.llm.model,
             'confirmation_origin': settings.confirmation_origin,
             'input_review_policy': settings.input_review_policy,
@@ -48,7 +48,7 @@ def create_app(settings=None):
             'export_options':{'policy_version':'export-options-v1','min_target_faces':100,'max_target_faces':1000000,
                 'default_target_faces':'automatic','min_texture_size':256,'max_texture_size':4096,'default_texture_size':2048},
             'preview_lighting':'official-forest-hdr-v1',
-            'backend_profiles':{name:['course_fast'] if name=='trellis2_candidate' and settings.workflow_policy=='automatic_glb' else ['official','course_fast'] if name=='trellis2_candidate' else ['official'] for name in settings.tools.backends},
+            'backend_profiles':{name:['course_fast'] if name=='trellis2_candidate' and settings.workflow_policy=='automatic_glb' else ['official','course_fast'] if name=='trellis2_candidate' else ['official'] for name in settings.tools.backends if settings.new_task_backends is None or name in settings.new_task_backends},
             'worker_concurrency': 1, 'active_timeout_s': settings.active_timeout_s,
             'max_tool_calls': settings.max_tool_calls, 'max_llm_calls': 4, 'max_llm_tokens': 12000}
 

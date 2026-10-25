@@ -1,0 +1,247 @@
+{
+  "task": "MID-RESIDENT-001",
+  "baseline_commit": "dc549d46e7a6fa82c87a29c1bfbe62ccb1b03d14",
+  "evidence_origin": "real_gpu_fixed_development_benchmark",
+  "gpu": "RTX4090D 24564MiB",
+  "model_revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+  "input_sha256": "1d6ac093c18648fc9568f58e310db3d1666d942cb0a2ea36b21be8384993f4ff",
+  "configuration": {
+    "pipeline_type": "1024_cascade",
+    "seed": 42,
+    "target_faces": 100000,
+    "texture_size": 2048,
+    "gpu_hole_repair": true
+  },
+  "trial_count": 3,
+  "not_a_statistical_speed_guarantee": true,
+  "new_llm_calls": 0,
+  "full_agent_or_print_test": false,
+  "cold_to_warm_reduction_percent": 60.5663856916011,
+  "trials": [
+    {
+      "label": "per_task_cold_baseline",
+      "run_id": "6d2d3473-3f27-4321-886e-a52000c7b0eb",
+      "caller_seconds": 174.73165863752365,
+      "readback": {
+        "faces": 99495,
+        "vertices": 49753,
+        "glb_bytes": 10666604
+      },
+      "gpu_after": "NVIDIA GeForce RTX 4090 D, 24564 MiB, 0 MiB, 0 %",
+      "seconds": {
+        "load_and_prepare": 103.2938438989222,
+        "preprocess": 1.3189736269414425,
+        "inference": 42.752605475485325,
+        "native_export": 0.9653293564915657,
+        "geometry_uv_texture_export": 22.216599132865667,
+        "independent_readback": 0.017371635884046555,
+        "total": 170.56472312659025
+      },
+      "resident": null,
+      "peak_allocated_mib": 5302.650390625,
+      "execution_scope": "per_task_process"
+    },
+    {
+      "label": "resident_first_cold",
+      "run_id": "1be795ea-b732-4d04-ba56-e90b84a57fdd",
+      "caller_seconds": 176.61387786269188,
+      "readback": {
+        "faces": 98921,
+        "vertices": 49466,
+        "glb_bytes": 10800472
+      },
+      "gpu_after": "NVIDIA GeForce RTX 4090 D, 24564 MiB, 465 MiB, 0 %",
+      "seconds": {
+        "load_and_prepare": 106.31124240532517,
+        "preprocess": 1.410320807248354,
+        "inference": 44.20880376920104,
+        "native_export": 0.9452928118407726,
+        "geometry_uv_texture_export": 23.427399091422558,
+        "independent_readback": 0.017191778868436813,
+        "total": 176.32025066390634
+      },
+      "resident": {
+        "instance_id": "dff16abf-1d0e-4a53-8c33-75dc6241b960",
+        "pid": 7130,
+        "request_index": 1,
+        "model_reused": false,
+        "weight_load_count": 1
+      },
+      "peak_allocated_mib": 5302.650390625,
+      "execution_scope": "resident_request"
+    },
+    {
+      "label": "resident_second_warm",
+      "run_id": "04fe2fbe-3549-4dcc-82d2-11032a8412b2",
+      "caller_seconds": 68.90300834178925,
+      "readback": {
+        "faces": 99391,
+        "vertices": 49701,
+        "glb_bytes": 11058296
+      },
+      "gpu_after": "NVIDIA GeForce RTX 4090 D, 24564 MiB, 465 MiB, 0 %",
+      "seconds": {
+        "load_and_prepare": 0.000469159334897995,
+        "preprocess": 0.7580756209790707,
+        "inference": 41.94077913835645,
+        "native_export": 1.004602037370205,
+        "geometry_uv_texture_export": 24.835611570626497,
+        "independent_readback": 0.016406230628490448,
+        "total": 68.55594375729561
+      },
+      "resident": {
+        "instance_id": "dff16abf-1d0e-4a53-8c33-75dc6241b960",
+        "pid": 7130,
+        "request_index": 2,
+        "model_reused": true,
+        "weight_load_count": 1
+      },
+      "peak_allocated_mib": 5302.650390625,
+      "execution_scope": "resident_request"
+    }
+  ],
+  "resident_idle_state": {
+    "protocol": "trellis-resident-v1",
+    "instance_id": "dff16abf-1d0e-4a53-8c33-75dc6241b960",
+    "pid": 7130,
+    "identity": "2935077136",
+    "owner_pid": 6015,
+    "phase": "idle_cached",
+    "request_index": 2,
+    "model_loaded": true,
+    "weight_load_count": 1,
+    "allocated_mib": 8.16943359375
+  },
+  "gpu_after_benchmark_stopped": "NVIDIA GeForce RTX 4090 D, 24564 MiB, 0 MiB, 0 %",
+  "verification": {
+    "readback": [
+      {
+        "label": "per_task_cold_baseline",
+        "faces": 99495,
+        "finite_coordinates_uv_and_valid_indices": true,
+        "pbr_basecolor_metallic_roughness": true,
+        "inspection_keeps_original_materials_and_texture_bytes": true,
+        "textures": [
+          {
+            "size": [
+              2048,
+              2048
+            ],
+            "mode": "RGBA"
+          },
+          {
+            "size": [
+              2048,
+              2048
+            ],
+            "mode": "RGB"
+          }
+        ],
+        "backend_input_sha256": "26b6d69a052184fd92bd770f75b66fa60ee82f37a7ec9a3eefa38868610e83e2",
+        "glb_sha256": "2be837d5728130cf67c2b7f39be2a3f14705ec5202ef18490c5d39974b90256b"
+      },
+      {
+        "label": "resident_first_cold",
+        "faces": 98921,
+        "finite_coordinates_uv_and_valid_indices": true,
+        "pbr_basecolor_metallic_roughness": true,
+        "inspection_keeps_original_materials_and_texture_bytes": true,
+        "textures": [
+          {
+            "size": [
+              2048,
+              2048
+            ],
+            "mode": "RGBA"
+          },
+          {
+            "size": [
+              2048,
+              2048
+            ],
+            "mode": "RGB"
+          }
+        ],
+        "backend_input_sha256": "26b6d69a052184fd92bd770f75b66fa60ee82f37a7ec9a3eefa38868610e83e2",
+        "glb_sha256": "f4219b613890300807e846d46cafcb2101cf8a1cf29a66483fc71d5efc661787"
+      },
+      {
+        "label": "resident_second_warm",
+        "faces": 99391,
+        "finite_coordinates_uv_and_valid_indices": true,
+        "pbr_basecolor_metallic_roughness": true,
+        "inspection_keeps_original_materials_and_texture_bytes": true,
+        "textures": [
+          {
+            "size": [
+              2048,
+              2048
+            ],
+            "mode": "RGBA"
+          },
+          {
+            "size": [
+              2048,
+              2048
+            ],
+            "mode": "RGB"
+          }
+        ],
+        "backend_input_sha256": "26b6d69a052184fd92bd770f75b66fa60ee82f37a7ec9a3eefa38868610e83e2",
+        "glb_sha256": "c339fdb9f18888ed95a1d9c7ae5ee97fcd3250f916a561cac7752685b84a506f"
+      }
+    ],
+    "configuration_backends": [
+      "trellis2_candidate"
+    ],
+    "production_resident_listeners": [
+      {
+        "protocol": "trellis-resident-v1",
+        "instance_id": "ec2a2f1b-4446-46a8-b4f1-029be1b56179",
+        "pid": 8309,
+        "identity": "2935105372",
+        "owner_pid": 8174,
+        "phase": "waiting_for_first_request",
+        "request_index": 0,
+        "model_loaded": false
+      }
+    ],
+    "production_statuses_unchanged": true,
+    "task_count": 33,
+    "statuses": {
+      "waiting_for_input": 3,
+      "cancelled": 9,
+      "failed": 1,
+      "succeeded": 20
+    },
+    "new_llm_calls": 0,
+    "new_production_tasks": 0
+  },
+  "deployment": {
+    "deployment_files": 11,
+    "task_count": 33,
+    "task_statuses_unchanged": true,
+    "statuses": {
+      "waiting_for_input": 3,
+      "cancelled": 9,
+      "failed": 1,
+      "succeeded": 20
+    },
+    "new_task_backends": [
+      "trellis2_candidate"
+    ],
+    "resident_enabled": true,
+    "backup": "production-before",
+    "new_llm_calls": 0,
+    "new_production_tasks": 0
+  },
+  "fixed_checks": {
+    "windows_related": "167 passed,10 skipped",
+    "linux_related": "177 passed",
+    "windows_measurement_evaluation_and_focused": "37 passed,1 skipped",
+    "frontend": "6 passed; TypeScript/Vite build passed",
+    "workflow": "52 passed,11 existing failed; unchanged failure set; 2 new policy tests passed"
+  },
+  "manual_review": "pending",
+  "browser_new_task_test": "not_run"
+}

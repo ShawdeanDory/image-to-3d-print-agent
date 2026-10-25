@@ -40,6 +40,18 @@ class TaskService:
     def create(self, body, key=None):
         create = body if isinstance(body, CreateTask) else CreateTask(request=body)
         req = create.request
+        create_body=create.model_dump(mode='json')
+        for name in ('reconstruction_profile','export_target_faces','texture_size'):
+            if getattr(create,name) is None:create_body.pop(name,None)
+        if key:
+            with self.store.connect() as db:
+                previous=db.execute('SELECT run,create_body FROM tasks WHERE create_key=?',(key,)).fetchone()
+                if previous:
+                    if previous['create_body']!=dumps(create_body):
+                        raise ToolFailure('STATE_CONFLICT','同一创建幂等键已用于不同请求')
+                    return self.store.row(previous['run'],db)['response']
+        if self.settings.new_task_backends is not None and (create.backend or self.settings.default_backend) not in self.settings.new_task_backends:
+            raise ToolFailure('MODEL_NOT_CONFIGURED','新任务仅启用当前配置的TRELLIS.2后端；旧任务保持原后端')
         automatic=self.settings.workflow_policy=='automatic_glb'
         if not automatic and (create.export_target_faces is not None or create.texture_size is not None):
             raise ToolFailure('INVALID_ARGUMENT','手动导出参数仅支持一次提交的自动GLB任务')
@@ -73,9 +85,6 @@ class TaskService:
         if automatic and ctx['backend']=='trellis2_candidate':ctx['reconstruction_profile']='course_fast'
         ctx['evidence_origin'] = 'test_fixture' if self.settings.confirmation_origin == 'test_fixture' else 'runtime'
         if measurements: self.measurement(ctx, req.scale_evidence_id)
-        create_body=create.model_dump(mode='json')
-        for name in ('reconstruction_profile','export_target_faces','texture_size'):
-            if getattr(create,name) is None:create_body.pop(name,None)
         return self.store.create(ctx, response_for(ctx), create_body, key)['response']
 
     def validate_input(self, ctx, body):
