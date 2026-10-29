@@ -5,6 +5,7 @@ import {artifactGroups,deliveryModel,checkLabel,checkNames,checkMeasure,display,
 import PendingForm,{AxisSelect} from './PendingForm';
 import ModelView from './ModelView';
 import ResultPreview from './ResultPreview';
+import PrintSummary from './PrintSummary';
 import ReconstructionTiming from './ReconstructionTiming';
 import MeshBudgetInfo from './MeshBudgetInfo';
 import MaterialInfo from './MaterialInfo';
@@ -120,6 +121,7 @@ export default function App(){
     {response.status==='succeeded'&&active&&<section className="sheet"><h2>生成GLB已可下载</h2><p>{original?'历史任务保留原始文件，未应用检查副本的定标和修复。':'交付最佳有效的定标、复检版本，原始文件在下方另行下载。'}下载不代表可打印。</p>{delivery&&<p>自动修复尝试{delivery.repair_attempts??0}轮。</p>}{delivery?.warnings?.map((warning,index)=><p className="muted" key={index}>{warning}</p>)}<DeliveryDownloads busy={busy} stlAvailable={stlAvailable} onGLB={()=>void act(()=>downloadFile(active,`${original?'original':'repaired'}-${run}.glb`))} onSTL={()=>void act(downloadSTLFile)}/><p className="muted">STL不包含颜色，按当前交付几何以毫米导出，不会额外补洞。{!stlAvailable&&(original?'历史原始无单位GLB暂不支持STL下载。':'计算服务尚未提供同版本STL下载，请核对连接和服务更新。')}</p></section>}
     {task.pending&&response.schema_version==='1.0.0'&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>{original?'检查副本的打印报告':'交付版本的打印报告'}</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>
+    {!original&&active&&response.data.inspection?.mesh_version===active.mesh_version&&response.data.inspection&&<PrintSummary inspection={response.data.inspection} profile={response.data.printer_profile}/>}
     {response.error&&<p className="error" role="alert"><strong>{response.error.code}</strong>：{response.error.message}</p>}
     {response.data.inspection?<div className="table-scroll"><table><thead><tr><th>检查项</th><th>状态</th><th>实际值</th><th>阈值 / 原因</th></tr></thead><tbody>{(response.data.inspection.checks??[]).map(c=><tr key={c.name}><td>{checkNames[c.name]||c.name}</td><td><span className={'check-status '+c.status}>{checkLabel(c.status)}</span></td><td>{c.status==='not_run'?'未知':checkMeasure(c.name,c.value,c.unit)}</td><td>{c.status==='not_run'?display(c.details?.reason):checkMeasure(c.name,c.threshold,c.unit,true)}</td></tr>)}</tbody></table></div>:<p className="empty">打印检查尚未执行。</p>}
     <h3>本任务文件</h3><div className="downloads">{groups.files.map(a=><button key={a.artifact_id} disabled={busy} onClick={()=>void act(()=>downloadFile(a,a.relative_path))}>{fileLabel(a)}<small>{a.mesh_version||'输入/任务'} · {a.relative_path.split('/').at(-1)}</small><span>↓</span></button>)}</div>{!groups.files.length&&<p className="empty">暂无已登记产物</p>}</section>

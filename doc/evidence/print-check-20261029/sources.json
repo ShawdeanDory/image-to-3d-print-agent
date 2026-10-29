@@ -1,0 +1,14 @@
+{
+  "read_date": "2026-10-29",
+  "sources": [
+    {"purpose":"weight and thickness formulas","url":"https://tiny-online.tools/assets/tool-DAWXtxND.js","bytes":6223,"sha256":"766836c7a01047ef6ec53e02217c98f25fd5bd42eb984f791f7b042c713df8b3","findings":["PLA density default 1.24 g/cm3","mass = mesh_volume_cm3 * density, no infill/shell/support factor","global thickness = 2 * volume / area","layers = ceil(height / layer_height)"]},
+    {"purpose":"repair tool orchestration","url":"https://tiny-online.tools/assets/tool-Cz_NeWhH.js","bytes":5863,"sha256":"3ff03c6f6b89a6c3b667357c5b092e978bd00c19b51be05b30d1985dfaa31803","findings":["weld/degenerate/duplicate/fill/winding options","optional Meshopt simplification","STL output, no GLB PBR preservation"]},
+    {"purpose":"boundary filling implementation","url":"https://tiny-online.tools/assets/analyze-CsvaZAqZ.js","bytes":7868,"sha256":"5d433e52fc3f4b586a69f2af38a7be1f877959b26b0eeb186c452d8374b3899c","findings":["mean boundary vertex centroid","triangle fan fill","actual implementation fills before winding unification"]},
+    {"purpose":"mesh volume and area computation","url":"https://tiny-online.tools/assets/stats-tcyQnrMI.js","bytes":5613,"sha256":"e497ede20dfc76170c93fb74a8d7f9e3ae5ea6b823c59ba0f54f24d8295d6cbd","findings":["absolute signed tetrahedral sum for volume","sum of triangle area"]},
+    {"purpose":"slicer infill interpretation","url":"https://help.prusa3d.com/article/infill_42"}
+  ],
+  "third_party_source_code_redistributed": false,
+  "user_model_selected_on_third_party_website": false,
+  "online_repair_tool_executed": false,
+  "local_candidate": "independent mathematical implementation, not exact website reproduction"
+}

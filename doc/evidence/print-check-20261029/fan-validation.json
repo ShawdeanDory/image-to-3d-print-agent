@@ -1,0 +1,83 @@
+{
+  "source_sha256": "5fc79ff954274bc20cbe801d53593248010c57e8e5e06007d55040c34a0657d9",
+  "source_unchanged": true,
+  "platform": "Windows_CPU_Blender_4.5.14",
+  "method": {
+    "method": "boundary_centroid_fan_experiment_v1",
+    "filled_loops": 7,
+    "loop_vertices": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "added_faces": 21,
+    "original_vertices_and_faces_preserved": true,
+    "production_approved": false,
+    "requires": [
+      "self_intersection",
+      "wall_thickness",
+      "normals",
+      "watertight",
+      "non_manifold",
+      "shape_review"
+    ]
+  },
+  "records": {
+    "original": {
+      "topology": {
+        "vertex_count": 4757,
+        "face_count": 9499,
+        "component_count": 2,
+        "watertight": false,
+        "normals_consistent": true,
+        "boundary_edge_count": 21,
+        "non_manifold_edge_count": 0,
+        "non_manifold_vertex_count": 0,
+        "non_manifold_vertices": [],
+        "dimensions": [
+          151.22364044189453,
+          119.44124984741211,
+          120.0
+        ],
+        "volume": null
+      },
+      "self_intersection_faces": 365,
+      "thin_faces_low": 9456,
+      "thin_faces_high": 9456,
+      "overhang_faces": 1186,
+      "blender_version": "4.5.14"
+    },
+    "candidate": {
+      "topology": {
+        "vertex_count": 4764,
+        "face_count": 9520,
+        "component_count": 2,
+        "watertight": true,
+        "normals_consistent": true,
+        "boundary_edge_count": 0,
+        "non_manifold_edge_count": 0,
+        "non_manifold_vertex_count": 0,
+        "non_manifold_vertices": [],
+        "dimensions": [
+          151.22364044189453,
+          119.44124984741211,
+          120.0
+        ],
+        "volume": 1614414.2875007228
+      },
+      "self_intersection_faces": 365,
+      "thin_faces_low": 9459,
+      "thin_faces_high": 9459,
+      "overhang_faces": 1189,
+      "blender_version": "4.5.14"
+    }
+  },
+  "geometry_gate_passed": false,
+  "production_integrated": false,
+  "print_certified": false,
+  "relative_extents_change_percent": 0.0
+}

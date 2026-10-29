@@ -1,0 +1,63 @@
+{
+  "task": "MID-CHECK-001",
+  "date": "2026-10-29",
+  "baseline_commit": "1e55f12c111e9195cb5db622b99e905c259d68ab",
+  "source_run_id": "123a6686-eb9c-42af-b917-9f8515f0422f",
+  "source_mesh_version": "m_0d802a61e59646979ddb886d",
+  "source_stl_sha256": "5fc79ff954274bc20cbe801d53593248010c57e8e5e06007d55040c34a0657d9",
+  "source_glb_sha256": "3758fd792c6ce85c43d98e194be34839263913863ca1fb3736dfe0b82feb6f9a",
+  "diagnostic": "local-diagnostic.json",
+  "external_source_notes": "sources.json",
+  "reproduced_external_numbers": {
+    "unreliable_algebraic_volume_cm3": 1614.414287499114,
+    "solid_pla_grams": 2001.8737164989013,
+    "global_2V_A_mm": 29.190895446736757
+  },
+  "candidate": {
+    "evidence": "fan-validation.json",
+    "method": "independent boundary centroid fan",
+    "holes_filled": 7,
+    "faces_before": 9499,
+    "faces_after": 9520,
+    "boundary_before": 21,
+    "boundary_after": 0,
+    "self_intersection_faces_before": 365,
+    "self_intersection_faces_after": 365,
+    "component_count_after": 2,
+    "thin_faces_low_after": 9459,
+    "geometry_gate_passed": false,
+    "production_integrated": false,
+    "print_certified": false,
+    "source_unchanged": true
+  },
+  "checks_ui": {
+    "policy": "print-summary-v1",
+    "same_version_required": true,
+    "safely_gated_solid_mass": true,
+    "actual_slicer_consumption": "unknown_until_slicing",
+    "wall_thickness": "local_sampling_not_global_2V_A",
+    "layer_count": "nominal_not_slicer_toolpath_layers"
+  },
+  "validation": {
+    "new_python_focused_passed": 4,
+    "full_python_passed": 300,
+    "full_python_skipped": 14,
+    "full_python_warnings": 2,
+    "full_python_seconds": 93.76,
+    "frontend_passed": 21,
+    "typecheck": "passed",
+    "build": "passed_existing_chunk_size_warning",
+    "browser": "local_saved_real_task_replay_not_live_cloud",
+    "replay_banner": "本机历史任务回放 · 已保存真实报告 · 非实时计算服务 · 不运行新任务",
+    "cloud_or_gpu_calls": "not_run",
+    "new_model_or_llm_calls": "not_run",
+    "new_slicing_or_physical_print": "not_run",
+    "human_review": {
+      "status": "passed",
+      "date": "2026-10-29",
+      "statement": "已核对，本轮人工复核通过"
+    }
+  },
+  "original_files_uv_pbr_and_production_workflow": "unchanged",
+  "full_local_evidence": "runs/tiny-check-20261029-01"
+}
