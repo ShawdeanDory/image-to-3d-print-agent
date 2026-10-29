@@ -4,6 +4,7 @@ import {api,ApiError,artifactBlob,download,downloadSTL,setAccessToken,transferLa
 import {artifactGroups,deliveryModel,checkLabel,checkNames,checkMeasure,display,heightNumber,id,mergeEvents,stageNames,statusNames,validateImage} from './domain';
 import PendingForm,{AxisSelect} from './PendingForm';
 import ModelView from './ModelView';
+import ResultPreview from './ResultPreview';
 import ReconstructionTiming from './ReconstructionTiming';
 import MeshBudgetInfo from './MeshBudgetInfo';
 import MaterialInfo from './MaterialInfo';
@@ -107,7 +108,7 @@ export default function App(){
   {task&&response&&<div className="workspace task-workspace"><div className="main-column">
     <section className="sheet model-sheet"><div className="section-title"><div><span className="eyebrow">模型与版本</span><h2>查看本次产物</h2></div><span className="muted">原始版本始终保留</span></div>
       {active&&!original&&<p role="status" className={delivery?.print_check==='passed'?'notice':'notice error'}><strong>{printNotice(delivery?.print_check,response.data.inspection?.checks??[])}</strong></p>}
-      {deliveryError&&<p role="alert" className="error">{deliveryError}</p>}{active?<div className="model-single"><ModelView run={run} artifact={active} frame={task.artifact_frames?.[active.artifact_id]}/></div>:<div className="empty-model"><span>◎</span><h3>模型将在后台处理完成后显示</h3><p>当前{statusNames[response.status]}，等待服务端登记本任务交付GLB。</p></div>}
+      {deliveryError&&<p role="alert" className="error">{deliveryError}</p>}{active?<div className="model-single">{response.status==='succeeded'?<ResultPreview run={run} artifact={active} frame={task.artifact_frames?.[active.artifact_id]} stlAvailable={stlAvailable} dimensionsMm={!original&&response.data.inspection?.mesh_version===active.mesh_version?response.data.inspection?.dimensions_mm:null}/>:<ModelView run={run} artifact={active} frame={task.artifact_frames?.[active.artifact_id]}/>}</div>:<div className="empty-model"><span>◎</span><h3>模型将在后台处理完成后显示</h3><p>当前{statusNames[response.status]}，等待服务端登记本任务交付GLB。</p></div>}
       {active&&<p className="muted">{original?'历史任务原始GLB：未应用检查副本的定标和修复。':'交付GLB：已按目标尺度定标并复检，保留已有UV/PBR，不重烘焙。'}网格版本：{active.mesh_version}</p>}
       {response.data.inspection?.dimensions_mm&&<div className="dimensions"><span>{original?'检查副本尺寸（原始GLB未应用）':'交付版本检查尺寸'}</span><strong>{response.data.inspection.dimensions_mm.map(n=>n.toFixed(2)).join(' × ')}<small>mm</small></strong><span>网格：{response.data.inspection.mesh_version}</span></div>}
       <ArtifactImages run={run} artifacts={(response.artifacts??[]).filter(a=>['input_image','foreground_image'].includes(a.kind)||a.artifact_id===task.pending?.details?.preview_artifact_id)}/>

@@ -95,7 +95,10 @@ export async function download(run: string, id: string, name: string, options:Ar
   saveBlob(await artifactBlob(run,id,options),name);
 }
 export async function downloadSTL(run:string,version:string,options:ArtifactTransferOptions={}){
-  saveBlob(await fileBlob(`${taskUrl(run)}/delivery.stl?mesh_version=${encodeURIComponent(version)}`,options),`candidate-${run}.stl`);
+  saveBlob(await deliverySTLBlob(run,version,options),`candidate-${run}.stl`);
+}
+export function deliverySTLBlob(run:string,version:string,options:ArtifactTransferOptions={}){
+  return fileBlob(`${taskUrl(run)}/delivery.stl?mesh_version=${encodeURIComponent(version)}`,options);
 }
 function saveBlob(blob:Blob,name:string){
   const url=URL.createObjectURL(blob);
