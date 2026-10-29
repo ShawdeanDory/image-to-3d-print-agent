@@ -1,0 +1,205 @@
+{
+  "date": "2026-10-29",
+  "task": "MID-PRINT-001",
+  "source": "已有TRELLIS.2开发鸭图的真实生成GLB，不是本轮新推理",
+  "mesh_version": "m_c81815a56927427e852a890a",
+  "dimensions_mm": [
+    151.4071747660637,
+    120.1726384460926,
+    119.99999731779099
+  ],
+  "faces": 166738,
+  "repair_attempts": 2,
+  "checks": [
+    {
+      "name": "finite_coordinates",
+      "status": "pass",
+      "value": true,
+      "threshold": null,
+      "unit": null
+    },
+    {
+      "name": "components",
+      "status": "pass",
+      "value": 1,
+      "threshold": 1,
+      "unit": "count"
+    },
+    {
+      "name": "boundary_edges",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0,
+      "unit": null
+    },
+    {
+      "name": "non_manifold_edges",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0,
+      "unit": null
+    },
+    {
+      "name": "non_manifold_vertices",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0,
+      "unit": null
+    },
+    {
+      "name": "watertight",
+      "status": "pass",
+      "value": true,
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "name": "normals",
+      "status": "pass",
+      "value": true,
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "name": "self_intersection",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0,
+      "unit": null
+    },
+    {
+      "name": "wall_thickness",
+      "status": "pass",
+      "value": 1.2,
+      "threshold": 1.2,
+      "unit": "mm"
+    },
+    {
+      "name": "overhang",
+      "status": "warn",
+      "value": 25983,
+      "threshold": 45.0,
+      "unit": "degree"
+    },
+    {
+      "name": "dimensions",
+      "status": "pass",
+      "value": 2.682209014892578e-06,
+      "threshold": 1.2,
+      "unit": "mm"
+    },
+    {
+      "name": "build_volume",
+      "status": "pass",
+      "value": true,
+      "threshold": [
+        220.0,
+        220.0,
+        250.0
+      ],
+      "unit": "mm"
+    },
+    {
+      "name": "bed_contact",
+      "status": "pass",
+      "value": true,
+      "threshold": 0.01,
+      "unit": "mm"
+    }
+  ],
+  "shape": {
+    "three_view_iou": [
+      0.9836329095425983,
+      0.9912497495157304,
+      0.974550682961898
+    ],
+    "max_relative_dimension_change": 0.004031985131961405,
+    "accepted": true,
+    "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差"
+  },
+  "original_unchanged": true,
+  "source_sha256": "c339fdb9f18888ed95a1d9c7ae5ee97fcd3250f916a561cac7752685b84a506f",
+  "rebaked": false,
+  "appearance": "打印副本不含原UV/PBR；原始彩色GLB另存",
+  "slicing": {
+    "slicer": "PrusaSlicer2.9.6",
+    "execution_machine": "local_windows",
+    "run_id": "09e75a8f-7a0b-4924-9c40-f7d7515d1f24",
+    "mesh_version": "m_c81815a56927427e852a890a",
+    "stl_sha256": "12b14971ae8c0df360cc21e9a8c918a1bfffbda8768daa2a0f3a7db80dd8eefc",
+    "profile_sha256": "f069457e60bcfa606316c367f2ba54b1993d7290f1650cf2c83bd811048b59f1",
+    "profile_kind": "demo",
+    "returncode": 0,
+    "seconds": 5.151582999998936,
+    "supports_enabled": true,
+    "physical_print": false,
+    "passed": true,
+    "layers": 672,
+    "first_z_mm": 0.2,
+    "last_z_mm": 120.0,
+    "has_extrusion_moves": true,
+    "gcode_bytes": 20727051,
+    "gcode_sha256": "65c6dfd8cf6fe305b1fa023a2c666d6fef87013f6768450aceeabc7cda43f901",
+    "material_estimate": [
+      "; filament used [mm] = 83586.60",
+      "; filament used [cm3] = 201.05",
+      "; estimated printing time (normal mode) = 14h 28m 38s",
+      "; estimated printing time (silent mode) = 14h 47m 50s"
+    ]
+  },
+  "physical_print": false,
+  "files": {
+    "小鸭_120mm_打印.stl": {
+      "bytes": 8336984,
+      "sha256": "12b14971ae8c0df360cc21e9a8c918a1bfffbda8768daa2a0f3a7db80dd8eefc"
+    },
+    "小鸭_120mm_打印预览.glb": {
+      "bytes": 14007316,
+      "sha256": "971644a3fe1d34165bc177d5c1fd6e44e2619b70f1a597d6b3b943930c01739a"
+    },
+    "小鸭_原始彩色.glb": {
+      "bytes": 11058296,
+      "sha256": "c339fdb9f18888ed95a1d9c7ae5ee97fcd3250f916a561cac7752685b84a506f"
+    },
+    "小鸭_打印副本预览.png": {
+      "bytes": 246007,
+      "sha256": "651b8ae99fae88bb0986a5e3425a9f456166aa222d1378dc3ed3647756333d43"
+    }
+  },
+  "package": {
+    "bytes": 18699613,
+    "sha256": "e5c8d8a0c5638d1ddf7c32dba6b84da14c677cb2f431615cea46dceb73ab02ef",
+    "files": 6,
+    "crc_passed": true
+  },
+  "validation": {
+    "windows_full": {
+      "passed": 291,
+      "skipped": 14,
+      "seconds": 74.95
+    },
+    "linux_native_focused": {
+      "passed": 13,
+      "seconds": 1.45
+    },
+    "slicing": true,
+    "physical_print": false,
+    "manual_review": {
+      "status": "passed",
+      "date": "2026-10-29",
+      "statement": "已核对，本轮人工复核通过"
+    },
+    "actual_gcode_feature_sections": {
+      "Support material": 448,
+      "Support material interface": 383,
+      "Skirt/Brim": 1
+    }
+  },
+  "resources": {
+    "production_task_snapshots_unchanged": 33,
+    "workflow_configuration": "repaired-glb-v1",
+    "gpu": "0 MiB, 0 %",
+    "web_workflow_changed": false,
+    "new_model_calls": 0
+  }
+}

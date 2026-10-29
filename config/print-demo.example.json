@@ -1,0 +1,8 @@
+{
+  "native_python": "/root/autodl-tmp/image-to-3d-print-agent/runtime/envs/backend/bin/python",
+  "native_paths": [
+    "/root/autodl-tmp/image-to-3d-print-agent/runtime/print-repair-deps/pymeshfix-0.18.1",
+    "/root/autodl-tmp/image-to-3d-print-agent/runtime/print-repair-deps/meshlib-core-3.1.4.297"
+  ],
+  "timeout_s": 180
+}

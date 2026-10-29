@@ -1,0 +1,28 @@
+{
+  "scope": "independent_course_print_demo_not_global_model_environment",
+  "python": "existing_backend_python_3.11.17",
+  "numpy": "existing_1.26.4",
+  "native_cpu_tools": [
+    {
+      "package": "pymeshfix",
+      "version": "0.18.1",
+      "filename": "pymeshfix-0.18.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "134351b50821f0b3c1ed238fc9821b1d290e9eb6856c0d360e3dfda9974eae8d",
+      "verified_against": "https://pypi.org/pypi/pymeshfix/0.18.1/json",
+      "license_source": "https://github.com/pyvista/pymeshfix/blob/main/README.rst"
+    },
+    {
+      "package": "meshlib-core",
+      "version": "3.1.4.297",
+      "filename": "meshlib_core-3.1.4.297-py38.py39.py310.py311.py312.py313.py314-none-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "0ac87ac352ed5fd8a243892304fd4e329d1b92edb18641653f7602a8c4bb6674",
+      "verified_against": "https://pypi.org/pypi/meshlib-core/3.1.4.297/json",
+      "license_source": "https://raw.githubusercontent.com/MeshInspector/MeshLib/master/LICENSE",
+      "use": "education_noncommercial_runtime_no_redistributed_library"
+    }
+  ],
+  "inspection": "Blender4.5.14_and_Toolbox_b42d6862_from_linux-geometry-tools.json",
+  "slicing": "existing_local_Windows_PrusaSlicer2.9.6",
+  "model_or_llm_calls": 0,
+  "physical_print": false
+}
