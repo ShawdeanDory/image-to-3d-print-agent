@@ -1,9 +1,10 @@
 import {test,expect} from '@playwright/test';
 import path from 'node:path';
 test('真实API/CPU几何fixture：一次提交、自动修复、刷新不下载、点击才下载',async({page})=>{
-  const posts:string[]=[];const downloads:string[]=[];
+  const posts:string[]=[];const downloads:string[]=[];const files:string[]=[];
   page.on('request',r=>{if(r.method()==='POST')posts.push(new URL(r.url()).pathname);});
   page.on('download',d=>downloads.push(d.suggestedFilename()));
+  page.on('request',r=>{if(r.method()==='GET'&&r.url().includes('/artifacts/'))files.push(r.url());});
   await page.goto('/');await page.evaluate(()=>localStorage.clear());await page.reload();
   await expect(page.getByText('固定验证服务：',{exact:false})).toBeVisible();
   await expect(page.locator('[name=reconstruction_profile]')).toHaveCount(0);
@@ -11,7 +12,7 @@ test('真实API/CPU几何fixture：一次提交、自动修复、刷新不下载
   await page.getByLabel('输入图片').setInputFiles(path.resolve('../fixtures/p1/procedural/block.png'));
   await page.getByLabel('目标高度',{exact:true}).fill('10');
   await page.getByRole('button',{name:'创建建模任务'}).dblclick();
-  await expect(page.getByRole('heading',{name:'GLB生成完成'})).toBeVisible({timeout:30000});
+  await expect(page.getByRole('heading',{name:'生成GLB已可下载'})).toBeVisible({timeout:30000});
   await expect(page.getByRole('heading',{name:'自动面数预算'})).toBeVisible();
   await expect(page.getByText('目标不超过10,000面',{exact:false})).toBeVisible();
   expect(posts.filter(p=>p.endsWith('/model-tasks'))).toHaveLength(1);
@@ -19,12 +20,21 @@ test('真实API/CPU几何fixture：一次提交、自动修复、刷新不下载
   await expect(page.locator('.confirmation')).toHaveCount(0);
   await expect(page.getByText('自动修复尝试1轮。',{exact:false})).toBeVisible();
   await expect(page.locator('.viewer-caption').first()).toContainText('拖动旋转');
+  const run=new URL(page.url()).searchParams.get('task')!;
+  const response=await (await page.request.get(`/api/v1/model-tasks/${run}`)).json();
+  const delivery=response.delivery;
+  expect(delivery.mesh_version).toBe(response.data.inspection.mesh_version);
+  const artifact=response.artifacts.find((a:{artifact_id:string})=>a.artifact_id===delivery.artifact_id);
+  expect(artifact.kind).toBe('repaired_mesh');
+  expect(files.some(url=>url.endsWith('/artifacts/'+delivery.artifact_id))).toBe(true);
+  await expect(page.getByText('交付GLB：',{exact:false})).toContainText(delivery.mesh_version);
   expect(downloads).toHaveLength(0);
   const url=page.url();await page.reload();
-  await expect(page.getByRole('heading',{name:'GLB生成完成'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'生成GLB已可下载'})).toBeVisible();
   expect(page.url()).toBe(url);expect(downloads).toHaveLength(0);
   const next=page.waitForEvent('download');await page.getByRole('button',{name:'下载GLB',exact:true}).click();
-  const downloaded=await next;expect(downloaded.suggestedFilename()).toMatch(/\.glb$/);
+  const downloaded=await next;expect(downloaded.suggestedFilename()).toBe(`repaired-${run}.glb`);
+  expect(files.at(-1)).toContain('/artifacts/'+delivery.artifact_id);
   expect(downloads).toHaveLength(1);
   await page.screenshot({path:path.join(process.env.I3D_BROWSER_EVIDENCE_DIR!,'automatic-fixture.png'),fullPage:true});
   await page.goto('about:blank');

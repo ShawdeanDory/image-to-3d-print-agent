@@ -12,6 +12,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'src'))
 sys.path.insert(0,str(ROOT/'tests'))
 from workflow.conftest import FixtureTools,pump
+from workflow.test_repaired_delivery import TexturedFixture
 from image_to_3d_print.api.app import create_app
 from image_to_3d_print.jobs.config import Settings
 from image_to_3d_print.jobs.service import TaskService
@@ -23,7 +24,8 @@ if __name__=='__main__':
     args=parser.parse_args()
     settings=Settings(root=args.root.resolve(),default_backend='triposr',confirmation_origin='test_fixture',input_review_policy=args.input_policy,workflow_policy=args.workflow_policy,
         operator_name='browser_test_fixture',profile_files=[ROOT/'fixtures/p1/printer_profile.json'])
-    app=create_app(settings);service=app.state.service;patch=MonkeyPatch();tools=FixtureTools(patch,mesh='open_cube.obj')
+    app=create_app(settings);service=app.state.service;patch=MonkeyPatch()
+    tools=(TexturedFixture if args.workflow_policy=='automatic_glb' else FixtureTools)(patch,mesh='open_cube.obj')
     def worker():
         while True:
             with service.store.connect() as db:

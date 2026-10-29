@@ -91,7 +91,7 @@ def export_preview(root,run,version,config=None):
         if not np.allclose(mesh.extents,reread.extents,atol=max(.01,float(mesh.extents.max())*1e-5),rtol=0):
             raise ToolFailure('INVALID_ARGUMENT','GLB独立重读尺寸不一致')
         _check_same_geometry(mesh,reread)
-        artifact=session.add('glb',glb,'repaired_mesh')
+        artifact=session.add('glb',glb,'repaired_mesh','mm')
         return session.finish({'mesh_version':version,'artifact_id':artifact.artifact_id,'independent_readback':True,
             'dimensions_mm':mesh.extents.tolist(),'artifact_frames':{artifact.artifact_id:'y_up'},
             'source_sha256':source.sha256,'print_certified':False,'appearance':appearance})

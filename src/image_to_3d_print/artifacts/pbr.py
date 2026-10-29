@@ -43,12 +43,15 @@ def write_processed_glb(root,run,version,mesh,file,session,config=None):
     source=MeshStore(root).get(run,version);path=Path(root)/source.relative_path
     if path.suffix.lower()=='.glb':
         facts=preserve_glb(path,mesh,file,logical_to_output=display_matrix(source.unit),unit=source.unit)
+        warning=(f"{facts['untextured_patch_faces']}个补片三角面没有原始纹理依据；已有UV/PBR及贴图保持，未重烘焙。"
+            if facts['untextured_patch_faces'] else None)
         return {'policy_version':'glb-preserve-v1','status':facts['appearance'],'mesh_version':version,
-            'approximation':bool(facts['untextured_patch_faces']),'pbr_available':bool(facts['source_images_sha256']),**facts}
+            'approximation':bool(facts['untextured_patch_faces']),'pbr_available':bool(facts['source_images_sha256']),
+            'warning':warning,**facts}
     from ..geometry.appearance import export_base_color_glb
     file.write_bytes(export_base_color_glb(_gltf_mesh(mesh)))
     return {'policy_version':'official-pbr-v1','status':'vertex_base_color','mesh_version':version,
-        'approximation':True,'pbr_available':False,'reason':'重烘焙已停用；网页展示和下载使用原始GLB。'}
+        'approximation':True,'pbr_available':False,'reason':'此历史检查网格没有UV/PBR，仅保留顶点底色近似；不重烘焙。'}
 
 
 def _gltf_mesh(mesh):

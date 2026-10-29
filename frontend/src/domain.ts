@@ -25,6 +25,14 @@ export function artifactGroups(artifacts: ArtifactRecord[], run: string) {
   const publicFiles=artifacts.filter(a=>a.kind!=='log');
   return {files:publicFiles,models:publicFiles.filter(a=>['raw_mesh','repaired_mesh','candidate_stl'].includes(a.kind)&&/\.(glb|ply|stl)$/i.test(a.relative_path))};
 }
+export function deliveryModel(artifacts: ArtifactRecord[], run: string, delivery?: {artifact_id:string;mesh_version:string}|null) {
+  if(artifacts.some(a=>a.run_id!==run))throw Error('产物与任务不一致');
+  if(!delivery)return undefined;
+  const artifact=artifacts.find(a=>a.artifact_id===delivery.artifact_id);
+  if(!artifact||artifact.mesh_version!==delivery.mesh_version||!['raw_mesh','repaired_mesh'].includes(artifact.kind)||!artifact.relative_path.toLowerCase().endsWith('.glb'))
+    throw Error('交付GLB与登记产物或网格版本不一致，已停止预览和下载');
+  return artifact;
+}
 export function display(value: unknown) { return value == null ? '未知' : typeof value==='object' ? JSON.stringify(value) : String(value); }
 export function checkMeasure(name:string,value:unknown,unit?:string|null,threshold=false){
   if(value==null)return '未知';if(typeof value==='boolean')return value?'是':'否';

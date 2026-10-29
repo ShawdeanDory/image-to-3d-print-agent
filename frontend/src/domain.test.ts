@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkLabel, validateImage, heightNumber, mergeEvents, newSubmission, artifactGroups, checkMeasure } from './domain';
+import { checkLabel, validateImage, heightNumber, mergeEvents, newSubmission, artifactGroups, checkMeasure, deliveryModel } from './domain';
 import type { PendingInput, RuntimeEvent, ArtifactRecord } from './contracts.generated';
 
 describe('页面沿用后端语义', () => {
@@ -34,4 +34,15 @@ describe('页面沿用后端语义', () => {
     expect(artifactGroups([a], 'r').models).toHaveLength(1);
     expect(() => artifactGroups([a], 'other')).toThrow();
   });
+});
+
+it('交付选择绑定服务端ID与网格版本，不取最后一个原件或其他任务',()=>{
+  const raw={run_id:'r',kind:'raw_mesh',relative_path:'runs/r/original.glb',artifact_id:'raw',mesh_version:'root'} as ArtifactRecord;
+  const checked={run_id:'r',kind:'repaired_mesh',relative_path:'runs/r/final.glb',artifact_id:'final',mesh_version:'checked'} as ArtifactRecord;
+  expect(deliveryModel([checked,raw],'r',{artifact_id:'final',mesh_version:'checked'})).toBe(checked);
+  expect(deliveryModel([checked,raw],'r',null)).toBeUndefined();
+  expect(()=>deliveryModel([checked,raw],'r',{artifact_id:'final',mesh_version:'other'})).toThrow();
+  expect(()=>deliveryModel([checked,raw],'r',{artifact_id:'missing',mesh_version:'checked'})).toThrow();
+  expect(()=>deliveryModel([checked,raw],'other',{artifact_id:'final',mesh_version:'checked'})).toThrow();
+  expect(deliveryModel([checked,raw],'r',{artifact_id:'raw',mesh_version:'root'})).toBe(raw);
 });

@@ -73,6 +73,8 @@ def test_two_ineffective_repairs_stop_and_deliver_glb(setup_service,monkeypatch)
     assert row['response']['delivery']['print_check']=='failed'
     assert tools.calls.count('apply')==2 and row['context']['pending'] is None
     assert len(row['context']['inspection_history'])==3
+    assert row['response']['delivery']['mesh_version']==row['context']['inspection_history'][0]['mesh_version']
+    assert any('已达2轮' in w and 'boundary_edges=fail' in w for w in row['response']['delivery']['warnings'])
     report=next(a for a in row['response']['artifacts'] if a['kind']=='quality_report' and a['relative_path'].endswith('.md'))
     readable=(settings.root/report['relative_path']).read_text(encoding='utf-8')
     assert 'GLB生成完成' in readable and '打印检查：failed' in readable and '自动修复尝试：2轮' in readable
@@ -90,11 +92,14 @@ def test_missing_checker_remains_unknown_but_glb_is_delivered(setup_service,monk
 @pytest.mark.parametrize('operation',['reconstruct','export_glb'])
 def test_missing_real_tool_does_not_fabricate_completed_delivery(setup_service,monkeypatch,operation):
     service,settings,request=automatic(setup_service);fixture=FixtureTools(monkeypatch)
+    reached=[]
     def tools(root,command,config,**kw):
-        if command['operation']==operation:raise ToolFailure('TOOL_UNAVAILABLE','TEST_FIXTURE unavailable')
+        if command['operation']==operation:
+            reached.append(operation);raise ToolFailure('TOOL_UNAVAILABLE','TEST_FIXTURE unavailable')
         return fixture(root,command,config,**kw)
     run=service.create(CreateTask(request=request))['run_id'];row=pump(service,settings,run,tools)
     assert row['status']=='failed' and row['response']['delivery'] is None
+    assert reached==[operation] and row['response']['error']['code']=='TOOL_UNAVAILABLE'
 
 
 def test_false_print_label_and_legacy_print_success_are_rejected(setup_service,monkeypatch):

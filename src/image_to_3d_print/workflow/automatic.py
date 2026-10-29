@@ -103,7 +103,7 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     if ctx.get('gpu_hole_policy')=='gpu-boundary-fill-v1':args['gpu_hole_repair']=True
                     if ctx['backend']=='trellis2_candidate':
                         args.update({k:v for k,v in (ctx.get('export_options') or {}).items() if v is not None})
-                        if ctx.get('delivery_policy')=='original-glb-v1' and 'export_target_faces' not in args and ctx.get('mesh_budget'):
+                        if ctx.get('delivery_policy') in {'original-glb-v1','repaired-glb-v1'} and 'export_target_faces' not in args and ctx.get('mesh_budget'):
                             args['export_target_faces']=ctx['mesh_budget'].get('effective_target_faces',ctx['mesh_budget']['target_faces'])
                     outcome=tool(ctx,'reconstruct',backend=ctx['backend'],prepared_outcome=ctx['prepared_outcome'],review=review.model_dump(),**args)
                     ctx['reconstruction_metrics']=outcome.tool.data.get('model');ctx['next']='clean'
@@ -174,7 +174,12 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     if data.get('appearance',{}).get('warning'):ctx['warnings'].append(data['appearance']['warning'])
                     inspection=MeshInspection.model_validate(ctx['inspection']) if ctx.get('inspection') else None
                     status=print_check_for(inspection)
-                    if status!='passed':ctx['warnings'].append('GLB已生成；打印检查未通过或未完整执行，不能作为打印合格证明。')
+                    if status!='passed':
+                        checks=inspection.checks if inspection is not None else []
+                        unresolved=[f'{c.name}={c.status}' for c in checks if c.status in {'fail','not_run'}]
+                        reason='、'.join(unresolved) or '未取得完整检查结果'
+                        limit='已达2轮修复上限，' if ctx.get('repair_attempts',0)>=2 else ''
+                        ctx['warnings'].append(f'{limit}保留最佳有效GLB；打印检查未通过或未完整执行：{reason}。不能作为打印合格证明。')
                     if original:
                         ctx['warnings'].append('交付原始GLB，未应用目标毫米尺寸或副本修复；打印检查属于另一个副本版本。')
                         ctx['delivery']=OriginalGLBDelivery(artifact_id=data['artifact_id'],mesh_version=data['mesh_version'],

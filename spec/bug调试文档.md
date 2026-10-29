@@ -1,5 +1,18 @@
 # Bug与约定问题记录
 
+- 2026-10-29恢复附属发现：质量Markdown将glb-preserve-v1保留PBR误写为“顶点底色”，且固定写“检查副本”；同步改为实际交付版本及材质保留说明。前端首轮构建发现可空warnings访问，按可选字段处理。
+
+- 本轮Linux首轮291通过/1失败：隔离验证包漏带config/launcher.example.json，非业务回归；补齐原样配置后重跑。默认pytest仅选择contract目录，完整验证必须显式pytest tests，未将68项称为全套。
+
+- 浏览器首轮1通过/1失败：原页面没有自动修复轮数文字，补上服务端delivery.repair_attempts真实计数（不造进度），再验证下载/刷新。首次录屏/截图保留。
+
+- 云端首轮真实CPU回放正确交付print_check=not_run，验证脚本拒绝将其计为实际检查通过；直接诊断定位隔离包漏带locks/linux-geometry-tools.json，Blender尚未启动。补齐原有锁文件后在新目录回放，保留首次response/日志；生产原件/任务未改。
+
+## DELIVERY-BUG-002：主交付仍取原件与11项工作流失败
+
+- 数据/接口/规则：TaskService为所有新自动任务固定original-glb-v1；10个回归fixture无原GLB登记而在export_original_glb失败，1个HTTP断言期待generation-v1；网页还过滤为raw_mesh并选择最后一个，处理版被排除。按用户最新要求，主交付应为同版本修复检查结果，不能仅把断言改成原件而清零。
+- 修订目标：新任务选择已有修复GLB导出分支并保持UV/PBR；网页按delivery.artifact_id/mesh_version而不是文件顺序选主产物；旧原件任务继续兼容。预算送首次重建，不因为切换交付策略而丢失；旧反例导出失败须确认实际调用到对应操作。
+- 修改前完整失败输出先保存本轮baseline-workflow.log；本轮固定正常/边界/失败/安全以及带PBR的实际读回分别验证。尚未执行的结果不填通过。
 ## RESIDENT-BUG-001：每任务重新加载及本轮固定验证
 
 - 基线dc549d4：execute_worker每次新建模型进程，course_fast_inference每次from_pretrained/cuda；历史99.152529秒仅为旧图加载准备，不当作本轮实测值。新配置失败回归先实际报execution_mode extra_forbidden。

@@ -46,7 +46,9 @@ def write_quality(store, ctx):
     if ctx.get('workflow_policy')=='automatic_glb':
         delivery=ctx.get('delivery')
         md.append(('GLB生成完成' if ctx['status']=='succeeded' and delivery else 'GLB生成未完成')+'；不代表实际打印合格。')
-        md.append(f"检查副本的打印检查：{delivery.get('inspection_print_check',delivery['print_check']) if delivery else 'not_run'}；自动修复尝试：{ctx.get('repair_attempts',0)}轮。自动来源：automatic_policy；没有实际切片/打印确认。")
+        subject='检查副本的' if ctx.get('delivery_policy')=='original-glb-v1' else '交付版本的'
+        md.append(f"{subject}打印检查：{delivery.get('inspection_print_check',delivery['print_check']) if delivery else 'not_run'}；自动修复尝试：{ctx.get('repair_attempts',0)}轮。自动来源：automatic_policy；没有实际切片/打印确认。")
+        md.extend('交付说明：'+warning for warning in (delivery or {}).get('warnings',[]))
         if ctx.get('mesh_budget'):
             b=ctx['mesh_budget'];target=b.get('effective_target_faces',b['target_faces'])
             origin='手动' if b.get('selection_source')=='manual' else '自动'
@@ -64,7 +66,10 @@ def write_quality(store, ctx):
         md.append(f"历史局部底色记录：{eye['status']}；{eye['reason']}。范围：{scope}。此试用现已回退，当前交付使用原始GLB；旧增强件保留，不改变打印结论。")
     if ctx.get('error'): md.append('停止原因：' + ctx['error']['message'])
     appearance=(ctx.get('export_data') or {}).get('appearance')
-    if appearance:md.append('外观：'+('原始PBR，未经重烘焙' if appearance['status']=='original_pbr' else '原始顶点色，未经重烘焙' if appearance['status']=='original_vertex_color' else 'PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')+'；'+(appearance.get('warning') or appearance.get('reason') or '原始PBR来源与重投射参数见JSON。'))
+    if appearance:
+        preserved=appearance.get('policy_version')=='glb-preserve-v1' and appearance.get('pbr_available')
+        label=('已有UV/PBR和纹理字节保持，未经重烘焙' if preserved else '原始PBR，未经重烘焙' if appearance['status']=='original_pbr' else '原始顶点色，未经重烘焙' if appearance['status']=='original_vertex_color' else 'PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')
+        md.append('外观：'+label+'；'+(appearance.get('warning') or appearance.get('reason') or '外观来源与保留记录见JSON。'))
     if ctx.get('explanation'): md.append('语言模型说明（不替代检查证据）：\n\n' + ctx['explanation'])
     md.append('结构化尺度、修改参数、逐版检查、产物与证据、资源及切片记录见同目录quality.json。')
     readable = session.directory / 'quality.md'

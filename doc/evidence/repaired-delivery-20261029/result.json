@@ -1,0 +1,255 @@
+{
+  "kind": "existing_model_cpu_replay",
+  "source_run": "63326f65-f3fb-4631-85bf-14fd497643c1",
+  "run_id": "1d88ad9d-f85f-4af0-8c35-7baab52ea0cd",
+  "new_model_calls": 0,
+  "llm_calls": 0,
+  "seconds": 39.73786697164178,
+  "source_unchanged": true,
+  "source_sha256": "7202be93f25a950bb163a386f4ac87c56bc94498bb24bcc4e7c8948c65829a99",
+  "delivery": {
+    "artifact_id": "t_cae9d3f636ed4fbf_glb",
+    "dimensions_mm": [
+      148.33715558052063,
+      80.70001006126404,
+      100.00000149011612
+    ],
+    "independent_readback": true,
+    "mesh_version": "m_df5dea5339d048a3974c7a17",
+    "print_certified": false,
+    "print_check": "failed",
+    "repair_attempts": 1,
+    "warnings": [
+      "仅修补受控开放边界；带内壁的错误通孔、语义缺失和不安全边界仍可能保留，不能称为全部大洞修好。",
+      "受控修复未执行或失败：边界不是简单闭环，不支持自动补洞",
+      "没有适用的受控修复操作，保留当前有效网格。",
+      "保留最佳有效GLB；打印检查未通过或未完整执行：boundary_edges=fail、non_manifold_edges=fail、non_manifold_vertices=fail、watertight=fail、self_intersection=fail、wall_thickness=not_run、bed_contact=fail。不能作为打印合格证明。"
+    ]
+  },
+  "artifact": {
+    "artifact_id": "t_cae9d3f636ed4fbf_glb",
+    "created_at": "2026-10-29T00:32:32.714707Z",
+    "derived_from": [],
+    "kind": "repaired_mesh",
+    "mesh_version": "m_df5dea5339d048a3974c7a17",
+    "relative_path": "runs/1d88ad9d-f85f-4af0-8c35-7baab52ea0cd/tools/t_cae9d3f636ed4fbf/model.glb",
+    "run_id": "1d88ad9d-f85f-4af0-8c35-7baab52ea0cd",
+    "unit": "mm"
+  },
+  "appearance": {
+    "appearance": "original_pbr",
+    "approximation": false,
+    "mesh_version": "m_df5dea5339d048a3974c7a17",
+    "new_patch_faces": 0,
+    "original_materials_preserved": true,
+    "pbr_available": true,
+    "policy": "glb-preserve-v1",
+    "policy_version": "glb-preserve-v1",
+    "rebaked": false,
+    "retained_faces": 95877,
+    "source_images_sha256": [
+      "be15763f379d253b5d4914fce8944670f3ac56de7a97f2c378f0dc7e21aa3aff",
+      "a5985e7b24bb2530626f778b095162ac8dad35f09cfd64603943f3c13c26a580"
+    ],
+    "status": "original_pbr",
+    "texture_bytes_preserved": true,
+    "untextured_patch_faces": 0,
+    "uv_preserved": true,
+    "warning": null
+  },
+  "faces": 95877,
+  "dimensions_mm": [
+    148.33715558052063,
+    80.70001006126404,
+    100.00000149011612
+  ],
+  "materials_textures_uv_preserved": true,
+  "http_download_matches": true,
+  "calls": [
+    "prepare_image",
+    "analyze_complexity",
+    "reconstruct",
+    "clean",
+    "scale",
+    "inspect",
+    "propose",
+    "export_glb"
+  ],
+  "repair_attempt_log": [
+    {
+      "adaptive_budget": false,
+      "attempt": 1,
+      "error": {
+        "code": "INVALID_ARGUMENT",
+        "message": "边界不是简单闭环，不支持自动补洞"
+      },
+      "mesh_version": "m_df5dea5339d048a3974c7a17",
+      "operation": "fill_small_holes",
+      "origin": "automatic_policy",
+      "status": "failed",
+      "target_faces": null
+    }
+  ],
+  "checks": [
+    {
+      "name": "finite_coordinates",
+      "status": "pass",
+      "value": true,
+      "threshold": null,
+      "unit": null
+    },
+    {
+      "name": "components",
+      "status": "warn",
+      "value": 20,
+      "threshold": 1,
+      "unit": "count",
+      "reason": "分离组件须确认保留或指定删除，不能默认只留最大件"
+    },
+    {
+      "name": "boundary_edges",
+      "status": "fail",
+      "value": 80,
+      "threshold": 0,
+      "unit": null
+    },
+    {
+      "name": "non_manifold_edges",
+      "status": "fail",
+      "value": 172,
+      "threshold": 0,
+      "unit": null
+    },
+    {
+      "name": "non_manifold_vertices",
+      "status": "fail",
+      "value": 344,
+      "threshold": 0,
+      "unit": null
+    },
+    {
+      "name": "watertight",
+      "status": "fail",
+      "value": false,
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "name": "normals",
+      "status": "pass",
+      "value": true,
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "name": "self_intersection",
+      "status": "fail",
+      "value": 6,
+      "threshold": 0,
+      "unit": null
+    },
+    {
+      "name": "wall_thickness",
+      "status": "not_run",
+      "value": null,
+      "threshold": null,
+      "unit": null,
+      "reason": "需要有效毫米尺度、水密且法线正确；不能将无命中当作通过"
+    },
+    {
+      "name": "overhang",
+      "status": "warn",
+      "value": 13166,
+      "threshold": 45.0,
+      "unit": "degree"
+    },
+    {
+      "name": "dimensions",
+      "status": "pass",
+      "value": 1.4901161193847656e-06,
+      "threshold": 1.0,
+      "unit": "mm"
+    },
+    {
+      "name": "build_volume",
+      "status": "pass",
+      "value": true,
+      "threshold": [
+        220.0,
+        220.0,
+        250.0
+      ],
+      "unit": "mm"
+    },
+    {
+      "name": "bed_contact",
+      "status": "fail",
+      "value": false,
+      "threshold": 0.01,
+      "unit": "mm",
+      "reason": "自动几何触地检测；未执行实际切片/打印稳定性验证"
+    }
+  ],
+  "verification_scope": "已有真实TRELLIS.2模型回放；CPU/Blender/GLB实际执行，不是新图片重建，不是打印合格",
+  "validation": {
+    "baseline_workflow": {
+      "passed": 52,
+      "failed": 11,
+      "seconds": 65.2
+    },
+    "windows_full": {
+      "passed": 281,
+      "skipped": 11,
+      "seconds": 98.58
+    },
+    "linux_full": {
+      "passed": 292,
+      "failed": 0,
+      "seconds": 59.74
+    },
+    "final_patch_focused": {
+      "windows": 22,
+      "linux": 22
+    },
+    "frontend_unit": 7,
+    "browser": {
+      "passed": 2,
+      "failed": 0,
+      "seconds": 14.1
+    },
+    "manual_review": {
+      "status": "passed",
+      "date": "2026-10-29",
+      "user_statement": "已核对，本轮人工复核通过"
+    }
+  },
+  "deployment": {
+    "configuration": {
+      "appearance_policy": "repaired-glb-v1",
+      "workflow_policy": "automatic_glb",
+      "configured_backends": [
+        "trellis2_candidate"
+      ],
+      "worker_concurrency": 1,
+      "llm_configured": true
+    },
+    "old_response_schema": "original-glb-v1",
+    "all_33_snapshots_unchanged": true,
+    "resident_mode": "resident",
+    "gpu": "0 MiB, 0 %",
+    "production_tasks_submitted": 0,
+    "code_matches": true,
+    "api_processes": 1,
+    "worker_processes": 1,
+    "resident_listeners": 1,
+    "resident_weights_loaded": false,
+    "configuration_and_resident_source_unchanged": true
+  },
+  "backup": {
+    "file": "evidence-backup.tgz",
+    "bytes": 118785580,
+    "sha256": "a313deb59823d2bf2cf25775b34aa070ae670c80408e528f96c184fa519b7bd1",
+    "members": 67,
+    "all_members_read": true
+  }
+}
