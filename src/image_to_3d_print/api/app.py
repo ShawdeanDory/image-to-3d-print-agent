@@ -4,7 +4,7 @@ import secrets
 from typing import Annotated, Literal
 from uuid import UUID
 from fastapi import FastAPI, UploadFile, File, Header, Query, Depends, HTTPException, Request
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from ..jobs.config import Settings
 from ..jobs.service import TaskService, INPUTS
@@ -43,6 +43,7 @@ def create_app(settings=None):
             'workflow_policy':settings.workflow_policy,
             'face_budget_policy':'image-complexity-v1' if settings.workflow_policy=='automatic_glb' else None,
             'appearance_policy':'repaired-glb-v1',
+            'delivery_stl_download':True,
             'eye_texture_policy':None,
             'gpu_hole_policy':'gpu-boundary-fill-v1' if settings.workflow_policy=='automatic_glb' else None,
             'export_options':{'policy_version':'export-options-v1','min_target_faces':100,'max_target_faces':1000000,
@@ -110,6 +111,18 @@ def create_app(settings=None):
 
     @app.post('/api/v1/model-tasks/{run_id}/cancel', response_model=ModelTaskResponse|GenerationTaskResponse|OriginalGLBTaskResponse)
     def cancel(run_id: UUID): return service.cancel(run_id)
+
+    @app.get('/api/v1/model-tasks/{run_id}/delivery.stl', response_class=Response,
+             responses={200: {'content': {'model/stl': {'schema': {'type': 'string', 'format': 'binary'}}}}})
+    def stl(run_id: UUID, mesh_version: Id = Query(pattern=r'^m_[a-z0-9]{24}$', min_length=26, max_length=26)):
+        from ..artifacts.stl import delivery_stl
+        try:
+            payload, headers = delivery_stl(service.store.root, run_id, service.store.row(run_id)['response'], mesh_version)
+        except ToolFailure:
+            raise
+        except (OSError, ValueError) as exc:
+            raise ToolFailure('INVALID_ARGUMENT', 'STL转换或独立读回失败，原GLB保持；请查看同版本质量报告') from exc
+        return Response(payload, media_type='model/stl', headers=headers)
 
     @app.get('/api/v1/model-tasks/{run_id}/artifacts/{artifact_id}')
     def artifact(run_id: UUID, artifact_id: Id):

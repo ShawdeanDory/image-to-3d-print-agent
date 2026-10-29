@@ -1,0 +1,207 @@
+{
+  "task": "MID-STL-001",
+  "date": "2026-10-29",
+  "baseline_commit": "2e6ca9f",
+  "source_task": "123a6686-eb9c-42af-b917-9f8515f0422f",
+  "delivery": {
+    "artifact_id": "t_80829a6aae0e4fb3_glb",
+    "mesh_version": "m_0d802a61e59646979ddb886d",
+    "independent_readback": true,
+    "print_check": "failed",
+    "print_certified": false,
+    "repair_attempts": 1,
+    "dimensions_mm": [
+      151.22364461421967,
+      119.44124847650528,
+      119.99999731779099
+    ],
+    "warnings": [
+      "仅修补受控开放边界；带内壁的错误通孔、语义缺失和不安全边界仍可能保留，不能称为全部大洞修好。",
+      "受控修复未执行或失败：孔洞退化或非平面",
+      "没有适用的受控修复操作，保留当前有效网格。",
+      "保留最佳有效GLB；打印检查未通过或未完整执行：boundary_edges=fail、watertight=fail、self_intersection=fail、wall_thickness=not_run、bed_contact=fail。不能作为打印合格证明。"
+    ]
+  },
+  "inspection_summary": [
+    {
+      "name": "finite_coordinates",
+      "status": "pass",
+      "value": true
+    },
+    {
+      "name": "components",
+      "status": "warn",
+      "value": 2
+    },
+    {
+      "name": "boundary_edges",
+      "status": "fail",
+      "value": 21
+    },
+    {
+      "name": "non_manifold_edges",
+      "status": "pass",
+      "value": 0
+    },
+    {
+      "name": "non_manifold_vertices",
+      "status": "pass",
+      "value": 0
+    },
+    {
+      "name": "watertight",
+      "status": "fail",
+      "value": false
+    },
+    {
+      "name": "normals",
+      "status": "pass",
+      "value": true
+    },
+    {
+      "name": "self_intersection",
+      "status": "fail",
+      "value": 365
+    },
+    {
+      "name": "wall_thickness",
+      "status": "not_run",
+      "value": null
+    },
+    {
+      "name": "overhang",
+      "status": "warn",
+      "value": 1186
+    },
+    {
+      "name": "dimensions",
+      "status": "pass",
+      "value": 2.682209014892578e-06
+    },
+    {
+      "name": "build_volume",
+      "status": "pass",
+      "value": true
+    },
+    {
+      "name": "bed_contact",
+      "status": "fail",
+      "value": false
+    }
+  ],
+  "first_export_comparison": {
+    "before_uv_facts": {
+      "vertex_count": 4762,
+      "face_count": 9506,
+      "component_count": 2,
+      "watertight": true,
+      "normals_consistent": false,
+      "boundary_edge_count": 0,
+      "non_manifold_edge_count": 0,
+      "non_manifold_vertex_count": 0,
+      "dimensions": [
+        0.99933260679245,
+        0.7893046736717224,
+        0.7929970920085907
+      ],
+      "volume": null
+    },
+    "max_point_distance": 3.925231146709438e-17,
+    "missing_faces_count": 7,
+    "new_faces_count": 0,
+    "same_coordinate_frame": true
+  },
+  "real_stl_download": {
+    "run_id": "123a6686-eb9c-42af-b917-9f8515f0422f",
+    "mesh_version": "m_0d802a61e59646979ddb886d",
+    "stl_bytes": 475034,
+    "stl_sha256": "5fc79ff954274bc20cbe801d53593248010c57e8e5e06007d55040c34a0657d9",
+    "source_glb_sha256": "3758fd792c6ce85c43d98e194be34839263913863ca1fb3736dfe0b82feb6f9a",
+    "same_delivery_geometry": true,
+    "facts": {
+      "vertex_count": 4757,
+      "face_count": 9499,
+      "component_count": 2,
+      "watertight": false,
+      "normals_consistent": true,
+      "boundary_edge_count": 21,
+      "non_manifold_edge_count": 0,
+      "non_manifold_vertex_count": 0,
+      "dimensions": [
+        151.22364044189453,
+        119.44124984741211,
+        120.0
+      ],
+      "volume": null
+    },
+    "print_check": "failed",
+    "new_repairs": 0,
+    "physical_print": false
+  },
+  "tests": {
+    "local_full": {
+      "passed": 296,
+      "skipped": 14,
+      "seconds": 88.99
+    },
+    "linux_related": {
+      "passed": 15,
+      "seconds": 6.48
+    },
+    "frontend": {
+      "passed": 12
+    },
+    "typescript_vite": "passed",
+    "real_browser_click": "not_run_browser_control_stopped_url_unknown"
+  },
+  "production_update": {
+    "updated": [
+      {
+        "path": "src/image_to_3d_print/api/app.py",
+        "previously_present": true,
+        "sha256": "12235c95d6ba250a5f02a3ecb38933e745bd0b5abaf3a44dc8e3aa9b1f706cad"
+      },
+      {
+        "path": "src/image_to_3d_print/artifacts/stl.py",
+        "previously_present": false,
+        "sha256": "575b0ded54f8bb64be881ad2a9d87aeae794f7e6832ee49ddbd821251c5ac38c"
+      }
+    ],
+    "task_count": 34,
+    "snapshots_unchanged": true,
+    "api_previous_pid": 5526,
+    "worker_pids": [
+      5666
+    ],
+    "resident_pids": [],
+    "worker_and_resident_not_restarted": true,
+    "capability": true,
+    "new_model_calls": 0,
+    "new_llm_calls": 0
+  },
+  "resources": {
+    "worker_alive": true,
+    "model_child_pids": [
+      5801
+    ],
+    "gpu_memory_mib": 465,
+    "gpu_utilization_percent": 0
+  },
+  "original_files_unchanged": true,
+  "source_task_response_unchanged": true,
+  "new_reconstruction_calls": 0,
+  "new_repairs": 0,
+  "new_llm_calls": 0,
+  "new_slicing_calls": 0,
+  "physical_print": false,
+  "limitations": [
+    "UV/PBR first-export missing triangles remain unresolved",
+    "Independent print_demo converter is not integrated in the web workflow",
+    "STL retains current delivery defects and has no color"
+  ],
+  "manual_review": {
+    "status": "review_completed_acceptance_not_explicit",
+    "user_reply": "核对完毕",
+    "previous_task_approval_not_reused": true
+  }
+}

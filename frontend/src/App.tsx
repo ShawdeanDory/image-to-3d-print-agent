@@ -1,6 +1,6 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import type {ArtifactRecord,AssetRecord,ModelTaskRequest,PrinterProfile,RuntimeEvent,RuntimeTask} from './contracts.generated';
-import {api,ApiError,artifactBlob,download,setAccessToken,transferLabel,type ArtifactProgress,type Capabilities} from './api';
+import {api,ApiError,artifactBlob,download,downloadSTL,setAccessToken,transferLabel,type ArtifactProgress,type Capabilities} from './api';
 import {artifactGroups,deliveryModel,checkLabel,checkNames,checkMeasure,display,heightNumber,id,mergeEvents,stageNames,statusNames,validateImage} from './domain';
 import PendingForm,{AxisSelect} from './PendingForm';
 import ModelView from './ModelView';
@@ -8,6 +8,7 @@ import ReconstructionTiming from './ReconstructionTiming';
 import MeshBudgetInfo from './MeshBudgetInfo';
 import MaterialInfo from './MaterialInfo';
 import GPURepairInfo from './GPURepairInfo';
+import DeliveryDownloads,{printNotice} from './DeliveryDownloads';
 
 const initialRun=()=>new URL(location.href).searchParams.get('task')||localStorage.getItem('i3d:last-run')||'';
 export default function App(){
@@ -46,6 +47,8 @@ export default function App(){
   const original=response?.schema_version==='original-glb-v1';
   let active:ArtifactRecord|undefined;let deliveryError='';
   try{active=deliveryModel(response?.artifacts??[],run,response&&'delivery' in response?response.delivery:null);}catch(exc){deliveryError=message(exc);}
+  const delivery=response&&'delivery' in response?response.delivery:null;
+  const stlAvailable=!!(cap?.delivery_stl_download&&active?.unit==='mm'&&response?.schema_version==='generation-v1');
 
   async function act(fn:()=>Promise<void>){if(lock.current)return;lock.current=true;setBusy(true);setError('');try{await fn();}catch(exc){setError(message(exc));}finally{lock.current=false;setBusy(false);}}
   async function create(event:React.FormEvent<HTMLFormElement>){
@@ -73,6 +76,13 @@ export default function App(){
     catch(exc){setDownloadError(message(exc));}
     finally{setTransfer(null);}
   }
+  async function downloadSTLFile(){
+    if(!stlAvailable||!active?.mesh_version)throw Error('当前交付尚无可下载的同版本毫米STL');
+    setTransfer({loaded:0,total:null});setDownloadError('');setNotice('');
+    try{await downloadSTL(run,active.mesh_version,{onProgress:setTransfer});setNotice('同版本毫米STL已交给浏览器保存；请按质量报告决定后续修复和切片。');}
+    catch(exc){setDownloadError(message(exc));}
+    finally{setTransfer(null);}
+  }
   function newTask(){setChosenBackend('');setRun('');setTask(null);setEvents([]);cursor.current=0;createKey.current=id('create');assetRef.current=null;localStorage.removeItem('i3d:last-run');history.replaceState(null,'',location.pathname);}
   return <><header><a className="brand" href="/" onClick={e=>{e.preventDefault();newTask();}}><span className="brand-mark">造</span><span>造物工坊<small>图像到3D打印模型</small></span></a><div className="connection"><span className={connected?'dot online':'dot'}/>{connected?'已连接计算服务':'计算服务未连接'}<button className="text-button" onClick={()=>void connect()}>重新连接</button></div></header>
   <main><section className="intro"><div><p className="eyebrow">单张图片 · 简单摆件</p><h1>{run?'让每一步都有依据':'从一张图片，开始造物'}</h1><p className="lede">上传图片并填写参数，后台完成重建、定标、检查与最多2轮修复，交付最佳有效GLB并保留原始文件。</p></div><div className="scope-note">适用于非功能性简单摆件<br/><strong>GLB生成完成与打印检查结果分别展示</strong></div></section>
@@ -96,6 +106,7 @@ export default function App(){
   {transfer&&<div role="status" className="notice">正在下载：{transferLabel(transfer)}<br/><progress aria-label="文件下载进度" max={transfer.total||undefined} value={transfer.total?transfer.loaded:undefined}/></div>}
   {task&&response&&<div className="workspace task-workspace"><div className="main-column">
     <section className="sheet model-sheet"><div className="section-title"><div><span className="eyebrow">模型与版本</span><h2>查看本次产物</h2></div><span className="muted">原始版本始终保留</span></div>
+      {active&&!original&&<p role="status" className={delivery?.print_check==='passed'?'notice':'notice error'}><strong>{printNotice(delivery?.print_check,response.data.inspection?.checks??[])}</strong></p>}
       {deliveryError&&<p role="alert" className="error">{deliveryError}</p>}{active?<div className="model-single"><ModelView run={run} artifact={active} frame={task.artifact_frames?.[active.artifact_id]}/></div>:<div className="empty-model"><span>◎</span><h3>模型将在后台处理完成后显示</h3><p>当前{statusNames[response.status]}，等待服务端登记本任务交付GLB。</p></div>}
       {active&&<p className="muted">{original?'历史任务原始GLB：未应用检查副本的定标和修复。':'交付GLB：已按目标尺度定标并复检，保留已有UV/PBR，不重烘焙。'}网格版本：{active.mesh_version}</p>}
       {response.data.inspection?.dimensions_mm&&<div className="dimensions"><span>{original?'检查副本尺寸（原始GLB未应用）':'交付版本检查尺寸'}</span><strong>{response.data.inspection.dimensions_mm.map(n=>n.toFixed(2)).join(' × ')}<small>mm</small></strong><span>网格：{response.data.inspection.mesh_version}</span></div>}
@@ -105,7 +116,7 @@ export default function App(){
     <GPURepairInfo value={task.resources?.gpu_boundary_repair}/>
     <MeshBudgetInfo value={task.resources?.mesh_budget} original={response.schema_version==='original-glb-v1'}/>
     {active&&<MaterialInfo original={original}/>}
-    {response.status==='succeeded'&&active&&<section className="sheet"><h2>生成GLB已可下载</h2><p>{original?'历史任务保留原始文件，未应用检查副本的定标和修复。':'交付最佳有效的定标、复检版本，原始文件在下方另行下载。'}下载不代表可打印。</p>{'delivery' in response&&response.delivery&&<p>自动修复尝试{response.delivery.repair_attempts??0}轮。</p>}{'delivery' in response&&response.delivery?.warnings?.map((warning,index)=><p className="muted" key={index}>{warning}</p>)}<button className="primary" disabled={busy} onClick={()=>void act(()=>downloadFile(active,`${original?'original':'repaired'}-${run}.glb`))}>{transfer?'正在下载…':'下载GLB'}</button></section>}
+    {response.status==='succeeded'&&active&&<section className="sheet"><h2>生成GLB已可下载</h2><p>{original?'历史任务保留原始文件，未应用检查副本的定标和修复。':'交付最佳有效的定标、复检版本，原始文件在下方另行下载。'}下载不代表可打印。</p>{delivery&&<p>自动修复尝试{delivery.repair_attempts??0}轮。</p>}{delivery?.warnings?.map((warning,index)=><p className="muted" key={index}>{warning}</p>)}<DeliveryDownloads busy={busy} stlAvailable={stlAvailable} onGLB={()=>void act(()=>downloadFile(active,`${original?'original':'repaired'}-${run}.glb`))} onSTL={()=>void act(downloadSTLFile)}/><p className="muted">STL不包含颜色，按当前交付几何以毫米导出，不会额外补洞。{!stlAvailable&&(original?'历史原始无单位GLB暂不支持STL下载。':'计算服务尚未提供同版本STL下载，请核对连接和服务更新。')}</p></section>}
     {task.pending&&response.schema_version==='1.0.0'&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>{original?'检查副本的打印报告':'交付版本的打印报告'}</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>
     {response.error&&<p className="error" role="alert"><strong>{response.error.code}</strong>：{response.error.message}</p>}

@@ -9,6 +9,7 @@ export interface Capabilities {
   workflow_policy?: 'guided'|'automatic_glb';
   face_budget_policy?: 'image-complexity-v1'|null;
   appearance_policy?: 'official-pbr-v1'|'original-glb-v1'|'repaired-glb-v1';
+  delivery_stl_download?: boolean;
   export_options?: {policy_version:string;min_target_faces:number;max_target_faces:number;min_texture_size:number;max_texture_size:number;default_texture_size:number};
 }
 export class ApiError extends Error {
@@ -57,6 +58,9 @@ export function transferLabel(progress:ArtifactProgress):string {
     :`已读取${amount(progress.loaded)}，总大小未知`;
 }
 export function artifactBlob(run: string, id: string, options:ArtifactTransferOptions={}): Promise<Blob> {
+  return fileBlob(artifactUrl(run,id),options);
+}
+function fileBlob(url:string,options:ArtifactTransferOptions={}):Promise<Blob>{
   // 文件采用独立时限，XHR覆盖整个二进制响应体并提供真实传输进度。
   return new Promise((resolve,reject)=>{
     const xhr=new XMLHttpRequest();let settled=false;
@@ -66,11 +70,15 @@ export function artifactBlob(run: string, id: string, options:ArtifactTransferOp
       if(error)reject(error);else if(blob)resolve(blob);
     }
     function abort(){xhr.abort();finish(new DOMException('已停止读取文件','AbortError'));}
-    xhr.open('GET',artifactUrl(run,id));xhr.responseType='blob';xhr.timeout=ARTIFACT_TIMEOUT_MS;
+    xhr.open('GET',url);xhr.responseType='blob';xhr.timeout=ARTIFACT_TIMEOUT_MS;
     if(accessToken)xhr.setRequestHeader('Authorization',`Bearer ${accessToken}`);
     xhr.onprogress=event=>options.onProgress?.({loaded:event.loaded,total:event.lengthComputable?event.total:null});
-    xhr.onload=()=>{
-      if(xhr.status<200||xhr.status>=300){finish(new ApiError(xhr.status,'ARTIFACT_UNAVAILABLE','该任务文件不可读取，请检查连接或访问权限后重试'));return;}
+    xhr.onload=async()=>{
+      if(xhr.status<200||xhr.status>=300){
+        let detail='该任务文件不可读取，请检查连接或访问权限后重试';let code='ARTIFACT_UNAVAILABLE';
+        try{const value=JSON.parse(await (xhr.response as Blob).text());detail=value.error?.message||detail;code=value.error?.code||code;}catch{/* 非JSON错误保留通用说明。 */}
+        finish(new ApiError(xhr.status,code,detail));return;
+      }
       const blob=xhr.response as Blob;
       options.onProgress?.({loaded:blob.size,total:blob.size});finish(undefined,blob);
     };
@@ -84,7 +92,13 @@ export function artifactBlob(run: string, id: string, options:ArtifactTransferOp
   });
 }
 export async function download(run: string, id: string, name: string, options:ArtifactTransferOptions={}) {
-  const url=URL.createObjectURL(await artifactBlob(run,id,options));
+  saveBlob(await artifactBlob(run,id,options),name);
+}
+export async function downloadSTL(run:string,version:string,options:ArtifactTransferOptions={}){
+  saveBlob(await fileBlob(`${taskUrl(run)}/delivery.stl?mesh_version=${encodeURIComponent(version)}`,options),`candidate-${run}.stl`);
+}
+function saveBlob(blob:Blob,name:string){
+  const url=URL.createObjectURL(blob);
   const anchor=document.createElement('a');anchor.href=url;anchor.download=name.split('/').at(-1) || 'artifact';anchor.click();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
