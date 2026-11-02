@@ -154,7 +154,7 @@ export type ExperimentRecord = {
 export type GenerationDelivery = {
   "artifact_id": string;
   "dimensions_mm": Array<number>;
-  "geometry_policy"?: "preserve_uv" | "print_copy";
+  "geometry_policy"?: "preserve_uv" | "print_copy" | "print_copy_color";
   "independent_readback": true;
   "mesh_version": string;
   "original_artifact_id"?: (string | null);

@@ -68,7 +68,7 @@ def write_quality(store, ctx):
     appearance=(ctx.get('export_data') or {}).get('appearance')
     if appearance:
         preserved=appearance.get('policy_version')=='glb-preserve-v1' and appearance.get('pbr_available')
-        label=('无纹理打印几何副本，原始彩色GLB另存，未经重烘焙' if appearance['status']=='print_geometry' else '已有UV/PBR和纹理字节保持，未经重烘焙' if preserved else '原始PBR，未经重烘焙' if appearance['status']=='original_pbr' else '原始顶点色，未经重烘焙' if appearance['status']=='original_vertex_color' else 'PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')
+        label=('最终修复几何上的原贴图/PBR近似映射，未经重烘焙' if appearance['status']=='print_pbr_reprojected' else '无纹理打印几何副本，原始彩色GLB另存，未经重烘焙' if appearance['status']=='print_geometry' else '已有UV/PBR和纹理字节保持，未经重烘焙' if preserved else '原始PBR，未经重烘焙' if appearance['status']=='original_pbr' else '原始顶点色，未经重烘焙' if appearance['status']=='original_vertex_color' else 'PBR纹理已重烘焙至本次处理网格' if appearance['status']=='pbr_rebaked' else '顶点底色')
         md.append('外观：'+label+'；'+(appearance.get('warning') or appearance.get('reason') or '外观来源与保留记录见JSON。'))
     if ctx.get('explanation'): md.append('语言模型说明（不替代检查证据）：\n\n' + ctx['explanation'])
     md.append('结构化尺度、修改参数、逐版检查、产物与证据、资源及切片记录见同目录quality.json。')

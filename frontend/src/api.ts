@@ -8,7 +8,7 @@ export interface Capabilities {
   backend_profiles?: Record<string, ('official'|'course_fast')[]>;
   workflow_policy?: 'guided'|'automatic_glb';
   face_budget_policy?: 'image-complexity-v1'|null;
-  appearance_policy?: 'official-pbr-v1'|'original-glb-v1'|'repaired-glb-v1'|'print-copy-v1';
+  appearance_policy?: 'official-pbr-v1'|'original-glb-v1'|'repaired-glb-v1'|'print-copy-v1'|'print-copy-color-v1';
   print_copy_configured?:boolean;
   delivery_stl_download?: boolean;
   export_options?: {policy_version:string;min_target_faces:number;max_target_faces:number;min_texture_size:number;max_texture_size:number;default_texture_size:number};

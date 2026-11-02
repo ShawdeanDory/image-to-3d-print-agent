@@ -103,7 +103,7 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     if ctx.get('gpu_hole_policy')=='gpu-boundary-fill-v1':args['gpu_hole_repair']=True
                     if ctx['backend']=='trellis2_candidate':
                         args.update({k:v for k,v in (ctx.get('export_options') or {}).items() if v is not None})
-                        if ctx.get('delivery_policy') in {'original-glb-v1','repaired-glb-v1','print-copy-v1'} and 'export_target_faces' not in args and ctx.get('mesh_budget'):
+                        if ctx.get('delivery_policy') in {'original-glb-v1','repaired-glb-v1','print-copy-v1','print-copy-color-v1'} and 'export_target_faces' not in args and ctx.get('mesh_budget'):
                             args['export_target_faces']=ctx['mesh_budget'].get('effective_target_faces',ctx['mesh_budget']['target_faces'])
                     outcome=tool(ctx,'reconstruct',backend=ctx['backend'],prepared_outcome=ctx['prepared_outcome'],review=review.model_dump(),**args)
                     ctx['reconstruction_metrics']=outcome.tool.data.get('model');ctx['next']='clean'
@@ -135,7 +135,7 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     ctx['next']='plan'
                 elif name=='plan':
                     inspection=MeshInspection.model_validate(ctx['inspection']) if ctx.get('inspection') else None
-                    if ctx.get('delivery_policy')=='print-copy-v1':
+                    if ctx.get('delivery_policy') in {'print-copy-v1','print-copy-color-v1'}:
                         # 单独打印政策不做后续减面，也不先消耗GPU补片轮数。
                         if inspection is None or inspection.ready_for_print or ctx.get('repair_attempts',0)>=2 or ctx.get('print_copy_blocked'):
                             ctx['next']='deliver'
@@ -186,9 +186,9 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                         ctx.update(mesh_version=best['mesh_version'],inspection=best['inspection'])
                         ctx['repair_round']=MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).repair_round
                     original=ctx.get('delivery_policy')=='original-glb-v1'
-                    print_copy=ctx.get('delivery_policy')=='print-copy-v1'
+                    print_copy=ctx.get('delivery_policy') in {'print-copy-v1','print-copy-color-v1'}
                     original_data=tool(ctx,'export_original_glb',mesh_version=ctx['mesh_version']).tool.data if print_copy else None
-                    outcome=tool(ctx,'export_original_glb' if original else 'export_print_copy' if print_copy else 'export_glb',mesh_version=ctx['mesh_version']);data=outcome.tool.data
+                    outcome=tool(ctx,'export_original_glb' if original else ('export_print_color' if ctx.get('delivery_policy')=='print-copy-color-v1' else 'export_print_copy') if print_copy else 'export_glb',mesh_version=ctx['mesh_version']);data=outcome.tool.data
                     inspected_version=data.get('inspection_mesh_version') if original else data.get('mesh_version')
                     if inspected_version!=ctx['mesh_version'] or data.get('independent_readback') is not True:
                         raise ToolFailure('STATE_CONFLICT','GLB缺少本版本独立读回证据')
@@ -209,7 +209,7 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     else:
                         ctx['delivery']=GenerationDelivery(artifact_id=data['artifact_id'],mesh_version=ctx['mesh_version'],
                             independent_readback=True,print_check=status,repair_attempts=ctx.get('repair_attempts',0),dimensions_mm=data['dimensions_mm'],warnings=ctx['warnings'],
-                            **({'geometry_policy':'print_copy','stl_artifact_id':data['stl_artifact_id'],
+                            **({'geometry_policy':'print_copy_color' if ctx.get('delivery_policy')=='print-copy-color-v1' else 'print_copy','stl_artifact_id':data['stl_artifact_id'],
                                 'original_artifact_id':original_data['artifact_id']} if print_copy else {})).model_dump(mode='json')
                     ctx['export_data']=data;ctx['next']='explain' if settings.llm.configured else 'finish'
                     if ctx.get('mesh_budget'):

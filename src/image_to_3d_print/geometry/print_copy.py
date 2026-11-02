@@ -50,20 +50,33 @@ def repair_copy(root,run,version,reference_version,phase,inspection,height,min_w
         'appearance':'print_geometry_without_original_uv','rebaked':False})
 
 
-def export_copy(root,run,version):
+def export_copy(root,run,version,*,colored=False):
     from ..artifacts.export import _check_same_geometry
     session=ToolSession(root,run,'export',version);source=MeshStore(root).get(run,version)
     if source.unit!='mm':raise ToolFailure('STATE_CONFLICT','打印副本导出需要明确毫米尺度')
     mesh=load_mesh(Path(root)/source.relative_path)
-    # 即使没有成功重网格，也不把旧贴图采样出的顶点色冒充打印材质。
-    display=mesh.copy();display.visual.vertex_colors=np.tile([180,200,210,255],(len(display.vertices),1))
-    glb=session.directory/'print-copy.glb';write_plain_glb(display,glb,'mm')
+    glb=session.directory/'print-copy.glb'
+    if colored:
+        from ..artifacts.print_color import reproject_pbr
+        from .glb_preserve import GLBDocument
+        reference=source
+        while True:
+            path=Path(root)/reference.relative_path
+            if path.suffix.lower()=='.glb' and GLBDocument(path).has_uv:break
+            if not reference.parent:raise ToolFailure('REFERENCE_NOT_FOUND','缺少本任务UV/PBR来源，不能把灰版当彩色版')
+            reference=MeshStore(root).get(run,reference.parent)
+        appearance=reproject_pbr(path,mesh,glb)
+        appearance.update(source_mesh_version=reference.mesh_version,source_sha256=reference.sha256)
+    else:
+        display=mesh.copy();display.visual.vertex_colors=np.tile([180,200,210,255],(len(display.vertices),1))
+        write_plain_glb(display,glb,'mm')
+        appearance={'status':'print_geometry','pbr_available':False,'rebaked':False,
+            'warning':'打印副本允许必要重网格、填实内腔、有限厚度补偿/底部切平，不含原UV/PBR；原始彩色GLB后台保留，未经重烘焙。'}
     stl=session.directory/'print-copy.stl';mesh.export(stl)
     _check_same_geometry(mesh,load_mesh(glb))
     stl_mesh=load_mesh(stl);_check_same_geometry(mesh,stl_mesh)
     main=session.add('glb',glb,'repaired_mesh','mm');stl_record=session.add('stl',stl,'candidate_stl','mm')
-    warning='打印副本允许必要重网格、填实内腔、有限厚度补偿/底部切平，不含原UV/PBR；原始彩色GLB另存，未经重烘焙。'
     return session.finish({'artifact_id':main.artifact_id,'stl_artifact_id':stl_record.artifact_id,
         'mesh_version':version,'dimensions_mm':mesh.extents.tolist(),'face_count':len(mesh.faces),
         'independent_readback':True,'artifact_frames':{main.artifact_id:'y_up',stl_record.artifact_id:'z_up'},
-        'appearance':{'status':'print_geometry','pbr_available':False,'rebaked':False,'warning':warning},'print_certified':False})
+        'appearance':appearance,'print_certified':False})

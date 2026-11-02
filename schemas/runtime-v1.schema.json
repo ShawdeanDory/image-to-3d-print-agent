@@ -555,7 +555,8 @@
           "default": "preserve_uv",
           "enum": [
             "preserve_uv",
-            "print_copy"
+            "print_copy",
+            "print_copy_color"
           ],
           "title": "Geometry Policy",
           "type": "string"

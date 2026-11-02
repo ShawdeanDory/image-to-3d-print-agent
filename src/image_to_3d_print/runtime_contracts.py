@@ -121,7 +121,7 @@ class GenerationDelivery(ContractModel):
     print_certified: Literal[False] = False
     repair_attempts: Annotated[StrictInt, Field(ge=0,le=2)] = 0
     dimensions_mm: Dimensions
-    geometry_policy: Literal['preserve_uv','print_copy'] = 'preserve_uv'
+    geometry_policy: Literal['preserve_uv','print_copy','print_copy_color'] = 'preserve_uv'
     original_artifact_id: Id | None = None
     stl_artifact_id: Id | None = None
     warnings: list[Text] = Field(default_factory=list)
@@ -142,7 +142,7 @@ class GenerationTaskResponse(ModelTaskResponse):
             raise ValueError('GLB交付必须引用本任务实际GLB')
         if not any(a.kind=='quality_report' and a.mesh_version==delivery.mesh_version for a in artifacts.values()):
             raise ValueError('GLB完成必须附带同版本质量报告')
-        if delivery.geometry_policy=='print_copy':
+        if delivery.geometry_policy in {'print_copy','print_copy_color'}:
             stl=artifacts.get(delivery.stl_artifact_id)
             original=artifacts.get(delivery.original_artifact_id)
             if stl is None or stl.kind!='candidate_stl' or stl.mesh_version!=delivery.mesh_version or stl.unit!='mm' or not stl.relative_path.endswith('.stl'):

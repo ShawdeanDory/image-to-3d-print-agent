@@ -24,9 +24,9 @@ def test_policy_snapshot_and_original_stl_binding(setup_service,monkeypatch):
     tools=TexturedFixture(monkeypatch)
     run=service.create(CreateTask(request=request),'same')['run_id']
     ctx=service.store.row(run)['context']
-    assert ctx['delivery_policy']=='print-copy-v1' and not ctx.get('gpu_hole_policy')
+    assert ctx['delivery_policy']=='print-copy-color-v1' and not ctx.get('gpu_hole_policy')
     row=pump(service,settings,run,tools);assert row['status']=='succeeded',row['context'].get('error')
-    delivery=row['response']['delivery'];assert delivery['geometry_policy']=='print_copy'
+    delivery=row['response']['delivery'];assert delivery['geometry_policy']=='print_copy_color'
     assert delivery['print_certified'] is False
     artifacts={a['artifact_id']:a for a in row['response']['artifacts']}
     stl=artifacts[delivery['stl_artifact_id']];glb=artifacts[delivery['artifact_id']]
@@ -34,11 +34,11 @@ def test_policy_snapshot_and_original_stl_binding(setup_service,monkeypatch):
     np.testing.assert_allclose(load_mesh(settings.root/stl['relative_path']).extents,load_mesh(settings.root/glb['relative_path']).extents,atol=.01)
     from image_to_3d_print.geometry.glb_preserve import GLBDocument
     exported=GLBDocument(settings.root/glb['relative_path'])
-    assert not exported.has_uv and not exported.tree.get('images')
-    assert len(np.unique(load_mesh(settings.root/glb['relative_path']).visual.vertex_colors,axis=0))==1
+    assert exported.has_uv and exported.tree.get('images')
+    assert exported.material_signature()==GLBDocument(tools.original).material_signature()
     original=artifacts[delivery['original_artifact_id']]
     assert digest(settings.root/original['relative_path'])==tools.original_sha
-    assert tools.calls.count('reconstruct')==1 and tools.calls.count('export_print_copy')==1
+    assert tools.calls.count('reconstruct')==1 and tools.calls.count('export_print_color')==1
     assert service.create(CreateTask(request=request),'same')['run_id']==run
 
 

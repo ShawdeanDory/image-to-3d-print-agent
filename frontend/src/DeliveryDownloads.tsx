@@ -10,6 +10,6 @@ export function printNotice(status:string|undefined,checks:{name:string;status:s
 export default function DeliveryDownloads({busy,stlAvailable,onGLB,onSTL}:{
   busy:boolean;stlAvailable:boolean;onGLB:()=>void;onSTL:()=>void;
 }){
-  return <div className="actions"><button className="primary" disabled={busy} onClick={onGLB}>下载GLB</button>
+  return <div className="actions"><button className="primary" disabled={busy} onClick={onGLB}>下载最终彩色GLB</button>
     <button disabled={busy||!stlAvailable} onClick={onSTL}>下载STL</button></div>;
 }

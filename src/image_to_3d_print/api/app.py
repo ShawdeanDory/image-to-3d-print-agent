@@ -42,7 +42,7 @@ def create_app(settings=None):
             'input_review_policy': settings.input_review_policy,
             'workflow_policy':settings.workflow_policy,
             'face_budget_policy':'image-complexity-v1' if settings.workflow_policy=='automatic_glb' else None,
-            'appearance_policy':'print-copy-v1' if settings.tools.print_repair is not None else 'repaired-glb-v1',
+            'appearance_policy':'print-copy-color-v1' if settings.tools.print_repair is not None else 'repaired-glb-v1',
             'print_copy_configured':settings.tools.print_repair is not None,
             'delivery_stl_download':True,
             'eye_texture_policy':None,

@@ -121,15 +121,11 @@ export default function ResultPreview({run,artifact,frame,stlAvailable,dimension
       });
     }
     if(value==='reset'){e.model.rotation.set(0,0,0);e.controls.autoRotate=false;setRotate(false);e.view('perspective');e.grid.position.y=new THREE.Box3().setFromObject(e.model).min.y-.002;}
-    if(value==='snapshot'){e.renderer.render(e.scene,e.camera);e.renderer.domElement.toBlob(blob=>{if(blob)save(blob,`preview-${run}-${isSTL?'stl':'glb'}.png`);});}
     if(value==='environment'){const next=environment==='studio'?'forest':'studio';void e.environment(next).then(ok=>{if(ok&&engine.current===e)setEnvironment(next);});}
     if(value==='lighting')setLighting(value=>!value);
     e.controls.update();
   }
   async function toggleFullscreen(){try{if(document.fullscreenElement===viewport.current)await document.exitFullscreen();else await viewport.current?.requestFullscreen();}catch{setEnvironmentNotice('当前浏览器不支持全屏，请使用窗口预览。');}}
-  function exportInfo(){save(new Blob([JSON.stringify({run_id:run,artifact_id:artifact.artifact_id,mesh_version:artifact.mesh_version,
-    preview_format:isSTL?'stl':'glb',file_statistics:stats,dimensions_mm:dimensionsMm??null,
-    source_up_axis:isSTL?'z':frame==='z_up'?'z':'y',display_up_axis:'y',preview_only:true,print_certified:false},null,2)],{type:'application/json'}),`model-info-${run}-${isSTL?'stl':'glb'}.json`);}
   return <div className="result-preview">
     <div className="result-heading"><div className="result-formats" role="group" aria-label="结果预览格式">
       <button type="button" aria-pressed={!isSTL} onClick={()=>setFormat('glb')}>{plainGeometry?'GLB几何预览':'GLB彩色预览'}</button>
@@ -155,14 +151,13 @@ export default function ResultPreview({run,artifact,frame,stlAvailable,dimension
     <div className="result-view-row"><span>视图控制</span><div>{views.map(([view,label])=><button type="button" key={view} disabled={!ready} onClick={()=>{const e=engine.current;if(e){e.controls.autoRotate=false;setRotate(false);e.view(view);}}}>{label}</button>)}</div></div>
     <p className="result-hint">拖动旋转 · 滚轮缩放 · 右键平移 · {environment==='studio'?'柔光棚拍环境':'官方森林HDR环境'}{isSTL?' · 已按Z朝上转换显示':''}<br/>显示调整不改文件；尺寸以毫米报告为准，预览不代表打印合格。</p>
     {environmentNotice&&<p role="status" className="result-environment-notice">{environmentNotice}</p>}
-    {stats&&<div className="result-info"><div className="result-info-title"><strong>模型信息</strong><button type="button" onClick={exportInfo}>导出JSON</button></div>
+    {stats&&<div className="result-info"><div className="result-info-title"><strong>模型信息</strong></div>
       <dl><div><dt>文件顶点数</dt><dd>{stats.vertices.toLocaleString()}</dd></div><div><dt>三角面数</dt><dd>{stats.triangles.toLocaleString()}</dd></div><div><dt>材质数</dt><dd>{stats.materials}</dd></div><div><dt>文件大小</dt><dd>{(stats.fileBytes/1000000).toFixed(2)}MB</dd></div></dl>
       <p>{dimensionsMm?'交付尺寸：'+dimensionsMm.map(v=>v.toFixed(2)).join(' × ')+'mm':'原始文件无目标毫米尺度，不作尺寸测量。'}<br/>网格：{artifact.mesh_version}</p>
     </div>}
   </div>;
 }
 
-function save(blob:Blob,name:string){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function disposeObject(object:THREE.Object3D){
   const geometries=new Set<THREE.BufferGeometry>(),materials=new Set<THREE.Material>(),textures=new Set<THREE.Texture>();
   object.traverse(node=>{const mesh=node as THREE.Mesh;if(!mesh.isMesh&&!(node as THREE.LineSegments).isLineSegments)return;

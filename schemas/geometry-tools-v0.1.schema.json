@@ -1283,6 +1283,7 @@
             "export_glb",
             "export_original_glb",
             "export_print_copy",
+            "export_print_color",
             "preview"
           ],
           "title": "Operation",
@@ -2315,6 +2316,7 @@
           "export": "#/$defs/MeshCall",
           "export_glb": "#/$defs/MeshCall",
           "export_original_glb": "#/$defs/MeshCall",
+          "export_print_color": "#/$defs/MeshCall",
           "export_print_copy": "#/$defs/MeshCall",
           "import_image": "#/$defs/ImportCall",
           "inspect": "#/$defs/InspectCall",

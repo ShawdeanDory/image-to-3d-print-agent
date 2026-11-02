@@ -33,6 +33,10 @@ export function deliveryModel(artifacts: ArtifactRecord[], run: string, delivery
     throw Error('交付GLB与登记产物或网格版本不一致，已停止预览和下载');
   return artifact;
 }
+export function finalDeliveryModel(artifacts:ArtifactRecord[],run:string,delivery?:{artifact_id:string;mesh_version:string}|null){
+  const result=deliveryModel(artifacts,run,delivery);
+  return result?.kind==='repaired_mesh'&&result.unit==='mm'?result:undefined;
+}
 export function display(value: unknown) { return value == null ? '未知' : typeof value==='object' ? JSON.stringify(value) : String(value); }
 export function checkMeasure(name:string,value:unknown,unit?:string|null,threshold=false){
   if(value==null)return '未知';if(typeof value==='boolean')return value?'是':'否';

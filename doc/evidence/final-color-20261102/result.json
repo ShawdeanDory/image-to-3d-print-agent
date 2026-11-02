@@ -1,0 +1,196 @@
+{
+  "task": "MID-FINAL-COLOR-001",
+  "date": "2026-11-02",
+  "baseline": "54c55fb",
+  "real_color": {
+    "run_id": "e49c6704-adac-4fbb-abc1-aa6fc3d2933c",
+    "root": "/root/autodl-tmp/image-to-3d-print-agent/runs/final-color-20261102-validation",
+    "delivery": {
+      "artifact_id": "t_25d7c91f99934d3b_glb",
+      "dimensions_mm": [
+        151.4071747660637,
+        120.1726384460926,
+        119.99999731779099
+      ],
+      "geometry_policy": "print_copy_color",
+      "independent_readback": true,
+      "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+      "original_artifact_id": "t_a072d155b5da4410_original_glb",
+      "print_certified": false,
+      "print_check": "passed",
+      "repair_attempts": 2,
+      "stl_artifact_id": "t_25d7c91f99934d3b_stl",
+      "warnings": [
+        "最终修复几何复用原贴图/PBR，UV按近表面对应重建；补洞/加厚位置的颜色为近似，未重烘焙。"
+      ]
+    },
+    "appearance": {
+      "status": "print_pbr_reprojected",
+      "policy_version": "print-pbr-reproject-v1",
+      "pbr_available": true,
+      "rebaked": false,
+      "approximation": true,
+      "source_images_sha256": [
+        "f5f964b04f7dca3df5508b00d0dfcfc6c8488300815419b1cdf59b83f5a3c897",
+        "b2f22f35b907ce7d24587ca274f49a44f364b2312d150799218ef4570ffb0a3a"
+      ],
+      "max_centroid_distance_mm": 1.0213555009984725,
+      "p95_centroid_distance_mm": 0.6935506646564891,
+      "max_allowed_distance_mm": 2.0,
+      "source_faces": 99391,
+      "target_faces": 166738,
+      "independent_triangle_correspondence": true,
+      "warning": "最终修复几何复用原贴图/PBR，UV按近表面对应重建；补洞/加厚位置的颜色为近似，未重烘焙。",
+      "source_mesh_version": "m_7de10098b2d54adab76f7dba",
+      "source_sha256": "80b4adcb3cf4d582bc9b967b6f4b9cc92c9bcab99d0554ea900a969b73f98067"
+    },
+    "source_unchanged": true,
+    "new_model_calls": 0,
+    "new_repair_calls": 0,
+    "new_slicing_calls": 0,
+    "seconds": 23.402632925659418,
+    "artifacts": [
+      {
+        "artifact_id": "t_25d7c91f99934d3b_glb",
+        "run_id": "e49c6704-adac-4fbb-abc1-aa6fc3d2933c",
+        "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+        "kind": "repaired_mesh",
+        "relative_path": "runs/e49c6704-adac-4fbb-abc1-aa6fc3d2933c/tools/t_25d7c91f99934d3b/print-copy.glb",
+        "created_at": "2026-11-02T02:32:20.566926Z",
+        "derived_from": [],
+        "unit": "mm"
+      },
+      {
+        "artifact_id": "t_25d7c91f99934d3b_stl",
+        "run_id": "e49c6704-adac-4fbb-abc1-aa6fc3d2933c",
+        "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+        "kind": "candidate_stl",
+        "relative_path": "runs/e49c6704-adac-4fbb-abc1-aa6fc3d2933c/tools/t_25d7c91f99934d3b/print-copy.stl",
+        "created_at": "2026-11-02T02:32:20.566926Z",
+        "derived_from": [],
+        "unit": "mm"
+      },
+      {
+        "artifact_id": "t_25d7c91f99934d3b_report",
+        "run_id": "e49c6704-adac-4fbb-abc1-aa6fc3d2933c",
+        "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+        "kind": "inspection_report",
+        "relative_path": "runs/e49c6704-adac-4fbb-abc1-aa6fc3d2933c/tools/t_25d7c91f99934d3b/tool-report.json",
+        "created_at": "2026-11-02T02:32:20.566926Z",
+        "derived_from": [],
+        "unit": null
+      }
+    ],
+    "original_sha256": "c339fdb9f18888ed95a1d9c7ae5ee97fcd3250f916a561cac7752685b84a506f"
+  },
+  "verified": {
+    "files": {
+      "repaired_mesh": {
+        "sha256": "5e43f145980222d084fd4c4e41b86f549e61a2f295b76cd0932308dcd8dbb568",
+        "bytes": 35160516,
+        "mesh_version": "m_9aca1fce00d84b02b63ff34b"
+      },
+      "candidate_stl": {
+        "sha256": "12b14971ae8c0df360cc21e9a8c918a1bfffbda8768daa2a0f3a7db80dd8eefc",
+        "bytes": 8336984,
+        "mesh_version": "m_9aca1fce00d84b02b63ff34b"
+      }
+    },
+    "cloud_sources_exact": 12,
+    "status_counts": [
+      [
+        "cancelled",
+        9
+      ],
+      [
+        "failed",
+        1
+      ],
+      [
+        "succeeded",
+        24
+      ],
+      [
+        "waiting_for_input",
+        3
+      ]
+    ],
+    "appearance_policy": "print-copy-color-v1",
+    "new_model_calls": 0,
+    "new_llm_calls": 0,
+    "original_unchanged": true
+  },
+  "tests": {
+    "windows_passed": 312,
+    "windows_skipped": 14,
+    "linux_focused_passed": 12,
+    "frontend_passed": 24,
+    "build": "passed"
+  },
+  "browser": {
+    "real_isolated_cloud_api": true,
+    "final_glb_and_stl_only": true,
+    "download_buttons": 2,
+    "downloads_match_server": true,
+    "new_gpu_generation": false
+  },
+  "deployment": {
+    "published": true,
+    "files": 12,
+    "old_tasks_unchanged": 37,
+    "configuration": {
+      "schema_version": "runtime-v1",
+      "default_backend": "trellis2_candidate",
+      "configured_backends": [
+        "trellis2_candidate"
+      ],
+      "inspection_configured": true,
+      "llm_configured": true,
+      "llm_model": "deepseek-flash",
+      "confirmation_origin": "human",
+      "input_review_policy": "automatic",
+      "workflow_policy": "automatic_glb",
+      "face_budget_policy": "image-complexity-v1",
+      "appearance_policy": "print-copy-color-v1",
+      "print_copy_configured": true,
+      "delivery_stl_download": true,
+      "eye_texture_policy": null,
+      "gpu_hole_policy": null,
+      "export_options": {
+        "policy_version": "export-options-v1",
+        "min_target_faces": 100,
+        "max_target_faces": 1000000,
+        "default_target_faces": "automatic",
+        "min_texture_size": 256,
+        "max_texture_size": 4096,
+        "default_texture_size": 2048
+      },
+      "preview_lighting": "official-forest-hdr-v1",
+      "backend_profiles": {
+        "trellis2_candidate": [
+          "course_fast"
+        ]
+      },
+      "worker_concurrency": 1,
+      "active_timeout_s": 1800.0,
+      "max_tool_calls": 32,
+      "max_llm_calls": 4,
+      "max_llm_tokens": 12000
+    },
+    "resident_implementation_unchanged": true,
+    "models_reinstalled": false,
+    "new_model_calls": 0,
+    "manual_shutdown": true
+  },
+  "manual_review": "passed",
+  "new_slicing_calls": 0,
+  "physical_print": false,
+  "manual_review_statement": "已核对，本轮人工复核通过",
+  "cleanup": {
+    "isolated_validation_api_stopped": true,
+    "temporary_preview_and_tunnel_stopped": true,
+    "temporary_browser_tab_closed": true,
+    "production_services_preserved": true,
+    "instance_shutdown": false
+  }
+}
