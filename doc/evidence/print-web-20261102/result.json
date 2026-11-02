@@ -1,0 +1,110 @@
+{
+  "task": "MID-PRINT-WEB-001",
+  "date": "2026-11-02",
+  "baseline": "51ea614",
+  "windows_tests": {
+    "passed": 307,
+    "skipped": 14
+  },
+  "linux_focused": {
+    "passed": 20
+  },
+  "final_display_regression": {
+    "windows": 7,
+    "linux": 7
+  },
+  "frontend_tests": 23,
+  "build": "passed",
+  "browser": {
+    "connected_real_isolated_cloud_api": true,
+    "model_source": "existing_generated_artifacts",
+    "glb_stl_and_original_preview": true,
+    "three_manual_downloads": true,
+    "no_new_model_calls": true,
+    "production_new_gpu_generation": "not_run"
+  },
+  "files": {
+    "print-copy.stl": {
+      "sha256": "12b14971ae8c0df360cc21e9a8c918a1bfffbda8768daa2a0f3a7db80dd8eefc",
+      "bytes": 8336984,
+      "browser_download_matches": true
+    },
+    "print-copy.glb": {
+      "sha256": "50fdefaa3e53e7b0af037321cfe2bd0cf0bc261185e55f2d060c3be9d777cd06",
+      "bytes": 4003080,
+      "browser_download_matches": true
+    },
+    "original-color.glb": {
+      "sha256": "c339fdb9f18888ed95a1d9c7ae5ee97fcd3250f916a561cac7752685b84a506f",
+      "bytes": 11058296,
+      "browser_download_matches": true
+    }
+  },
+  "slicing": {
+    "passed": true,
+    "layers": 672,
+    "first_z_mm": 0.2,
+    "last_z_mm": 120.0,
+    "has_extrusion_moves": true,
+    "physical_print": false,
+    "run_id": "e49c6704-adac-4fbb-abc1-aa6fc3d2933c",
+    "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+    "stl_sha256": "12b14971ae8c0df360cc21e9a8c918a1bfffbda8768daa2a0f3a7db80dd8eefc",
+    "profile_sha256": "f069457e60bcfa606316c367f2ba54b1993d7290f1650cf2c83bd811048b59f1",
+    "returncode": 0,
+    "seconds": 8.280949999999848,
+    "slicer": "PrusaSlicer2.9.6",
+    "execution_machine": "local_windows"
+  },
+  "deployment": {
+    "published": true,
+    "files": 16,
+    "old_tasks_unchanged": 36,
+    "configuration": {
+      "schema_version": "runtime-v1",
+      "default_backend": "trellis2_candidate",
+      "configured_backends": [
+        "trellis2_candidate"
+      ],
+      "inspection_configured": true,
+      "llm_configured": true,
+      "llm_model": "deepseek-flash",
+      "confirmation_origin": "human",
+      "input_review_policy": "automatic",
+      "workflow_policy": "automatic_glb",
+      "face_budget_policy": "image-complexity-v1",
+      "appearance_policy": "print-copy-v1",
+      "print_copy_configured": true,
+      "delivery_stl_download": true,
+      "eye_texture_policy": null,
+      "gpu_hole_policy": null,
+      "export_options": {
+        "policy_version": "export-options-v1",
+        "min_target_faces": 100,
+        "max_target_faces": 1000000,
+        "default_target_faces": "automatic",
+        "min_texture_size": 256,
+        "max_texture_size": 4096,
+        "default_texture_size": 2048
+      },
+      "preview_lighting": "official-forest-hdr-v1",
+      "backend_profiles": {
+        "trellis2_candidate": [
+          "course_fast"
+        ]
+      },
+      "worker_concurrency": 1,
+      "active_timeout_s": 1800.0,
+      "max_tool_calls": 32,
+      "max_llm_calls": 4,
+      "max_llm_tokens": 12000
+    },
+    "resident_implementation_unchanged": true,
+    "models_reinstalled": false,
+    "new_model_calls": 0,
+    "manual_shutdown": true
+  },
+  "manual_review": "passed",
+  "physical_print": false,
+  "manual_review_statement": "已核对，本轮人工复核通过"
+}

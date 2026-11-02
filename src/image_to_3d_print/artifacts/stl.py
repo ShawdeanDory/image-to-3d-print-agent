@@ -33,7 +33,13 @@ def delivery_stl(root, run_id, response, mesh_version):
         raise ToolFailure('STATE_CONFLICT', '网格尚未完成毫米定标，不能导出打印STL')
     mesh = load_mesh(Path(root) / source.relative_path)
     _check_same_geometry(mesh, _read_mm(glb))
-    payload = mesh.export(file_type='stl')
+    if delivery.stl_artifact_id is not None:
+        stored=next(a for a in task.artifacts if a.artifact_id==delivery.stl_artifact_id)
+        try:stl_file=resolve_artifact_path(root,stored.relative_path)
+        except ValueError as exc:raise ToolFailure('REFERENCE_NOT_FOUND','登记的打印STL文件不存在或越界') from exc
+        _check_same_geometry(mesh,load_mesh(stl_file))
+        payload=stl_file.read_bytes()
+    else:payload = mesh.export(file_type='stl')
     reread = trimesh.load(io.BytesIO(payload), file_type='stl', force='mesh', process=False)
     tolerance = max(.01, float(mesh.extents.max()) * 1e-5)
     if (len(reread.faces) != len(mesh.faces) or not np.isfinite(reread.vertices).all()

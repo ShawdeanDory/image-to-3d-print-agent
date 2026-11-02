@@ -551,6 +551,15 @@
           "title": "Dimensions Mm",
           "type": "array"
         },
+        "geometry_policy": {
+          "default": "preserve_uv",
+          "enum": [
+            "preserve_uv",
+            "print_copy"
+          ],
+          "title": "Geometry Policy",
+          "type": "string"
+        },
         "independent_readback": {
           "const": true,
           "title": "Independent Readback",
@@ -562,6 +571,21 @@
           "pattern": "^[a-z][a-z0-9_-]*$",
           "title": "Mesh Version",
           "type": "string"
+        },
+        "original_artifact_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Original Artifact Id"
         },
         "print_certified": {
           "const": false,
@@ -584,6 +608,21 @@
           "minimum": 0,
           "title": "Repair Attempts",
           "type": "integer"
+        },
+        "stl_artifact_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stl Artifact Id"
         },
         "warnings": {
           "items": {

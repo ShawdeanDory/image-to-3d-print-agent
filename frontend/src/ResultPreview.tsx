@@ -17,8 +17,8 @@ type Engine={scene:THREE.Scene;camera:THREE.PerspectiveCamera;controls:OrbitCont
   view:(view:StandardView)=>void;environment:(mode:Environment)=>Promise<boolean>};
 const views:[StandardView,string][]=[['front','正视图'],['back','背视图'],['top','顶视图'],['bottom','底视图'],['left','左视图'],['right','右视图']];
 
-export default function ResultPreview({run,artifact,frame,stlAvailable,dimensionsMm}:{
-  run:string;artifact:ArtifactRecord;frame?:'y_up'|'z_up';stlAvailable:boolean;dimensionsMm?:number[]|null;
+export default function ResultPreview({run,artifact,frame,stlAvailable,dimensionsMm,plainGeometry=false}:{
+  run:string;artifact:ArtifactRecord;frame?:'y_up'|'z_up';stlAvailable:boolean;dimensionsMm?:number[]|null;plainGeometry?:boolean;
 }){
   const host=useRef<HTMLDivElement>(null),viewport=useRef<HTMLDivElement>(null),engine=useRef<Engine|null>(null);
   const [format,setFormat]=useState<'glb'|'stl'>('glb'),[ready,setReady]=useState(false),[error,setError]=useState('');
@@ -132,9 +132,9 @@ export default function ResultPreview({run,artifact,frame,stlAvailable,dimension
     source_up_axis:isSTL?'z':frame==='z_up'?'z':'y',display_up_axis:'y',preview_only:true,print_certified:false},null,2)],{type:'application/json'}),`model-info-${run}-${isSTL?'stl':'glb'}.json`);}
   return <div className="result-preview">
     <div className="result-heading"><div className="result-formats" role="group" aria-label="结果预览格式">
-      <button type="button" aria-pressed={!isSTL} onClick={()=>setFormat('glb')}>GLB彩色预览</button>
+      <button type="button" aria-pressed={!isSTL} onClick={()=>setFormat('glb')}>{plainGeometry?'GLB几何预览':'GLB彩色预览'}</button>
       <button type="button" aria-pressed={isSTL} disabled={!stlAvailable} onClick={()=>setFormat('stl')}>STL几何预览</button>
-    </div><span>{isSTL?'不含纹理颜色':'保留本次UV/PBR材质'}</span></div>
+    </div><span>{isSTL||plainGeometry?'不含原UV/PBR纹理颜色':'保留本次UV/PBR材质'}</span></div>
     <div className="result-viewport" ref={viewport}>
       <div className="result-canvas" ref={host}/>
       <button className="result-fullscreen" type="button" aria-label={fullscreen?'退出全屏':'全屏展示'} title={fullscreen?'退出全屏':'全屏展示'} onClick={()=>void toggleFullscreen()}><ViewerIcon name="fullscreen"/></button>

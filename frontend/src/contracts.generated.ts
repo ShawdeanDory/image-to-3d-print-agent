@@ -154,11 +154,14 @@ export type ExperimentRecord = {
 export type GenerationDelivery = {
   "artifact_id": string;
   "dimensions_mm": Array<number>;
+  "geometry_policy"?: "preserve_uv" | "print_copy";
   "independent_readback": true;
   "mesh_version": string;
+  "original_artifact_id"?: (string | null);
   "print_certified"?: false;
   "print_check": "passed" | "failed" | "not_run";
   "repair_attempts"?: number;
+  "stl_artifact_id"?: (string | null);
   "warnings"?: Array<string>;
 };
 

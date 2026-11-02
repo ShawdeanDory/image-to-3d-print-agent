@@ -6,6 +6,7 @@ import PendingForm,{AxisSelect} from './PendingForm';
 import ModelView from './ModelView';
 import ResultPreview from './ResultPreview';
 import PrintSummary from './PrintSummary';
+import PrintCopyControls from './PrintCopyControls';
 import ReconstructionTiming from './ReconstructionTiming';
 import MeshBudgetInfo from './MeshBudgetInfo';
 import MaterialInfo from './MaterialInfo';
@@ -18,6 +19,7 @@ export default function App(){
   const [run,setRun]=useState(initialRun);const [task,setTask]=useState<RuntimeTask|null>(null);const [events,setEvents]=useState<RuntimeEvent[]>([]);
   const [error,setError]=useState('');const [connected,setConnected]=useState(false);const [busy,setBusy]=useState(false);
   const [notice,setNotice]=useState('');
+  const [showOriginal,setShowOriginal]=useState(false);
   const [transfer,setTransfer]=useState<ArtifactProgress|null>(null);
   const [downloadError,setDownloadError]=useState('');
   const [preview,setPreview]=useState('');const lock=useRef(false);const createKey=useRef(id('create'));const cursor=useRef(0);
@@ -35,7 +37,7 @@ export default function App(){
     setTask(current);setEvents(old=>mergeEvents(old,page.events,run));cursor.current=page.next_after;setError('');setConnected(true);
   },[run]);
   useEffect(()=>{
-    cursor.current=0;setTask(null);setEvents([]);setNotice('');setDownloadError('');
+    cursor.current=0;setTask(null);setEvents([]);setNotice('');setDownloadError('');setShowOriginal(false);
     if(!run)return;
     localStorage.setItem('i3d:last-run',run);const url=new URL(location.href);url.searchParams.set('task',run);history.replaceState(null,'',url);
     let stopped=false;let timer:ReturnType<typeof setTimeout>;
@@ -50,6 +52,9 @@ export default function App(){
   let active:ArtifactRecord|undefined;let deliveryError='';
   try{active=deliveryModel(response?.artifacts??[],run,response&&'delivery' in response?response.delivery:null);}catch(exc){deliveryError=message(exc);}
   const delivery=response&&'delivery' in response?response.delivery:null;
+  const printCopy=!!(delivery&&'geometry_policy' in delivery&&delivery.geometry_policy==='print_copy');
+  const originalArtifact=printCopy&&delivery&&'original_artifact_id' in delivery?(response?.artifacts??[]).find(a=>a.artifact_id===delivery.original_artifact_id):undefined;
+  const previewArtifact=showOriginal&&originalArtifact?originalArtifact:active;
   const stlAvailable=!!(cap?.delivery_stl_download&&active?.unit==='mm'&&response?.schema_version==='generation-v1');
 
   async function act(fn:()=>Promise<void>){if(lock.current)return;lock.current=true;setBusy(true);setError('');try{await fn();}catch(exc){setError(message(exc));}finally{lock.current=false;setBusy(false);}}
@@ -101,7 +106,7 @@ export default function App(){
     <label>补充描述<textarea name="description" maxLength={2000} placeholder="例如：做一个高8厘米的摆件。留空则仅使用填写的约束。"/></label>
     {cap&&!cap.llm_configured&&<p className="muted">语言模型未配置。请使用结构化约束并将描述留空。</p>}
     <button className="primary wide" disabled={!connected||!draftValid||!profiles.length}>{busy?'正在保存与创建…':'创建建模任务'}<span>↗</span></button>
-  </fieldset></form></section><aside className="guide"><span className="eyebrow">工作流</span><h2>提交后自动完成</h2><ol><li><strong>准备图片</strong><p>保留清晰原图，自动进入快速重建。</p></li><li><strong>生成原始模型</strong><p>使用本次图片重建，首次材质导出前进行GPU几何复查。</p></li><li><strong>打印检查与修复</strong><p>保留原件，在副本上定标、检查和最多2轮受限修复。</p></li><li><strong>结果与下载</strong><p>交付复检后的最佳有效GLB，明确未修好或未执行的项目。</p></li></ol><label>恢复已有任务<input id="resume-id" placeholder="输入任务UUID"/></label><button onClick={()=>{const v=(document.getElementById('resume-id') as HTMLInputElement).value.trim();if(/^[0-9a-f-]{36}$/i.test(v))setRun(v);else setError('请输入有效任务UUID');}}>读取原任务</button></aside></div>:
+  </fieldset></form></section><aside className="guide"><span className="eyebrow">工作流</span><h2>提交后自动完成</h2><ol><li><strong>准备图片</strong><p>保留清晰原图，自动进入快速重建。</p></li><li><strong>生成原始模型</strong><p>{cap?.print_copy_configured?'使用本次图片重建，原始彩色GLB独立保留。':'使用本次图片重建，首次材质导出前进行GPU几何复查。'}</p></li><li><strong>打印检查与修复</strong><p>保留原件，在副本上定标、检查和最多2轮受限修复。</p></li><li><strong>结果与下载</strong><p>交付复检后的最佳有效GLB，明确未修好或未执行的项目。</p></li></ol><label>恢复已有任务<input id="resume-id" placeholder="输入任务UUID"/></label><button onClick={()=>{const v=(document.getElementById('resume-id') as HTMLInputElement).value.trim();if(/^[0-9a-f-]{36}$/i.test(v))setRun(v);else setError('请输入有效任务UUID');}}>读取原任务</button></aside></div>:
   <><div className="task-bar"><div><span className={'badge '+response?.status}>{statusNames[response?.status||'']||'正在读取'}</span><strong>{stageNames[response?.data.state.stage||'']||'读取任务'}</strong><small>任务：{run}</small></div><div className="actions"><button onClick={newTask}>新建任务</button>{response&&!['failed','cancelled','succeeded'].includes(response.status)&&<button disabled={busy} onClick={()=>void act(async()=>{await api.cancel(run);await fetchTask();})}>取消任务</button>}</div></div>
   {notice&&<p role="status" className="notice">{notice}</p>}
   {downloadError&&<p role="alert" className="error">下载未完成：{downloadError}。可再次点击原下载按钮重试。</p>}
@@ -109,16 +114,17 @@ export default function App(){
   {task&&response&&<div className="workspace task-workspace"><div className="main-column">
     <section className="sheet model-sheet"><div className="section-title"><div><span className="eyebrow">模型与版本</span><h2>查看本次产物</h2></div><span className="muted">原始版本始终保留</span></div>
       {active&&!original&&<p role="status" className={delivery?.print_check==='passed'?'notice':'notice error'}><strong>{printNotice(delivery?.print_check,response.data.inspection?.checks??[])}</strong></p>}
-      {deliveryError&&<p role="alert" className="error">{deliveryError}</p>}{active?<div className="model-single">{response.status==='succeeded'?<ResultPreview run={run} artifact={active} frame={task.artifact_frames?.[active.artifact_id]} stlAvailable={stlAvailable} dimensionsMm={!original&&response.data.inspection?.mesh_version===active.mesh_version?response.data.inspection?.dimensions_mm:null}/>:<ModelView run={run} artifact={active} frame={task.artifact_frames?.[active.artifact_id]}/>}</div>:<div className="empty-model"><span>◎</span><h3>模型将在后台处理完成后显示</h3><p>当前{statusNames[response.status]}，等待服务端登记本任务交付GLB。</p></div>}
-      {active&&<p className="muted">{original?'历史任务原始GLB：未应用检查副本的定标和修复。':'交付GLB：已按目标尺度定标并复检，保留已有UV/PBR，不重烘焙。'}网格版本：{active.mesh_version}</p>}
+      {printCopy&&originalArtifact&&<PrintCopyControls original={showOriginal} busy={busy} onPreview={setShowOriginal} onDownload={()=>void act(()=>downloadFile(originalArtifact,`original-${run}.glb`))}/>}
+      {deliveryError&&<p role="alert" className="error">{deliveryError}</p>}{previewArtifact?<div className="model-single">{response.status==='succeeded'?<ResultPreview key={previewArtifact.artifact_id} run={run} artifact={previewArtifact} frame={task.artifact_frames?.[previewArtifact.artifact_id]} stlAvailable={stlAvailable&&!showOriginal} plainGeometry={printCopy&&!showOriginal} dimensionsMm={!original&&!showOriginal&&response.data.inspection?.mesh_version===active?.mesh_version?response.data.inspection?.dimensions_mm:null}/>:<ModelView run={run} artifact={previewArtifact} frame={task.artifact_frames?.[previewArtifact.artifact_id]}/>}</div>:<div className="empty-model"><span>◎</span><h3>模型将在后台处理完成后显示</h3><p>当前{statusNames[response.status]}，等待服务端登记本任务交付GLB。</p></div>}
+      {previewArtifact&&<p className="muted">{showOriginal?'原始彩色GLB：保留生成时的外观与坐标，未应用打印副本修复或毫米定标。':printCopy?'打印副本：按目标毫米尺度修复并复检，不含原UV/PBR；检查状态以报告为准。':original?'历史任务原始GLB：未应用检查副本的定标和修复。':'交付GLB：已按目标尺度定标并复检，保留已有UV/PBR，不重烘焙。'}网格版本：{previewArtifact.mesh_version}</p>}
       {response.data.inspection?.dimensions_mm&&<div className="dimensions"><span>{original?'检查副本尺寸（原始GLB未应用）':'交付版本检查尺寸'}</span><strong>{response.data.inspection.dimensions_mm.map(n=>n.toFixed(2)).join(' × ')}<small>mm</small></strong><span>网格：{response.data.inspection.mesh_version}</span></div>}
       <ArtifactImages run={run} artifacts={(response.artifacts??[]).filter(a=>['input_image','foreground_image'].includes(a.kind)||a.artifact_id===task.pending?.details?.preview_artifact_id)}/>
     </section>
     <ReconstructionTiming value={task.resources?.reconstruction}/>
     <GPURepairInfo value={task.resources?.gpu_boundary_repair}/>
     <MeshBudgetInfo value={task.resources?.mesh_budget} original={response.schema_version==='original-glb-v1'}/>
-    {active&&<MaterialInfo original={original}/>}
-    {response.status==='succeeded'&&active&&<section className="sheet"><h2>生成GLB已可下载</h2><p>{original?'历史任务保留原始文件，未应用检查副本的定标和修复。':'交付最佳有效的定标、复检版本，原始文件在下方另行下载。'}下载不代表可打印。</p>{delivery&&<p>自动修复尝试{delivery.repair_attempts??0}轮。</p>}{delivery?.warnings?.map((warning,index)=><p className="muted" key={index}>{warning}</p>)}<DeliveryDownloads busy={busy} stlAvailable={stlAvailable} onGLB={()=>void act(()=>downloadFile(active,`${original?'original':'repaired'}-${run}.glb`))} onSTL={()=>void act(downloadSTLFile)}/><p className="muted">STL不包含颜色，按当前交付几何以毫米导出，不会额外补洞。{!stlAvailable&&(original?'历史原始无单位GLB暂不支持STL下载。':'计算服务尚未提供同版本STL下载，请核对连接和服务更新。')}</p></section>}
+    {active&&<MaterialInfo original={original} printCopy={printCopy}/>}
+    {response.status==='succeeded'&&active&&<section className="sheet"><h2>{printCopy?'打印副本GLB与STL已可下载':'生成GLB已可下载'}</h2><p>{original?'历史任务保留原始文件，未应用检查副本的定标和修复。':'交付最佳有效的定标、复检版本，原始文件在下方另行下载。'}下载不代表可打印。</p>{delivery&&<p>自动修复尝试{delivery.repair_attempts??0}轮。</p>}{delivery?.warnings?.map((warning,index)=><p className="muted" key={index}>{warning}</p>)}<DeliveryDownloads busy={busy} stlAvailable={stlAvailable} onGLB={()=>void act(()=>downloadFile(active,`${original?'original':'repaired'}-${run}.glb`))} onSTL={()=>void act(downloadSTLFile)}/><p className="muted">STL不包含颜色，按当前交付几何以毫米导出，不会额外补洞。{!stlAvailable&&(original?'历史原始无单位GLB暂不支持STL下载。':'计算服务尚未提供同版本STL下载，请核对连接和服务更新。')}</p></section>}
     {task.pending&&response.schema_version==='1.0.0'&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>{original?'检查副本的打印报告':'交付版本的打印报告'}</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>
     {!original&&active&&response.data.inspection?.mesh_version===active.mesh_version&&response.data.inspection&&<PrintSummary inspection={response.data.inspection} profile={response.data.printer_profile}/>}

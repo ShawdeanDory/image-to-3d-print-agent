@@ -9,7 +9,7 @@ import sys
 from uuid import uuid4
 import numpy as np
 import trimesh
-from pydantic import Field
+from .print_config import PrintRepairConfig as PrintDemoConfig
 from .schemas.common import ContractModel,PrinterProfile,MeshInspection
 from .schemas.task import ModelTaskRequest
 from .jobs.config import Settings
@@ -18,12 +18,6 @@ from .geometry.core import MeshStore,load_mesh,topology
 from .geometry.glb_preserve import prepare_inspection_glb,write_plain_glb
 from .geometry.structure import preservation
 from .inspection.service import inspect_mesh,blender_call
-
-
-class PrintDemoConfig(ContractModel):
-    native_python:Path
-    native_paths:list[Path]=Field(min_length=1,max_length=4)
-    timeout_s:float=Field(default=180,gt=0,le=300)
 
 
 def shape_gate(before,after):

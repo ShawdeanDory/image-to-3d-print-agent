@@ -1,0 +1,23 @@
+{
+  "files_exact": 16,
+  "status_counts": [
+    [
+      "cancelled",
+      9
+    ],
+    [
+      "failed",
+      1
+    ],
+    [
+      "succeeded",
+      23
+    ],
+    [
+      "waiting_for_input",
+      3
+    ]
+  ],
+  "appearance_policy": "print-copy-v1",
+  "print_copy_configured": true
+}

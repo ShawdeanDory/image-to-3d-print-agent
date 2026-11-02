@@ -187,6 +187,15 @@
           "title": "Device",
           "type": "string"
         },
+        "execution_mode": {
+          "default": "per_task",
+          "enum": [
+            "per_task",
+            "resident"
+          ],
+          "title": "Execution Mode",
+          "type": "string"
+        },
         "execution_root": {
           "format": "path",
           "title": "Execution Root",
@@ -240,6 +249,19 @@
           "format": "path",
           "title": "Python",
           "type": "string"
+        },
+        "resident_socket": {
+          "anyOf": [
+            {
+              "format": "path",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resident Socket"
         },
         "seed": {
           "anyOf": [
@@ -332,6 +354,92 @@
         "reviewer"
       ],
       "title": "BedReview",
+      "type": "object"
+    },
+    "CheckResult": {
+      "additionalProperties": false,
+      "properties": {
+        "details": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Details",
+          "type": "object"
+        },
+        "evidence_artifact_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Artifact Id"
+        },
+        "name": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Name",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "fail",
+            "warn",
+            "not_run"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "threshold": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "tool_version": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Version"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "status"
+      ],
+      "title": "CheckResult",
       "type": "object"
     },
     "ComplexityCall": {
@@ -1174,6 +1282,7 @@
             "export",
             "export_glb",
             "export_original_glb",
+            "export_print_copy",
             "preview"
           ],
           "title": "Operation",
@@ -1191,6 +1300,118 @@
         "mesh_version"
       ],
       "title": "MeshCall",
+      "type": "object"
+    },
+    "MeshInspection": {
+      "additionalProperties": false,
+      "properties": {
+        "boundary_edge_count": {
+          "minimum": 0,
+          "title": "Boundary Edge Count",
+          "type": "integer"
+        },
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/CheckResult"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "component_count": {
+          "minimum": 0,
+          "title": "Component Count",
+          "type": "integer"
+        },
+        "dimensions_mm": {
+          "anyOf": [
+            {
+              "items": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "maxItems": 3,
+              "minItems": 3,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dimensions Mm"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "non_manifold_edge_count": {
+          "minimum": 0,
+          "title": "Non Manifold Edge Count",
+          "type": "integer"
+        },
+        "non_manifold_vertex_count": {
+          "minimum": 0,
+          "title": "Non Manifold Vertex Count",
+          "type": "integer"
+        },
+        "normals_consistent": {
+          "title": "Normals Consistent",
+          "type": "boolean"
+        },
+        "unit": {
+          "enum": [
+            "mm",
+            "unitless"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "volume_mm3": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Volume Mm3"
+        },
+        "volume_reason": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Volume Reason"
+        },
+        "watertight": {
+          "title": "Watertight",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mesh_version",
+        "unit",
+        "component_count",
+        "watertight",
+        "normals_consistent",
+        "boundary_edge_count",
+        "non_manifold_edge_count",
+        "non_manifold_vertex_count"
+      ],
+      "title": "MeshInspection",
       "type": "object"
     },
     "MeshVersion": {
@@ -1449,6 +1670,101 @@
         "asset_id"
       ],
       "title": "PrepareCall",
+      "type": "object"
+    },
+    "PrintRepairCall": {
+      "additionalProperties": false,
+      "properties": {
+        "height_mm": {
+          "maximum": 150,
+          "minimum": 100,
+          "title": "Height Mm",
+          "type": "number"
+        },
+        "inspection": {
+          "$ref": "#/$defs/MeshInspection"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "min_wall_mm": {
+          "exclusiveMinimum": 0,
+          "maximum": 1.4,
+          "title": "Min Wall Mm",
+          "type": "number"
+        },
+        "operation": {
+          "const": "repair_print_copy",
+          "title": "Operation",
+          "type": "string"
+        },
+        "phase": {
+          "maximum": 2,
+          "minimum": 1,
+          "title": "Phase",
+          "type": "integer"
+        },
+        "reference_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Reference Version",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "operation",
+        "mesh_version",
+        "reference_version",
+        "phase",
+        "inspection",
+        "height_mm",
+        "min_wall_mm"
+      ],
+      "title": "PrintRepairCall",
+      "type": "object"
+    },
+    "PrintRepairConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "native_paths": {
+          "items": {
+            "format": "path",
+            "type": "string"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Native Paths",
+          "type": "array"
+        },
+        "native_python": {
+          "format": "path",
+          "title": "Native Python",
+          "type": "string"
+        },
+        "timeout_s": {
+          "default": 180,
+          "exclusiveMinimum": 0,
+          "maximum": 300,
+          "title": "Timeout S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "native_python",
+        "native_paths"
+      ],
+      "title": "PrintRepairConfig",
       "type": "object"
     },
     "PrinterProfile": {
@@ -1857,6 +2173,17 @@
           ],
           "default": null
         },
+        "print_repair": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PrintRepairConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "view_mappings": {
           "additionalProperties": {
             "maxLength": 1000,
@@ -1988,6 +2315,7 @@
           "export": "#/$defs/MeshCall",
           "export_glb": "#/$defs/MeshCall",
           "export_original_glb": "#/$defs/MeshCall",
+          "export_print_copy": "#/$defs/MeshCall",
           "import_image": "#/$defs/ImportCall",
           "inspect": "#/$defs/InspectCall",
           "measure_view": "#/$defs/MeasureCall",
@@ -1995,6 +2323,7 @@
           "preview": "#/$defs/MeshCall",
           "propose": "#/$defs/ProposeCall",
           "reconstruct": "#/$defs/ReconstructCall",
+          "repair_print_copy": "#/$defs/PrintRepairCall",
           "scale": "#/$defs/ScaleCall"
         },
         "propertyName": "operation"
@@ -2023,6 +2352,9 @@
         },
         {
           "$ref": "#/$defs/InspectCall"
+        },
+        {
+          "$ref": "#/$defs/PrintRepairCall"
         },
         {
           "$ref": "#/$defs/ProposeCall"

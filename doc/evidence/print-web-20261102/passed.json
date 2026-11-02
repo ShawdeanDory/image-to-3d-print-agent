@@ -1,0 +1,1032 @@
+{
+  "run_id": "e49c6704-adac-4fbb-abc1-aa6fc3d2933c",
+  "origin": "existing_artifact_replay",
+  "new_model_calls": 0,
+  "llm_calls": 0,
+  "source_sha256": "c339fdb9f18888ed95a1d9c7ae5ee97fcd3250f916a561cac7752685b84a506f",
+  "original_unchanged": true,
+  "delivery": {
+    "artifact_id": "t_19a7cb0b449b4dad_glb",
+    "dimensions_mm": [
+      151.4071747660637,
+      120.1726384460926,
+      119.99999731779099
+    ],
+    "geometry_policy": "print_copy",
+    "independent_readback": true,
+    "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+    "original_artifact_id": "t_a072d155b5da4410_original_glb",
+    "print_certified": false,
+    "print_check": "passed",
+    "repair_attempts": 2,
+    "stl_artifact_id": "t_19a7cb0b449b4dad_stl",
+    "warnings": [
+      "打印副本允许必要重网格、填实内腔、有限厚度补偿/底部切平，不含原UV/PBR；原始彩色GLB另存，未经重烘焙。"
+    ]
+  },
+  "face_count": 166738,
+  "inspection": {
+    "boundary_edge_count": 0,
+    "checks": [
+      {
+        "details": {},
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "finite_coordinates",
+        "status": "pass",
+        "threshold": null,
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": null,
+        "value": true
+      },
+      {
+        "details": {
+          "reason": "分离组件须确认保留或指定删除，不能默认只留最大件",
+          "review": null
+        },
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "components",
+        "status": "pass",
+        "threshold": 1,
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": "count",
+        "value": 1
+      },
+      {
+        "details": {},
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "boundary_edges",
+        "status": "pass",
+        "threshold": 0,
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": null,
+        "value": 0
+      },
+      {
+        "details": {},
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "non_manifold_edges",
+        "status": "pass",
+        "threshold": 0,
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": null,
+        "value": 0
+      },
+      {
+        "details": {},
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "non_manifold_vertices",
+        "status": "pass",
+        "threshold": 0,
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": null,
+        "value": 0
+      },
+      {
+        "details": {},
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "watertight",
+        "status": "pass",
+        "threshold": true,
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": null,
+        "value": true
+      },
+      {
+        "details": {},
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "normals",
+        "status": "pass",
+        "threshold": true,
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": null,
+        "value": true
+      },
+      {
+        "details": {
+          "face_indices": []
+        },
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "self_intersection",
+        "status": "pass",
+        "threshold": 0,
+        "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+        "unit": null,
+        "value": 0
+      },
+      {
+        "details": {
+          "global_minimum_proven": false,
+          "sample_threshold_mm": 1.22,
+          "value_kind": "validated_sampling_lower_bound"
+        },
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "wall_thickness",
+        "status": "pass",
+        "threshold": 1.2,
+        "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+        "unit": "mm",
+        "value": 1.2
+      },
+      {
+        "details": {
+          "critical_face_indices": [],
+          "definition": "downward normal angle to -Z <45 degrees, bed faces excluded",
+          "face_indices": {
+            "count": 25983,
+            "first_16": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "truncated_for_repository": true,
+            "full_evidence": "runs/print-web-20261102-01 and cloud validation directories"
+          },
+          "supports": "human_slicer_review"
+        },
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "overhang",
+        "status": "warn",
+        "threshold": 45.0,
+        "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+        "unit": "degree",
+        "value": 25983
+      },
+      {
+        "details": {
+          "dimensions_mm": [
+            151.4071747660637,
+            120.1726384460926,
+            119.99999731779099
+          ],
+          "target_height_mm": 120.0
+        },
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "dimensions",
+        "status": "pass",
+        "threshold": 1.2,
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": "mm",
+        "value": 2.682209014892578e-06
+      },
+      {
+        "details": {
+          "profile_kind": "demo",
+          "profile_version": "1.0.0"
+        },
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "build_volume",
+        "status": "pass",
+        "threshold": [
+          220.0,
+          220.0,
+          250.0
+        ],
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": "mm",
+        "value": true
+      },
+      {
+        "details": {
+          "contact_area_mm2": 632.7324665121805,
+          "human_review": null,
+          "minimum_z_mm": -1.8352776746388727e-23,
+          "origin": "automatic_policy",
+          "reason": "自动几何触地检测；未执行实际切片/打印稳定性验证"
+        },
+        "evidence_artifact_id": "t_d7b48e72187049c7_report",
+        "name": "bed_contact",
+        "status": "pass",
+        "threshold": 0.01,
+        "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+        "unit": "mm",
+        "value": true
+      }
+    ],
+    "component_count": 1,
+    "dimensions_mm": [
+      151.4071747660637,
+      120.1726384460926,
+      119.99999731779099
+    ],
+    "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+    "non_manifold_edge_count": 0,
+    "non_manifold_vertex_count": 0,
+    "normals_consistent": true,
+    "unit": "mm",
+    "volume_mm3": 837614.282664282,
+    "volume_reason": null,
+    "watertight": true
+  },
+  "inspection_history": [
+    {
+      "boundary_edge_count": 9,
+      "checks": [
+        {
+          "details": {},
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "finite_coordinates",
+          "status": "pass",
+          "threshold": null,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": true
+        },
+        {
+          "details": {
+            "reason": "分离组件须确认保留或指定删除，不能默认只留最大件",
+            "review": null
+          },
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "components",
+          "status": "warn",
+          "threshold": 1,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "count",
+          "value": 2
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "boundary_edges",
+          "status": "fail",
+          "threshold": 0,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": 9
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "non_manifold_edges",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "non_manifold_vertices",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "watertight",
+          "status": "fail",
+          "threshold": true,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": false
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "normals",
+          "status": "pass",
+          "threshold": true,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": true
+        },
+        {
+          "details": {
+            "face_indices": []
+          },
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "self_intersection",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {
+            "reason": "需要有效毫米尺度、水密且法线正确；不能将无命中当作通过"
+          },
+          "evidence_artifact_id": null,
+          "name": "wall_thickness",
+          "status": "not_run",
+          "threshold": null,
+          "tool_version": null,
+          "unit": null,
+          "value": null
+        },
+        {
+          "details": {
+            "critical_face_indices": [],
+            "definition": "downward normal angle to -Z <45 degrees, bed faces excluded",
+            "face_indices": {
+              "count": 13694,
+              "first_16": [
+                2250,
+                2291,
+                2315,
+                2316,
+                2317,
+                2318,
+                2319,
+                2322,
+                2325,
+                2326,
+                2327,
+                2329,
+                2341,
+                2427,
+                2428,
+                2429
+              ],
+              "truncated_for_repository": true,
+              "full_evidence": "runs/print-web-20261102-01 and cloud validation directories"
+            },
+            "supports": "human_slicer_review"
+          },
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "overhang",
+          "status": "warn",
+          "threshold": 45.0,
+          "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+          "unit": "degree",
+          "value": 13694
+        },
+        {
+          "details": {
+            "dimensions_mm": [
+              151.14472061395645,
+              119.69004943966866,
+              119.99999731779099
+            ],
+            "target_height_mm": 120.0
+          },
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "dimensions",
+          "status": "pass",
+          "threshold": 1.2,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "mm",
+          "value": 2.682209014892578e-06
+        },
+        {
+          "details": {
+            "profile_kind": "demo",
+            "profile_version": "1.0.0"
+          },
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "build_volume",
+          "status": "pass",
+          "threshold": [
+            220.0,
+            220.0,
+            250.0
+          ],
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "mm",
+          "value": true
+        },
+        {
+          "details": {
+            "contact_area_mm2": 0.0,
+            "human_review": null,
+            "minimum_z_mm": -1.6319492489353508e-24,
+            "origin": "automatic_policy",
+            "reason": "自动几何触地检测；未执行实际切片/打印稳定性验证"
+          },
+          "evidence_artifact_id": "t_150b6b38ef924e05_report",
+          "name": "bed_contact",
+          "status": "fail",
+          "threshold": 0.01,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "mm",
+          "value": false
+        }
+      ],
+      "component_count": 2,
+      "dimensions_mm": [
+        151.14472061395645,
+        119.69004943966866,
+        119.99999731779099
+      ],
+      "mesh_version": "m_7de10098b2d54adab76f7dba",
+      "non_manifold_edge_count": 0,
+      "non_manifold_vertex_count": 0,
+      "normals_consistent": true,
+      "unit": "mm",
+      "volume_mm3": null,
+      "volume_reason": "缺有效毫米实体、自交检查或方向证据",
+      "watertight": false
+    },
+    {
+      "boundary_edge_count": 0,
+      "checks": [
+        {
+          "details": {},
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "finite_coordinates",
+          "status": "pass",
+          "threshold": null,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": true
+        },
+        {
+          "details": {
+            "reason": "分离组件须确认保留或指定删除，不能默认只留最大件",
+            "review": null
+          },
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "components",
+          "status": "pass",
+          "threshold": 1,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "count",
+          "value": 1
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "boundary_edges",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "non_manifold_edges",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "non_manifold_vertices",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "watertight",
+          "status": "pass",
+          "threshold": true,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": true
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "normals",
+          "status": "pass",
+          "threshold": true,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": true
+        },
+        {
+          "details": {
+            "face_indices": []
+          },
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "self_intersection",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {
+            "face_indices": [
+              842,
+              844,
+              867,
+              868,
+              869,
+              870,
+              871,
+              876,
+              878,
+              879,
+              922,
+              923,
+              924,
+              1067,
+              1069,
+              1112,
+              1770,
+              1771,
+              1832,
+              1833,
+              1834,
+              1840,
+              1842,
+              1843,
+              1847,
+              1852,
+              1853,
+              1854,
+              1855,
+              1962,
+              1994
+            ],
+            "method": "six_seeded_inward_rays_per_face"
+          },
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "wall_thickness",
+          "status": "fail",
+          "threshold": 1.2,
+          "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+          "unit": "mm",
+          "value": {
+            "thin_face_count": 31
+          }
+        },
+        {
+          "details": {
+            "critical_face_indices": [],
+            "definition": "downward normal angle to -Z <45 degrees, bed faces excluded",
+            "face_indices": {
+              "count": 6822,
+              "first_16": [
+                8,
+                9,
+                10,
+                11,
+                12,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26
+              ],
+              "truncated_for_repository": true,
+              "full_evidence": "runs/print-web-20261102-01 and cloud validation directories"
+            },
+            "supports": "human_slicer_review"
+          },
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "overhang",
+          "status": "warn",
+          "threshold": 45.0,
+          "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+          "unit": "degree",
+          "value": 6822
+        },
+        {
+          "details": {
+            "dimensions_mm": [
+              151.14472061395645,
+              119.69004943966866,
+              119.99999731779099
+            ],
+            "target_height_mm": 120.0
+          },
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "dimensions",
+          "status": "pass",
+          "threshold": 1.2,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "mm",
+          "value": 2.682209014892578e-06
+        },
+        {
+          "details": {
+            "profile_kind": "demo",
+            "profile_version": "1.0.0"
+          },
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "build_volume",
+          "status": "pass",
+          "threshold": [
+            220.0,
+            220.0,
+            250.0
+          ],
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "mm",
+          "value": true
+        },
+        {
+          "details": {
+            "contact_area_mm2": 0.0,
+            "human_review": null,
+            "minimum_z_mm": -1.6319492489353508e-24,
+            "origin": "automatic_policy",
+            "reason": "自动几何触地检测；未执行实际切片/打印稳定性验证"
+          },
+          "evidence_artifact_id": "t_1c5d3b649ad04401_report",
+          "name": "bed_contact",
+          "status": "fail",
+          "threshold": 0.01,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "mm",
+          "value": false
+        }
+      ],
+      "component_count": 1,
+      "dimensions_mm": [
+        151.14472061395645,
+        119.69004943966866,
+        119.99999731779099
+      ],
+      "mesh_version": "m_d638b90b22084c3e8410a03f",
+      "non_manifold_edge_count": 0,
+      "non_manifold_vertex_count": 0,
+      "normals_consistent": true,
+      "unit": "mm",
+      "volume_mm3": 817124.0123957447,
+      "volume_reason": null,
+      "watertight": true
+    },
+    {
+      "boundary_edge_count": 0,
+      "checks": [
+        {
+          "details": {},
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "finite_coordinates",
+          "status": "pass",
+          "threshold": null,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": true
+        },
+        {
+          "details": {
+            "reason": "分离组件须确认保留或指定删除，不能默认只留最大件",
+            "review": null
+          },
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "components",
+          "status": "pass",
+          "threshold": 1,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "count",
+          "value": 1
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "boundary_edges",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "non_manifold_edges",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "non_manifold_vertices",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "watertight",
+          "status": "pass",
+          "threshold": true,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": true
+        },
+        {
+          "details": {},
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "normals",
+          "status": "pass",
+          "threshold": true,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": null,
+          "value": true
+        },
+        {
+          "details": {
+            "face_indices": []
+          },
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "self_intersection",
+          "status": "pass",
+          "threshold": 0,
+          "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "details": {
+            "global_minimum_proven": false,
+            "sample_threshold_mm": 1.22,
+            "value_kind": "validated_sampling_lower_bound"
+          },
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "wall_thickness",
+          "status": "pass",
+          "threshold": 1.2,
+          "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+          "unit": "mm",
+          "value": 1.2
+        },
+        {
+          "details": {
+            "critical_face_indices": [],
+            "definition": "downward normal angle to -Z <45 degrees, bed faces excluded",
+            "face_indices": {
+              "count": 25983,
+              "first_16": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+              ],
+              "truncated_for_repository": true,
+              "full_evidence": "runs/print-web-20261102-01 and cloud validation directories"
+            },
+            "supports": "human_slicer_review"
+          },
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "overhang",
+          "status": "warn",
+          "threshold": 45.0,
+          "tool_version": "Blender4.5.14/print_toolbox@b42d6862",
+          "unit": "degree",
+          "value": 25983
+        },
+        {
+          "details": {
+            "dimensions_mm": [
+              151.4071747660637,
+              120.1726384460926,
+              119.99999731779099
+            ],
+            "target_height_mm": 120.0
+          },
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "dimensions",
+          "status": "pass",
+          "threshold": 1.2,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "mm",
+          "value": 2.682209014892578e-06
+        },
+        {
+          "details": {
+            "profile_kind": "demo",
+            "profile_version": "1.0.0"
+          },
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "build_volume",
+          "status": "pass",
+          "threshold": [
+            220.0,
+            220.0,
+            250.0
+          ],
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "mm",
+          "value": true
+        },
+        {
+          "details": {
+            "contact_area_mm2": 632.7324665121805,
+            "human_review": null,
+            "minimum_z_mm": -1.8352776746388727e-23,
+            "origin": "automatic_policy",
+            "reason": "自动几何触地检测；未执行实际切片/打印稳定性验证"
+          },
+          "evidence_artifact_id": "t_d7b48e72187049c7_report",
+          "name": "bed_contact",
+          "status": "pass",
+          "threshold": 0.01,
+          "tool_version": "numpy1.26.4/trimesh4.0.5/geometry0.1",
+          "unit": "mm",
+          "value": true
+        }
+      ],
+      "component_count": 1,
+      "dimensions_mm": [
+        151.4071747660637,
+        120.1726384460926,
+        119.99999731779099
+      ],
+      "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+      "non_manifold_edge_count": 0,
+      "non_manifold_vertex_count": 0,
+      "normals_consistent": true,
+      "unit": "mm",
+      "volume_mm3": 837614.282664282,
+      "volume_reason": null,
+      "watertight": true
+    }
+  ],
+  "repair_log": [
+    {
+      "attempt": 1,
+      "details": {
+        "method": {
+          "algorithm": "MeshFix+closed_shell_containment",
+          "external_components_kept": 1,
+          "filled_internal_cavities": [
+            {
+              "component": 1,
+              "contained_by": [
+                0
+              ],
+              "faces": 49422,
+              "method": "MeshLib.isInside_closed_mesh",
+              "signed_volume_mm3": 800643.1976820352
+            }
+          ],
+          "input_sha256": "3f4e2144fc7a530813039e5427501be0388ed53adaee83fe1e2440db033a02fe",
+          "joincomp": false,
+          "meshfix": "0.18.1",
+          "not_original_uv": true,
+          "output_sha256": "0a2d5e1802e2748457463f21d27c032f5c5f717a2ee4e3ee65161778a3e688a3",
+          "remove_smallest_components": false,
+          "versions": {
+            "meshlib-core": "3.1.4.297",
+            "pymeshfix": "0.18.1"
+          }
+        },
+        "phase": 1,
+        "reference_version": "m_7de10098b2d54adab76f7dba",
+        "shape": {
+          "accepted": true,
+          "max_relative_dimension_change": 0.0,
+          "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差",
+          "three_view_iou": [
+            0.9993697401104809,
+            0.9998654150264124,
+            0.9996341954128105
+          ]
+        },
+        "source_mesh_version": "m_7de10098b2d54adab76f7dba"
+      },
+      "mesh_version": "m_7de10098b2d54adab76f7dba",
+      "operation": "repair_print_copy",
+      "origin": "automatic_policy",
+      "status": "applied"
+    },
+    {
+      "attempt": 2,
+      "details": {
+        "method": {
+          "algorithm": "MeshLib bounded offset/plane cut/local self-intersection repair",
+          "bed_cut_mm": 0.5,
+          "decimate_max_error_mm": 0.06,
+          "input_sha256": "0a2d5e1802e2748457463f21d27c032f5c5f717a2ee4e3ee65161778a3e688a3",
+          "native_intersection_pairs_after": 0,
+          "native_intersection_pairs_before": 25,
+          "not_original_uv": true,
+          "offset_mm": 0.7,
+          "output_sha256": "54f9c36345a7a3580331cbbcc3681308b27d0efcef6744ba0eb75dc35e91940e",
+          "rebaked": false,
+          "versions": {
+            "meshlib-core": "3.1.4.297",
+            "pymeshfix": "0.18.1"
+          },
+          "voxel_mm": 0.35
+        },
+        "phase": 2,
+        "reference_version": "m_7de10098b2d54adab76f7dba",
+        "shape": {
+          "accepted": true,
+          "max_relative_dimension_change": 0.004031985131961405,
+          "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差",
+          "three_view_iou": [
+            0.9836329095425983,
+            0.9912497495157304,
+            0.974550682961898
+          ]
+        },
+        "source_mesh_version": "m_d638b90b22084c3e8410a03f"
+      },
+      "mesh_version": "m_d638b90b22084c3e8410a03f",
+      "operation": "repair_print_copy",
+      "origin": "automatic_policy",
+      "status": "applied"
+    }
+  ],
+  "operations_seconds": [
+    {
+      "operation": "prepare_image",
+      "mesh_version": null,
+      "seconds": 0.0027522221207618713
+    },
+    {
+      "operation": "analyze_complexity",
+      "mesh_version": null,
+      "seconds": 0.05525926873087883
+    },
+    {
+      "operation": "reconstruct",
+      "mesh_version": null,
+      "seconds": 0.9322633594274521
+    },
+    {
+      "operation": "clean",
+      "mesh_version": "m_fdd8ce16b21844eca6a2af62",
+      "seconds": 7.661931652575731
+    },
+    {
+      "operation": "scale",
+      "mesh_version": "m_bda4c6f5d00d4791a9ac421f",
+      "seconds": 2.8524477519094944
+    },
+    {
+      "operation": "inspect",
+      "mesh_version": "m_7de10098b2d54adab76f7dba",
+      "seconds": 15.161868441849947
+    },
+    {
+      "operation": "repair_print_copy",
+      "mesh_version": "m_7de10098b2d54adab76f7dba",
+      "seconds": 14.148342154920101
+    },
+    {
+      "operation": "inspect",
+      "mesh_version": "m_d638b90b22084c3e8410a03f",
+      "seconds": 8.053650632500648
+    },
+    {
+      "operation": "repair_print_copy",
+      "mesh_version": "m_d638b90b22084c3e8410a03f",
+      "seconds": 32.069711204618216
+    },
+    {
+      "operation": "inspect",
+      "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+      "seconds": 22.4613642282784
+    },
+    {
+      "operation": "export_original_glb",
+      "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+      "seconds": 0.6306834556162357
+    },
+    {
+      "operation": "export_print_copy",
+      "mesh_version": "m_9aca1fce00d84b02b63ff34b",
+      "seconds": 3.044688604772091
+    }
+  ],
+  "evidence_format": "summary-v1; large diagnostic face lists truncated, not a raw MeshInspection response"
+}

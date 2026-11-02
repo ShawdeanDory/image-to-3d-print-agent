@@ -39,7 +39,7 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
         ctx.setdefault('artifact_frames',{}).update(frames)
         ctx['operations'].append({'operation':operation,'mesh_version':ctx.get('mesh_version'),'origin':'automatic_policy','result':outcome.tool.model_dump(mode='json')})
         ctx.pop('inflight',None)
-        if outcome.tool.succeeded and operation in {'reconstruct','clean','scale','apply'}:
+        if outcome.tool.succeeded and operation in {'reconstruct','clean','scale','apply','repair_print_copy'}:
             version=outcome.tool.data['mesh_version'];source=MeshStore(root).get(ctx['run_id'],version)
             ctx.update(mesh_version=version,repair_round=source.repair_round,inspection=None)
         if not outcome.tool.succeeded:raise ToolFailure(outcome.tool.error.code,outcome.tool.error.message)
@@ -103,7 +103,7 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     if ctx.get('gpu_hole_policy')=='gpu-boundary-fill-v1':args['gpu_hole_repair']=True
                     if ctx['backend']=='trellis2_candidate':
                         args.update({k:v for k,v in (ctx.get('export_options') or {}).items() if v is not None})
-                        if ctx.get('delivery_policy') in {'original-glb-v1','repaired-glb-v1'} and 'export_target_faces' not in args and ctx.get('mesh_budget'):
+                        if ctx.get('delivery_policy') in {'original-glb-v1','repaired-glb-v1','print-copy-v1'} and 'export_target_faces' not in args and ctx.get('mesh_budget'):
                             args['export_target_faces']=ctx['mesh_budget'].get('effective_target_faces',ctx['mesh_budget']['target_faces'])
                     outcome=tool(ctx,'reconstruct',backend=ctx['backend'],prepared_outcome=ctx['prepared_outcome'],review=review.model_dump(),**args)
                     ctx['reconstruction_metrics']=outcome.tool.data.get('model');ctx['next']='clean'
@@ -135,6 +135,18 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     ctx['next']='plan'
                 elif name=='plan':
                     inspection=MeshInspection.model_validate(ctx['inspection']) if ctx.get('inspection') else None
+                    if ctx.get('delivery_policy')=='print-copy-v1':
+                        # 单独打印政策不做后续减面，也不先消耗GPU补片轮数。
+                        if inspection is None or inspection.ready_for_print or ctx.get('repair_attempts',0)>=2 or ctx.get('print_copy_blocked'):
+                            ctx['next']='deliver'
+                        else:
+                            ctx.setdefault('print_copy_reference',ctx['mesh_version'])
+                            ctx['repair_attempts']=ctx.get('repair_attempts',0)+1
+                            ctx.setdefault('repair_attempt_log',[]).append({'attempt':ctx['repair_attempts'],
+                                'mesh_version':ctx['mesh_version'],'operation':'repair_print_copy','status':'planned','origin':'automatic_policy'})
+                            ctx['next']='print_repair'
+                        persist(ctx,'node_completed',{'node':name,'origin':'automatic_policy'})
+                        return {'ctx':ctx}
                     request=budget_request(ctx) if ctx.get('repair_attempts',0)<2 else None
                     adaptive=request is not None
                     if (inspection is not None and inspection.ready_for_print and not adaptive) or ctx.get('repair_attempts',0)>=2:
@@ -160,6 +172,13 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                 elif name=='apply':
                     ctx['stage']='repair';tool(ctx,'apply',proposal_id=ctx['proposal']['proposal_id'])
                     ctx['repair_attempt_log'][-1]['status']='applied';ctx['next']='inspect'
+                elif name=='print_repair':
+                    ctx['stage']='repair'
+                    result=tool(ctx,'repair_print_copy',mesh_version=ctx['mesh_version'],reference_version=ctx['print_copy_reference'],
+                        phase=ctx['repair_attempts'],inspection=ctx['inspection'],
+                        height_mm=ModelTaskRequest.model_validate(ctx['request']).height_mm,min_wall_mm=ctx['profile']['min_wall_mm'])
+                    ctx['repair_attempt_log'][-1].update(status='applied',details=result.tool.data['print_copy'])
+                    ctx['next']='inspect'
                 elif name=='deliver':
                     ctx['stage']='export'
                     best=ctx.get('best_checked')
@@ -167,7 +186,9 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                         ctx.update(mesh_version=best['mesh_version'],inspection=best['inspection'])
                         ctx['repair_round']=MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).repair_round
                     original=ctx.get('delivery_policy')=='original-glb-v1'
-                    outcome=tool(ctx,'export_original_glb' if original else 'export_glb',mesh_version=ctx['mesh_version']);data=outcome.tool.data
+                    print_copy=ctx.get('delivery_policy')=='print-copy-v1'
+                    original_data=tool(ctx,'export_original_glb',mesh_version=ctx['mesh_version']).tool.data if print_copy else None
+                    outcome=tool(ctx,'export_original_glb' if original else 'export_print_copy' if print_copy else 'export_glb',mesh_version=ctx['mesh_version']);data=outcome.tool.data
                     inspected_version=data.get('inspection_mesh_version') if original else data.get('mesh_version')
                     if inspected_version!=ctx['mesh_version'] or data.get('independent_readback') is not True:
                         raise ToolFailure('STATE_CONFLICT','GLB缺少本版本独立读回证据')
@@ -187,7 +208,9 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                             independent_readback=True,inspection_print_check=status,repair_attempts=ctx.get('repair_attempts',0),warnings=ctx['warnings']).model_dump(mode='json')
                     else:
                         ctx['delivery']=GenerationDelivery(artifact_id=data['artifact_id'],mesh_version=ctx['mesh_version'],
-                            independent_readback=True,print_check=status,repair_attempts=ctx.get('repair_attempts',0),dimensions_mm=data['dimensions_mm'],warnings=ctx['warnings']).model_dump(mode='json')
+                            independent_readback=True,print_check=status,repair_attempts=ctx.get('repair_attempts',0),dimensions_mm=data['dimensions_mm'],warnings=ctx['warnings'],
+                            **({'geometry_policy':'print_copy','stl_artifact_id':data['stl_artifact_id'],
+                                'original_artifact_id':original_data['artifact_id']} if print_copy else {})).model_dump(mode='json')
                     ctx['export_data']=data;ctx['next']='explain' if settings.llm.configured else 'finish'
                     if ctx.get('mesh_budget'):
                         inspected_faces=len(load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path).faces)
@@ -210,7 +233,11 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                 persist(ctx,'node_completed',{'node':name,'origin':'automatic_policy'})
             except (ToolFailure,ValueError,OSError,KeyError,StopIteration) as exc:
                 code=exc.code if isinstance(exc,ToolFailure) else 'TOOL_UNAVAILABLE'
-                if name in {'propose','confirm','apply'} and code not in {'STATE_CONFLICT','BUDGET_NOT_CONFIGURED'}:
+                if name=='print_repair' and code not in {'STATE_CONFLICT','BUDGET_NOT_CONFIGURED'}:
+                    ctx['repair_attempt_log'][-1].update(status='failed',error={'code':code,'message':str(exc)[:300]})
+                    ctx['warnings'].append('打印副本修复失败，保留最佳有效版本：'+str(exc)[:200])
+                    ctx['print_copy_blocked']=True;ctx['next']='deliver'
+                elif name in {'propose','confirm','apply'} and code not in {'STATE_CONFLICT','BUDGET_NOT_CONFIGURED'}:
                     ctx['repair_attempt_log'][-1].update(status='failed',error={'code':code,'message':str(exc)[:300]})
                     ctx['warnings'].append('受控修复未执行或失败：'+str(exc)[:200]);ctx['next']='plan'
                 elif name=='inspect' and code not in {'STATE_CONFLICT','BUDGET_NOT_CONFIGURED'}:
@@ -242,7 +269,7 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
         write_quality(store,ctx);persist(ctx,'completed',{'target':'glb','origin':'automatic_policy'})
         return {'ctx':ctx}
 
-    builder=StateGraph(dict);nodes=['prepare','reconstruct','clean','scale','inspect','plan','propose','confirm','apply','deliver','eye_texture','explain']
+    builder=StateGraph(dict);nodes=['prepare','reconstruct','clean','scale','inspect','plan','propose','confirm','apply','print_repair','deliver','eye_texture','explain']
     for name in nodes:
         builder.add_node(name,node(name));builder.add_conditional_edges(name,lambda state:state['ctx']['next'],{n:n for n in [*nodes,'finish']})
     builder.add_node('finish',finish);builder.add_edge(START,'prepare');builder.add_edge('finish',END)

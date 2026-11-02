@@ -7,7 +7,7 @@ from pydantic import Field,TypeAdapter,model_validator,StrictBool
 from ..schemas.common import ContractModel,Id,RelativePath,Text
 from ..schemas.task import ModelTaskRequest
 from ..schemas.validation import resolve_artifact_path
-from ..schemas import PrinterProfile
+from ..schemas import PrinterProfile,MeshInspection
 from ..tools import ToolSession,ToolFailure,ToolOutcome
 from ..image.assets import AssetStore,InputReview,AutomaticInputAcceptance
 from ..image.complexity import analyze_image
@@ -18,6 +18,7 @@ from .core import MeshStore
 from .structure import StructureRequest,propose,confirm,apply_proposal
 from .view import measure_view
 from ..export_options import ExportTargetFaces,TextureSize
+from ..print_config import PrintRepairConfig
 
 class Call(ContractModel):run_id:UUID
 class ImportCall(Call):
@@ -41,7 +42,7 @@ class ReconstructCall(Call):
     texture_size:TextureSize|None=None
     gpu_hole_repair:StrictBool=False
 class MeshCall(Call):
-    operation:Literal['clean','export','export_glb','export_original_glb','preview']
+    operation:Literal['clean','export','export_glb','export_original_glb','export_print_copy','preview']
     mesh_version:Id
 class EyeTextureCall(Call):
     operation:Literal['enhance_eye_texture']
@@ -60,6 +61,14 @@ class InspectCall(Call):
     height_mm:float|None=Field(default=None,gt=0)
     bed_review:BedReview|None=None
     component_review:ComponentReview|None=None
+class PrintRepairCall(Call):
+    operation:Literal['repair_print_copy']
+    mesh_version:Id
+    reference_version:Id
+    phase:Annotated[int,Field(strict=True,ge=1,le=2)]
+    inspection:MeshInspection
+    height_mm:float=Field(ge=100,le=150)
+    min_wall_mm:float=Field(gt=0,le=1.4)
 class ProposeCall(Call):
     operation:Literal['propose']
     mesh_version:Id
@@ -79,12 +88,13 @@ class MeasureCall(Call):
     mask_path:RelativePath
     backend:Literal['triposr','trellis2_candidate']
 
-Command=Annotated[Union[ImportCall,ComplexityCall,PrepareCall,ReconstructCall,MeshCall,EyeTextureCall,ScaleCall,InspectCall,ProposeCall,ConfirmCall,ApplyCall,MeasureCall],Field(discriminator='operation')]
+Command=Annotated[Union[ImportCall,ComplexityCall,PrepareCall,ReconstructCall,MeshCall,EyeTextureCall,ScaleCall,InspectCall,PrintRepairCall,ProposeCall,ConfirmCall,ApplyCall,MeasureCall],Field(discriminator='operation')]
 COMMANDS=TypeAdapter(Command)
 
 class ToolConfiguration(ContractModel):
     backends:dict[Literal['triposr','trellis2_candidate'],BackendConfig]=Field(default_factory=dict)
     inspection:InspectionConfig|None=None
+    print_repair:PrintRepairConfig|None=None
     view_mappings:dict[Literal['triposr','trellis2_candidate'],RelativePath]=Field(default_factory=dict)
 
     @model_validator(mode='after')
@@ -95,7 +105,7 @@ class ToolConfiguration(ContractModel):
 def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human',automatic_input=False,automatic_action=False):
     root=Path(root).resolve();command=COMMANDS.validate_python(command)
     store=MeshStore(root);assets=AssetStore(root);op=command.operation;run=command.run_id
-    tool_name={'analyze_complexity':'preprocess','import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','export_original_glb':'export','enhance_eye_texture':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
+    tool_name={'analyze_complexity':'preprocess','import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','repair_print_copy':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','export_print_copy':'export','export_original_glb':'export','enhance_eye_texture':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
     # 包装只有原子返回值的资产/提案接口；已有ToolOutcome直接返回。
     session=None
     try:
@@ -143,6 +153,13 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
         if op=='inspect':return inspect_mesh(root,run,command.mesh_version,command.profile,command.height_mm,command.bed_review,configuration.inspection,command.component_review,automatic_bed=automatic_action)
         if op=='export':return export_mesh(root,run,command.mesh_version,configuration.inspection)
         if op=='export_glb':return export_preview(root,run,command.mesh_version,configuration.inspection)
+        if op in {'repair_print_copy','export_print_copy'}:
+            if not (automatic_action and confirmation_origin=='automatic_policy'):
+                raise ToolFailure('STATE_CONFLICT','打印副本结构修改仅允许服务端授权自动策略')
+            from .print_copy import repair_copy,export_copy
+            if op=='export_print_copy':return export_copy(root,run,command.mesh_version)
+            return repair_copy(root,run,command.mesh_version,command.reference_version,command.phase,
+                command.inspection,command.height_mm,command.min_wall_mm,configuration.print_repair)
         if op=='export_original_glb':return export_original(root,run,command.mesh_version)
         if op=='enhance_eye_texture':
             raise ToolFailure('TOOL_UNAVAILABLE','眼部与局部底色试用已按用户要求回退，使用原始GLB')
