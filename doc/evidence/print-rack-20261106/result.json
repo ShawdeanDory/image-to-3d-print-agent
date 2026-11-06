@@ -1,0 +1,155 @@
+{
+  "run_id": "35c2b935-d4b6-4d72-9718-d33deb773f89",
+  "source_sha256": "76876ddcb7ba76561863769de2a3d7c45b305ca64a49a8ab4c3213d05b7ae189",
+  "original_unchanged": true,
+  "mesh_version": "m_f302780944b84243827f74e3",
+  "task_status": "succeeded",
+  "print_check": "failed",
+  "checks": [
+    {
+      "name": "finite_coordinates",
+      "status": "pass",
+      "value": true
+    },
+    {
+      "name": "components",
+      "status": "warn",
+      "value": 384
+    },
+    {
+      "name": "boundary_edges",
+      "status": "fail",
+      "value": 7660
+    },
+    {
+      "name": "non_manifold_edges",
+      "status": "fail",
+      "value": 13419
+    },
+    {
+      "name": "non_manifold_vertices",
+      "status": "fail",
+      "value": 32215
+    },
+    {
+      "name": "watertight",
+      "status": "fail",
+      "value": false
+    },
+    {
+      "name": "normals",
+      "status": "pass",
+      "value": true
+    },
+    {
+      "name": "self_intersection",
+      "status": "fail",
+      "value": 102
+    },
+    {
+      "name": "wall_thickness",
+      "status": "not_run",
+      "value": null
+    },
+    {
+      "name": "overhang",
+      "status": "warn",
+      "value": 164126
+    },
+    {
+      "name": "dimensions",
+      "status": "pass",
+      "value": 2.682209014892578e-06
+    },
+    {
+      "name": "build_volume",
+      "status": "pass",
+      "value": true
+    },
+    {
+      "name": "bed_contact",
+      "status": "pass",
+      "value": true
+    }
+  ],
+  "faces": 944116,
+  "dimensions_mm": [
+    108.02853479981422,
+    44.250937178730965,
+    119.99999731779099
+  ],
+  "repair_attempts": 1,
+  "repair_log": [
+    {
+      "attempt": 1,
+      "error": {
+        "code": "INVALID_ARGUMENT",
+        "message": "打印候选外形变化超出保形门槛，保留上一有效版本"
+      },
+      "mesh_version": "m_f302780944b84243827f74e3",
+      "operation": "repair_print_copy",
+      "origin": "automatic_policy",
+      "status": "failed"
+    }
+  ],
+  "task_error": null,
+  "warnings": [
+    "打印副本修复失败，保留最佳有效版本：打印候选外形变化超出保形门槛，保留上一有效版本",
+    "最终修复几何复用原贴图/PBR，UV按近表面对应重建；补洞/加厚位置的颜色为近似，未重烘焙。",
+    "保留最佳有效GLB；打印检查未通过或未完整执行：boundary_edges=fail、non_manifold_edges=fail、non_manifold_vertices=fail、watertight=fail、self_intersection=fail、wall_thickness=not_run。不能作为打印合格证明。"
+  ],
+  "appearance": "print_pbr_reprojected",
+  "paired_triangle_readback": true,
+  "readback": {
+    ".glb": {
+      "sha256": "142560b02091f281d0669738b0f3d129c49ddf84c6605894c7ed042da1f7cfb2",
+      "bytes": 252811488,
+      "max_vertex_error_mm": 0.0
+    },
+    ".stl": {
+      "sha256": "cf96abecdf32d0a01600d2b6367075a1697c4b09d3ae9555ecb527d7910b2f54",
+      "bytes": 47205884,
+      "max_vertex_error_mm": 0.0
+    }
+  },
+  "slicing": "not_run",
+  "physical_print": "not_run",
+  "basename": "rack-120mm-diagnostic",
+  "date": "2026-11-06",
+  "baseline": "bc42f5d",
+  "source_task": "01504c4c-1c1e-48ea-b975-9542e170baa9",
+  "evidence_origin": "existing_artifact_replay",
+  "actual_new_model_calls": 0,
+  "llm_calls": 0,
+  "first_attempt": {
+    "phase": 1,
+    "method": {
+      "algorithm": "MeshFix+closed_shell_containment",
+      "meshfix": "0.18.1",
+      "joincomp": false,
+      "remove_smallest_components": false,
+      "filled_internal_cavities": [],
+      "external_components_kept": 1,
+      "not_original_uv": true,
+      "versions": {
+        "pymeshfix": "0.18.1",
+        "meshlib-core": "3.1.4.297"
+      },
+      "input_sha256": "dd18b6ada979095d510add8fc1f34ce07a05b3266ca2f0509636066eeb3edeb7",
+      "output_sha256": "260b4eb626311404d51a89cb3075b393744f93daa00d3b2cf2423e157146d75d"
+    },
+    "shape": {
+      "three_view_iou": [
+        0.9892598645809012,
+        0.9643086628891875,
+        0.9889655643618475
+      ],
+      "max_relative_dimension_change": 0.0036767450963274425,
+      "accepted": false,
+      "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差"
+    },
+    "source_mesh_version": "m_f302780944b84243827f74e3",
+    "reference_version": "m_f302780944b84243827f74e3"
+  },
+  "manual_review": "pending"
+}
