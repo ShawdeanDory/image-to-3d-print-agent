@@ -1,0 +1,63 @@
+{
+  "source_sha256": "4c61e0aaa092b44e6c9880ea79f734c5c474fef477ac8ac6a06331615789a8d8",
+  "candidate_sha256": "f7d88679dead89c179223a852713bdd0640421b11eaa73673f212a5bb0bb1ec9",
+  "stl_sha256": "12381f532749fd3ef258a3c47744c5cde823fe9adc7736bde900fd1338518f2b",
+  "faces": 162390,
+  "dimensions_mm": [
+    151.50093287229538,
+    119.94259804487228,
+    119.99999731779099
+  ],
+  "independent_triangle_readback": true,
+  "production_iou": [
+    0.9694512813088172,
+    0.9879675559726505,
+    0.9841327343863209
+  ],
+  "true_orthogonal_views": [
+    {
+      "view": "正视XZ",
+      "iou": 0.9694512813088172,
+      "lost_pixels": 26,
+      "added_pixels": 818
+    },
+    {
+      "view": "俯视XY",
+      "iou": 0.9879675559726505,
+      "lost_pixels": 20,
+      "added_pixels": 339
+    },
+    {
+      "view": "侧视YZ",
+      "iou": 0.9877752756412131,
+      "lost_pixels": 26,
+      "added_pixels": 392
+    }
+  ],
+  "trial_iou_floor": 0.969,
+  "trial_passed": true,
+  "max_relative_dimension_change": 0.004197457534660838,
+  "demo_slicing": {
+    "slicer": "PrusaSlicer2.9.6",
+    "profile_sha256": "f069457e60bcfa606316c367f2ba54b1993d7290f1650cf2c83bd811048b59f1",
+    "returncode": 0,
+    "seconds": 4.343636099999912,
+    "passed": true,
+    "layers": 663,
+    "first_z_mm": 0.2,
+    "last_z_mm": 120.0,
+    "has_extrusion_moves": true,
+    "physical_print": false,
+    "support_path_sections": 901,
+    "material_estimate": [
+      "; filament used [mm] = 83137.59",
+      "; filament used [cm3] = 199.97",
+      "; estimated printing time (normal mode) = 14h 26m 54s",
+      "; estimated printing time (silent mode) = 14h 46m 27s"
+    ],
+    "gcode_sha256": "bda816000b483a2824e3abfc1860abadda9c81a0f80383e4a09873bd1cdde080"
+  },
+  "production_changed": false,
+  "physical_print": "not_run",
+  "human_shape_review": "pending"
+}
