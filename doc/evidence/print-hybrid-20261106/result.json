@@ -1,0 +1,894 @@
+{
+  "date": "2026-11-06",
+  "baseline": "b862820",
+  "source_sha256": "5fc79ff954274bc20cbe801d53593248010c57e8e5e06007d55040c34a0657d9",
+  "profile": {
+    "profile_id": "demo_v1",
+    "version": "1.0.0",
+    "profile_kind": "demo",
+    "process": "FDM",
+    "material": "PLA",
+    "nozzle_mm": 0.4,
+    "layer_height_mm": 0.2,
+    "min_wall_mm": 1.2,
+    "build_volume_mm": [
+      220.0,
+      220.0,
+      250.0
+    ],
+    "slicer_version": "2.9.6",
+    "supports_policy": "human_review"
+  },
+  "cpu_comparison": {
+    "existing": {
+      "fan": null,
+      "history": [
+        {
+          "stage": "original",
+          "mesh_version": "m_4e979cc2770042a8ba28b50f",
+          "faces": 9499,
+          "path": "runs/b00d6276-9ef2-4993-a3c0-0d7ec1a6ecf9/versions/m_4e979cc2770042a8ba28b50f/original.stl",
+          "ready": false,
+          "checks": {
+            "finite_coordinates": {
+              "status": "pass",
+              "value": true
+            },
+            "components": {
+              "status": "warn",
+              "value": 2
+            },
+            "boundary_edges": {
+              "status": "fail",
+              "value": 21
+            },
+            "non_manifold_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_vertices": {
+              "status": "pass",
+              "value": 0
+            },
+            "watertight": {
+              "status": "fail",
+              "value": false
+            },
+            "normals": {
+              "status": "pass",
+              "value": true
+            },
+            "self_intersection": {
+              "status": "fail",
+              "value": 365
+            },
+            "wall_thickness": {
+              "status": "not_run",
+              "value": null
+            },
+            "overhang": {
+              "status": "warn",
+              "value": 1186
+            },
+            "dimensions": {
+              "status": "pass",
+              "value": 0.0
+            },
+            "build_volume": {
+              "status": "pass",
+              "value": true
+            },
+            "bed_contact": {
+              "status": "fail",
+              "value": false
+            }
+          }
+        },
+        {
+          "stage": "repair_1",
+          "mesh_version": "m_724cb4380b0342de9e4ef529",
+          "faces": 4704,
+          "path": "runs/b00d6276-9ef2-4993-a3c0-0d7ec1a6ecf9/versions/m_724cb4380b0342de9e4ef529/original.glb",
+          "ready": false,
+          "checks": {
+            "finite_coordinates": {
+              "status": "pass",
+              "value": true
+            },
+            "components": {
+              "status": "pass",
+              "value": 1
+            },
+            "boundary_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_vertices": {
+              "status": "pass",
+              "value": 0
+            },
+            "watertight": {
+              "status": "pass",
+              "value": true
+            },
+            "normals": {
+              "status": "pass",
+              "value": true
+            },
+            "self_intersection": {
+              "status": "pass",
+              "value": 0
+            },
+            "wall_thickness": {
+              "status": "fail",
+              "value": {
+                "thin_face_count": 17
+              }
+            },
+            "overhang": {
+              "status": "warn",
+              "value": 585
+            },
+            "dimensions": {
+              "status": "pass",
+              "value": 2.682209014892578e-06
+            },
+            "build_volume": {
+              "status": "pass",
+              "value": true
+            },
+            "bed_contact": {
+              "status": "fail",
+              "value": false
+            }
+          }
+        }
+      ],
+      "attempts": [
+        {
+          "phase": 1,
+          "succeeded": true,
+          "error": null,
+          "acceptance": {
+            "phase": 1,
+            "method": {
+              "algorithm": "MeshFix+closed_shell_containment",
+              "meshfix": "0.18.1",
+              "joincomp": false,
+              "remove_smallest_components": false,
+              "filled_internal_cavities": [],
+              "external_components_kept": 1,
+              "not_original_uv": true,
+              "versions": {
+                "pymeshfix": "0.18.1",
+                "meshlib-core": "3.1.4.297"
+              },
+              "input_sha256": "46c4673b61c8435c6112cb322e1b5bd7f85070293a79985311a3bfd0e087f72d",
+              "output_sha256": "a9e166f178bfb1129e6f937af7d497f1241977ff688a0a2bf279c83fd8c24e97"
+            },
+            "shape": {
+              "three_view_iou": [
+                0.998100204879866,
+                0.9992880873279545,
+                0.9980913929161314
+              ],
+              "max_relative_dimension_change": 0.0,
+              "accepted": true,
+              "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差"
+            },
+            "source_mesh_version": "m_4e979cc2770042a8ba28b50f",
+            "reference_version": "m_4e979cc2770042a8ba28b50f"
+          }
+        },
+        {
+          "phase": 2,
+          "succeeded": false,
+          "error": {
+            "code": "INVALID_ARGUMENT",
+            "message": "打印候选外形变化超出保形门槛，保留上一有效版本",
+            "details": {}
+          },
+          "acceptance": {
+            "phase": 2,
+            "method": {
+              "algorithm": "MeshLib bounded offset/plane cut/local self-intersection repair",
+              "offset_mm": 0.7,
+              "voxel_mm": 0.35,
+              "bed_cut_mm": 0.5,
+              "rebaked": false,
+              "not_original_uv": true,
+              "decimate_max_error_mm": 0.06,
+              "native_intersection_pairs_before": 33,
+              "native_intersection_pairs_after": 0,
+              "versions": {
+                "pymeshfix": "0.18.1",
+                "meshlib-core": "3.1.4.297"
+              },
+              "input_sha256": "bf0b0855a119ba5c63da2f68b999bfd9d64abd721748360f91856f5b5d1c209c",
+              "output_sha256": "47934a1b64e3b73b402971f150ae1f8ee65409835f5825f6b4036253ecc2fc60"
+            },
+            "shape": {
+              "three_view_iou": [
+                0.9694512813088172,
+                0.9879675559726505,
+                0.9841327343863209
+              ],
+              "max_relative_dimension_change": 0.004197432535034948,
+              "accepted": false,
+              "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差"
+            },
+            "source_mesh_version": "m_724cb4380b0342de9e4ef529",
+            "reference_version": "m_4e979cc2770042a8ba28b50f"
+          }
+        }
+      ],
+      "ready": false,
+      "unchanged": true
+    },
+    "fan_then_existing": {
+      "fan": {
+        "method": "boundary_centroid_fan_experiment_v1",
+        "filled_loops": 7,
+        "loop_vertices": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "added_faces": 21,
+        "original_vertices_and_faces_preserved": true,
+        "production_approved": false,
+        "requires": [
+          "self_intersection",
+          "wall_thickness",
+          "normals",
+          "watertight",
+          "non_manifold",
+          "shape_review"
+        ]
+      },
+      "history": [
+        {
+          "stage": "original",
+          "mesh_version": "m_969255b4376242fb9f3ca7b9",
+          "faces": 9499,
+          "path": "runs/b68cc418-4a17-44ff-8c5d-66d8448e5d64/versions/m_969255b4376242fb9f3ca7b9/original.stl",
+          "ready": false,
+          "checks": {
+            "finite_coordinates": {
+              "status": "pass",
+              "value": true
+            },
+            "components": {
+              "status": "warn",
+              "value": 2
+            },
+            "boundary_edges": {
+              "status": "fail",
+              "value": 21
+            },
+            "non_manifold_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_vertices": {
+              "status": "pass",
+              "value": 0
+            },
+            "watertight": {
+              "status": "fail",
+              "value": false
+            },
+            "normals": {
+              "status": "pass",
+              "value": true
+            },
+            "self_intersection": {
+              "status": "fail",
+              "value": 365
+            },
+            "wall_thickness": {
+              "status": "not_run",
+              "value": null
+            },
+            "overhang": {
+              "status": "warn",
+              "value": 1186
+            },
+            "dimensions": {
+              "status": "pass",
+              "value": 0.0
+            },
+            "build_volume": {
+              "status": "pass",
+              "value": true
+            },
+            "bed_contact": {
+              "status": "fail",
+              "value": false
+            }
+          }
+        },
+        {
+          "stage": "fan",
+          "mesh_version": "m_69361f1037104b539ef962b4",
+          "faces": 9520,
+          "path": "runs/b68cc418-4a17-44ff-8c5d-66d8448e5d64/versions/m_69361f1037104b539ef962b4/original.stl",
+          "ready": false,
+          "checks": {
+            "finite_coordinates": {
+              "status": "pass",
+              "value": true
+            },
+            "components": {
+              "status": "warn",
+              "value": 2
+            },
+            "boundary_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_edges": {
+              "status": "fail",
+              "value": 10
+            },
+            "non_manifold_vertices": {
+              "status": "fail",
+              "value": 15
+            },
+            "watertight": {
+              "status": "fail",
+              "value": false
+            },
+            "normals": {
+              "status": "pass",
+              "value": true
+            },
+            "self_intersection": {
+              "status": "fail",
+              "value": 365
+            },
+            "wall_thickness": {
+              "status": "not_run",
+              "value": null
+            },
+            "overhang": {
+              "status": "warn",
+              "value": 1190
+            },
+            "dimensions": {
+              "status": "pass",
+              "value": 0.0
+            },
+            "build_volume": {
+              "status": "pass",
+              "value": true
+            },
+            "bed_contact": {
+              "status": "fail",
+              "value": false
+            }
+          }
+        },
+        {
+          "stage": "repair_1",
+          "mesh_version": "m_e6e86982a280475c96f9b86d",
+          "faces": 4704,
+          "path": "runs/b68cc418-4a17-44ff-8c5d-66d8448e5d64/versions/m_e6e86982a280475c96f9b86d/original.glb",
+          "ready": false,
+          "checks": {
+            "finite_coordinates": {
+              "status": "pass",
+              "value": true
+            },
+            "components": {
+              "status": "pass",
+              "value": 1
+            },
+            "boundary_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_vertices": {
+              "status": "pass",
+              "value": 0
+            },
+            "watertight": {
+              "status": "pass",
+              "value": true
+            },
+            "normals": {
+              "status": "pass",
+              "value": true
+            },
+            "self_intersection": {
+              "status": "pass",
+              "value": 0
+            },
+            "wall_thickness": {
+              "status": "fail",
+              "value": {
+                "thin_face_count": 16
+              }
+            },
+            "overhang": {
+              "status": "warn",
+              "value": 585
+            },
+            "dimensions": {
+              "status": "pass",
+              "value": 2.682209014892578e-06
+            },
+            "build_volume": {
+              "status": "pass",
+              "value": true
+            },
+            "bed_contact": {
+              "status": "fail",
+              "value": false
+            }
+          }
+        }
+      ],
+      "attempts": [
+        {
+          "phase": 1,
+          "succeeded": true,
+          "error": null,
+          "acceptance": {
+            "phase": 1,
+            "method": {
+              "algorithm": "MeshFix+closed_shell_containment",
+              "meshfix": "0.18.1",
+              "joincomp": false,
+              "remove_smallest_components": false,
+              "filled_internal_cavities": [],
+              "external_components_kept": 1,
+              "not_original_uv": true,
+              "versions": {
+                "pymeshfix": "0.18.1",
+                "meshlib-core": "3.1.4.297"
+              },
+              "input_sha256": "91f14b0d3c7470fbccd14b61d6d28a96c187416f5063b30bdc303dfa084f48d0",
+              "output_sha256": "63937ffe045dc59acc9cdea7e1e6f5bfc9ddb8c649ad3050bea4deca421c2fc4"
+            },
+            "shape": {
+              "three_view_iou": [
+                0.998100204879866,
+                0.9992880873279545,
+                0.9980913929161314
+              ],
+              "max_relative_dimension_change": 0.0,
+              "accepted": true,
+              "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差"
+            },
+            "source_mesh_version": "m_69361f1037104b539ef962b4",
+            "reference_version": "m_969255b4376242fb9f3ca7b9"
+          }
+        },
+        {
+          "phase": 2,
+          "succeeded": false,
+          "error": {
+            "code": "INVALID_ARGUMENT",
+            "message": "打印候选外形变化超出保形门槛，保留上一有效版本",
+            "details": {}
+          },
+          "acceptance": {
+            "phase": 2,
+            "method": {
+              "algorithm": "MeshLib bounded offset/plane cut/local self-intersection repair",
+              "offset_mm": 0.7,
+              "voxel_mm": 0.35,
+              "bed_cut_mm": 0.5,
+              "rebaked": false,
+              "not_original_uv": true,
+              "decimate_max_error_mm": 0.06,
+              "native_intersection_pairs_before": 33,
+              "native_intersection_pairs_after": 0,
+              "versions": {
+                "pymeshfix": "0.18.1",
+                "meshlib-core": "3.1.4.297"
+              },
+              "input_sha256": "d271a59eeccc9c99eda36b76a74cad30a221609986ec3e9589fc54933a520601",
+              "output_sha256": "47934a1b64e3b73b402971f150ae1f8ee65409835f5825f6b4036253ecc2fc60"
+            },
+            "shape": {
+              "three_view_iou": [
+                0.9694512813088172,
+                0.9879675559726505,
+                0.9841327343863209
+              ],
+              "max_relative_dimension_change": 0.004197432535034948,
+              "accepted": false,
+              "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差"
+            },
+            "source_mesh_version": "m_e6e86982a280475c96f9b86d",
+            "reference_version": "m_969255b4376242fb9f3ca7b9"
+          }
+        }
+      ],
+      "ready": false,
+      "unchanged": true
+    },
+    "fan_then_offset_065": {
+      "fan": {
+        "method": "boundary_centroid_fan_experiment_v1",
+        "filled_loops": 7,
+        "loop_vertices": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "added_faces": 21,
+        "original_vertices_and_faces_preserved": true,
+        "production_approved": false,
+        "requires": [
+          "self_intersection",
+          "wall_thickness",
+          "normals",
+          "watertight",
+          "non_manifold",
+          "shape_review"
+        ]
+      },
+      "history": [
+        {
+          "stage": "original",
+          "mesh_version": "m_47459b311cf24f34b1c7331c",
+          "faces": 9499,
+          "path": "runs/462cb566-6d28-4d41-9360-8457f4fd68c6/versions/m_47459b311cf24f34b1c7331c/original.stl",
+          "ready": false,
+          "checks": {
+            "finite_coordinates": {
+              "status": "pass",
+              "value": true
+            },
+            "components": {
+              "status": "warn",
+              "value": 2
+            },
+            "boundary_edges": {
+              "status": "fail",
+              "value": 21
+            },
+            "non_manifold_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_vertices": {
+              "status": "pass",
+              "value": 0
+            },
+            "watertight": {
+              "status": "fail",
+              "value": false
+            },
+            "normals": {
+              "status": "pass",
+              "value": true
+            },
+            "self_intersection": {
+              "status": "fail",
+              "value": 365
+            },
+            "wall_thickness": {
+              "status": "not_run",
+              "value": null
+            },
+            "overhang": {
+              "status": "warn",
+              "value": 1186
+            },
+            "dimensions": {
+              "status": "pass",
+              "value": 0.0
+            },
+            "build_volume": {
+              "status": "pass",
+              "value": true
+            },
+            "bed_contact": {
+              "status": "fail",
+              "value": false
+            }
+          }
+        },
+        {
+          "stage": "fan",
+          "mesh_version": "m_7f9fd052b78d41d683460599",
+          "faces": 9520,
+          "path": "runs/462cb566-6d28-4d41-9360-8457f4fd68c6/versions/m_7f9fd052b78d41d683460599/original.stl",
+          "ready": false,
+          "checks": {
+            "finite_coordinates": {
+              "status": "pass",
+              "value": true
+            },
+            "components": {
+              "status": "warn",
+              "value": 2
+            },
+            "boundary_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_edges": {
+              "status": "fail",
+              "value": 10
+            },
+            "non_manifold_vertices": {
+              "status": "fail",
+              "value": 15
+            },
+            "watertight": {
+              "status": "fail",
+              "value": false
+            },
+            "normals": {
+              "status": "pass",
+              "value": true
+            },
+            "self_intersection": {
+              "status": "fail",
+              "value": 365
+            },
+            "wall_thickness": {
+              "status": "not_run",
+              "value": null
+            },
+            "overhang": {
+              "status": "warn",
+              "value": 1190
+            },
+            "dimensions": {
+              "status": "pass",
+              "value": 0.0
+            },
+            "build_volume": {
+              "status": "pass",
+              "value": true
+            },
+            "bed_contact": {
+              "status": "fail",
+              "value": false
+            }
+          }
+        },
+        {
+          "stage": "repair_1",
+          "mesh_version": "m_a7d282f0ced3494da8930fc8",
+          "faces": 4704,
+          "path": "runs/462cb566-6d28-4d41-9360-8457f4fd68c6/versions/m_a7d282f0ced3494da8930fc8/original.glb",
+          "ready": false,
+          "checks": {
+            "finite_coordinates": {
+              "status": "pass",
+              "value": true
+            },
+            "components": {
+              "status": "pass",
+              "value": 1
+            },
+            "boundary_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_vertices": {
+              "status": "pass",
+              "value": 0
+            },
+            "watertight": {
+              "status": "pass",
+              "value": true
+            },
+            "normals": {
+              "status": "pass",
+              "value": true
+            },
+            "self_intersection": {
+              "status": "pass",
+              "value": 0
+            },
+            "wall_thickness": {
+              "status": "fail",
+              "value": {
+                "thin_face_count": 16
+              }
+            },
+            "overhang": {
+              "status": "warn",
+              "value": 585
+            },
+            "dimensions": {
+              "status": "pass",
+              "value": 2.682209014892578e-06
+            },
+            "build_volume": {
+              "status": "pass",
+              "value": true
+            },
+            "bed_contact": {
+              "status": "fail",
+              "value": false
+            }
+          }
+        },
+        {
+          "stage": "repair_2",
+          "mesh_version": "m_d5e046823d574874ad876000",
+          "faces": 162466,
+          "path": "runs/462cb566-6d28-4d41-9360-8457f4fd68c6/versions/m_d5e046823d574874ad876000/original.glb",
+          "ready": false,
+          "checks": {
+            "finite_coordinates": {
+              "status": "pass",
+              "value": true
+            },
+            "components": {
+              "status": "pass",
+              "value": 1
+            },
+            "boundary_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_edges": {
+              "status": "pass",
+              "value": 0
+            },
+            "non_manifold_vertices": {
+              "status": "pass",
+              "value": 0
+            },
+            "watertight": {
+              "status": "pass",
+              "value": true
+            },
+            "normals": {
+              "status": "pass",
+              "value": true
+            },
+            "self_intersection": {
+              "status": "pass",
+              "value": 0
+            },
+            "wall_thickness": {
+              "status": "fail",
+              "value": {
+                "thin_face_count": 2
+              }
+            },
+            "overhang": {
+              "status": "warn",
+              "value": 24919
+            },
+            "dimensions": {
+              "status": "pass",
+              "value": 2.682209014892578e-06
+            },
+            "build_volume": {
+              "status": "pass",
+              "value": true
+            },
+            "bed_contact": {
+              "status": "pass",
+              "value": true
+            }
+          }
+        }
+      ],
+      "attempts": [
+        {
+          "phase": 1,
+          "succeeded": true,
+          "error": null,
+          "acceptance": {
+            "phase": 1,
+            "method": {
+              "algorithm": "MeshFix+closed_shell_containment",
+              "meshfix": "0.18.1",
+              "joincomp": false,
+              "remove_smallest_components": false,
+              "filled_internal_cavities": [],
+              "external_components_kept": 1,
+              "not_original_uv": true,
+              "versions": {
+                "pymeshfix": "0.18.1",
+                "meshlib-core": "3.1.4.297"
+              },
+              "input_sha256": "91f14b0d3c7470fbccd14b61d6d28a96c187416f5063b30bdc303dfa084f48d0",
+              "output_sha256": "63937ffe045dc59acc9cdea7e1e6f5bfc9ddb8c649ad3050bea4deca421c2fc4"
+            },
+            "shape": {
+              "three_view_iou": [
+                0.998100204879866,
+                0.9992880873279545,
+                0.9980913929161314
+              ],
+              "max_relative_dimension_change": 0.0,
+              "accepted": true,
+              "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差"
+            },
+            "source_mesh_version": "m_7f9fd052b78d41d683460599",
+            "reference_version": "m_47459b311cf24f34b1c7331c"
+          }
+        },
+        {
+          "phase": 2,
+          "succeeded": true,
+          "error": null,
+          "acceptance": {
+            "phase": 2,
+            "method": {
+              "algorithm": "MeshLib bounded offset/plane cut/local self-intersection repair",
+              "offset_mm": 0.65,
+              "voxel_mm": 0.35,
+              "bed_cut_mm": 0.5,
+              "rebaked": false,
+              "not_original_uv": true,
+              "decimate_max_error_mm": 0.06,
+              "native_intersection_pairs_before": 46,
+              "native_intersection_pairs_after": 0,
+              "versions": {
+                "pymeshfix": "0.18.1",
+                "meshlib-core": "3.1.4.297"
+              },
+              "input_sha256": "d271a59eeccc9c99eda36b76a74cad30a221609986ec3e9589fc54933a520601",
+              "output_sha256": "ed10aeb0a752f6eab01c019b7e58b9c747563305f7db29649edba4c2a3c1bbd2"
+            },
+            "shape": {
+              "three_view_iou": [
+                0.9701162748578259,
+                0.9872688287322434,
+                0.9847034942728723
+              ],
+              "max_relative_dimension_change": 0.00415070745381938,
+              "accepted": true,
+              "scope": "固定三正交方向轮廓/尺寸，不是有真值的三维还原误差"
+            },
+            "source_mesh_version": "m_a7d282f0ced3494da8930fc8",
+            "reference_version": "m_47459b311cf24f34b1c7331c"
+          }
+        }
+      ],
+      "ready": false,
+      "unchanged": true
+    }
+  },
+  "fan_stl_readback": {
+    "float32_vertex_collisions": 5,
+    "non_manifold_edges": 10,
+    "non_manifold_vertices": 15
+  },
+  "first_print": {
+    "stl_sha256": "12b14971ae8c0df360cc21e9a8c918a1bfffbda8768daa2a0f3a7db80dd8eefc",
+    "height_mm": 120,
+    "previous_demo_slicing_layers": 672,
+    "slicing_at_print_shop": "pending",
+    "physical_print": "pending"
+  },
+  "windows_focused_passed": 21,
+  "production_integration": false,
+  "candidate_slicing": "not_run",
+  "manual_review": "pending"
+}
