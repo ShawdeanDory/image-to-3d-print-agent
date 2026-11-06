@@ -1,0 +1,305 @@
+{
+  "date": "2026-11-06",
+  "baseline": "c0a0e92",
+  "tiny_module_url": "https://tiny-online.tools/assets/analyze-CsvaZAqZ.js",
+  "module_download_sha256": "5d433e52fc3f4b586a69f2af38a7be1f877959b26b0eeb186c452d8374b3899c",
+  "input_sha256_unchanged": true,
+  "tiny": {
+    "fixture": {
+      "mode": "fixture",
+      "options": {
+        "tolerance": 1e-05,
+        "weld": true,
+        "removeDegenerate": true,
+        "removeDuplicates": true,
+        "fillHoles": true,
+        "fixWinding": true,
+        "recomputeNormals": true
+      },
+      "input_sha256": null,
+      "tiny_module_sha256": "5d433e52fc3f4b586a69f2af38a7be1f877959b26b0eeb186c452d8374b3899c",
+      "report": {
+        "mergedVertices": 0,
+        "removedDegenerate": 0,
+        "removedDuplicates": 0,
+        "filledHoles": 1,
+        "filledTriangles": 4,
+        "flippedFaces": 4
+      },
+      "before": {
+        "faces": 10,
+        "vertices": 8,
+        "boundary_edges": 4,
+        "boundary_paths": 1,
+        "non_manifold_edges": 0,
+        "watertight": false,
+        "vertex_connected_islands": 1
+      },
+      "after": {
+        "faces": 14,
+        "vertices": 9,
+        "boundary_edges": 0,
+        "boundary_paths": 0,
+        "non_manifold_edges": 0,
+        "watertight": true,
+        "vertex_connected_islands": 1
+      },
+      "seconds": 0.0023315000000000054
+    },
+    "fill-off": {
+      "mode": "fill-off",
+      "options": {
+        "tolerance": 1e-05,
+        "weld": true,
+        "removeDegenerate": true,
+        "removeDuplicates": true,
+        "fillHoles": false,
+        "fixWinding": true,
+        "recomputeNormals": true
+      },
+      "input_sha256": "cf96abecdf32d0a01600d2b6367075a1697c4b09d3ae9555ecb527d7910b2f54",
+      "tiny_module_sha256": "5d433e52fc3f4b586a69f2af38a7be1f877959b26b0eeb186c452d8374b3899c",
+      "report": {
+        "mergedVertices": 2381279,
+        "removedDegenerate": 0,
+        "removedDuplicates": 0,
+        "filledHoles": 0,
+        "filledTriangles": 0,
+        "flippedFaces": 403724
+      },
+      "before": {
+        "faces": 944116,
+        "vertices": 451069,
+        "boundary_edges": 7660,
+        "boundary_paths": 1877,
+        "non_manifold_edges": 13419,
+        "watertight": false,
+        "vertex_connected_islands": 265
+      },
+      "after": {
+        "faces": 944116,
+        "vertices": 451069,
+        "boundary_edges": 7660,
+        "boundary_paths": 1882,
+        "non_manifold_edges": 13419,
+        "watertight": false,
+        "vertex_connected_islands": 265
+      },
+      "seconds": 15.590676,
+      "stl_sha256": "a3f5220bf17affae8fe3dc43caf7e9e29c02cd28fa475e8a2d56d910b2d8011a"
+    },
+    "fill-on": {
+      "mode": "fill-on",
+      "options": {
+        "tolerance": 1e-05,
+        "weld": true,
+        "removeDegenerate": true,
+        "removeDuplicates": true,
+        "fillHoles": true,
+        "fixWinding": true,
+        "recomputeNormals": true
+      },
+      "input_sha256": "cf96abecdf32d0a01600d2b6367075a1697c4b09d3ae9555ecb527d7910b2f54",
+      "tiny_module_sha256": "5d433e52fc3f4b586a69f2af38a7be1f877959b26b0eeb186c452d8374b3899c",
+      "report": {
+        "mergedVertices": 2381279,
+        "removedDegenerate": 0,
+        "removedDuplicates": 0,
+        "filledHoles": 1877,
+        "filledTriangles": 5869,
+        "flippedFaces": 400395
+      },
+      "before": {
+        "faces": 944116,
+        "vertices": 451069,
+        "boundary_edges": 7660,
+        "boundary_paths": 1877,
+        "non_manifold_edges": 13419,
+        "watertight": false,
+        "vertex_connected_islands": 265
+      },
+      "after": {
+        "faces": 949985,
+        "vertices": 452932,
+        "boundary_edges": 3827,
+        "boundary_paths": 209,
+        "non_manifold_edges": 13461,
+        "watertight": false,
+        "vertex_connected_islands": 265
+      },
+      "seconds": 13.5913167,
+      "stl_sha256": "1f6afecbfb245da5c3f72869e236e96f0e16b98aceddbc3eae88dd9434ae1a7f",
+      "patch_sha256": "bbe5a0ccf29b929cd59f36d8afb4d052c8984241747f910776c012a9c5cacdd0"
+    }
+  },
+  "readback": {
+    "source_vs_tiny": [
+      {
+        "view": "Front (XZ)",
+        "iou": 1.0,
+        "removed_pixels": 0,
+        "added_pixels": 0,
+        "union_pixels": 29972
+      },
+      {
+        "view": "Top (XY)",
+        "iou": 1.0,
+        "removed_pixels": 0,
+        "added_pixels": 0,
+        "union_pixels": 16795
+      },
+      {
+        "view": "Front rotated (ZX)",
+        "iou": 1.0,
+        "removed_pixels": 0,
+        "added_pixels": 0,
+        "union_pixels": 29264
+      }
+    ],
+    "fill_toggle": [
+      {
+        "view": "Front (XZ)",
+        "iou": 1.0,
+        "removed_pixels": 0,
+        "added_pixels": 0,
+        "union_pixels": 29972
+      },
+      {
+        "view": "Top (XY)",
+        "iou": 1.0,
+        "removed_pixels": 0,
+        "added_pixels": 0,
+        "union_pixels": 16795
+      },
+      {
+        "view": "Front rotated (ZX)",
+        "iou": 1.0,
+        "removed_pixels": 0,
+        "added_pixels": 0,
+        "union_pixels": 29264
+      }
+    ],
+    "input": {
+      "vertex_count": 451069,
+      "face_count": 944116,
+      "component_count": 384,
+      "watertight": false,
+      "normals_consistent": true,
+      "boundary_edge_count": 7660,
+      "non_manifold_edge_count": 13419,
+      "non_manifold_vertex_count": 32215,
+      "dimensions": [
+        108.02853393554688,
+        44.250938415527344,
+        120.0
+      ],
+      "volume": null
+    },
+    "fill_off": {
+      "vertex_count": 451069,
+      "face_count": 944116,
+      "component_count": 384,
+      "watertight": false,
+      "normals_consistent": false,
+      "boundary_edge_count": 7660,
+      "non_manifold_edge_count": 13419,
+      "non_manifold_vertex_count": 32215,
+      "dimensions": [
+        108.02853393554688,
+        44.250938415527344,
+        120.0
+      ],
+      "volume": null
+    },
+    "fill_on": {
+      "vertex_count": 452935,
+      "face_count": 949985,
+      "component_count": 375,
+      "watertight": false,
+      "normals_consistent": false,
+      "boundary_edge_count": 3824,
+      "non_manifold_edge_count": 13483,
+      "non_manifold_vertex_count": 32244,
+      "dimensions": [
+        108.02853393554688,
+        44.250938415527344,
+        120.0
+      ],
+      "volume": null
+    }
+  },
+  "patch_summary": {
+    "count": 1877,
+    "max_bbox_diagonal_mm": 1.3864031553997747,
+    "max_area_mm2": 0.39910390165469045
+  },
+  "meshfix": {
+    "views": [
+      {
+        "view": "Front (XZ)",
+        "iou": 0.9892598645809012,
+        "removed_pixels": 313,
+        "added_pixels": 9,
+        "union_pixels": 29981
+      },
+      {
+        "view": "Top (XY)",
+        "iou": 0.9643086628891875,
+        "removed_pixels": 287,
+        "added_pixels": 324,
+        "union_pixels": 17119
+      },
+      {
+        "view": "Front rotated (ZX)",
+        "iou": 0.9889655643618475,
+        "removed_pixels": 315,
+        "added_pixels": 8,
+        "union_pixels": 29272
+      }
+    ],
+    "original": {
+      "vertex_count": 451069,
+      "face_count": 944116,
+      "component_count": 384,
+      "watertight": false,
+      "normals_consistent": true,
+      "boundary_edge_count": 7660,
+      "non_manifold_edge_count": 13419,
+      "non_manifold_vertex_count": 32215,
+      "dimensions": [
+        108.02853479981422,
+        44.250937178730965,
+        119.99999731779099
+      ],
+      "volume": null
+    },
+    "candidate": {
+      "vertex_count": 221024,
+      "face_count": 443908,
+      "component_count": 1,
+      "watertight": true,
+      "normals_consistent": true,
+      "boundary_edge_count": 0,
+      "non_manifold_edge_count": 0,
+      "non_manifold_vertex_count": 0,
+      "dimensions": [
+        108.02853393554688,
+        44.08823776245117,
+        120.0
+      ],
+      "volume": 28316.956014899177
+    }
+  },
+  "same_camera_review": {
+    "right_post_visible_defects": {
+      "input": 2,
+      "tiny": 2,
+      "meshfix": 2
+    }
+  },
+  "hybrid_chain": "not_run",
+  "slicing": "not_run",
+  "physical_print": "not_run",
+  "production_integration": false,
+  "manual_review": "pending"
+}
