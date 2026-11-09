@@ -113,6 +113,24 @@ class PendingInput(ContractModel):
     details: dict = Field(default_factory=dict)
 
 
+class STLSupport(ContractModel):
+    status: Literal['generated','not_required','blocked','failed']
+    artifact_id: Id | None = None
+    pillar_count: Annotated[StrictInt, Field(ge=0)] = 0
+    blocked_samples: Annotated[StrictInt, Field(ge=0)] = 0
+    top_gap_mm: Annotated[float, Field(gt=0)] | None = None
+    reason: Text | None = None
+
+    @model_validator(mode='after')
+    def check_evidence(self):
+        downloadable = self.status in {'generated','not_required'}
+        generated = self.status == 'generated'
+        if (downloadable != (self.artifact_id is not None) or downloadable == (self.reason is not None)
+                or generated != (self.pillar_count > 0) or generated != (self.top_gap_mm is not None)):
+            raise ValueError('STL支撑状态和产物证据不一致')
+        return self
+
+
 class GenerationDelivery(ContractModel):
     artifact_id: Id
     mesh_version: Id
@@ -124,6 +142,7 @@ class GenerationDelivery(ContractModel):
     geometry_policy: Literal['preserve_uv','print_copy','print_copy_color'] = 'preserve_uv'
     original_artifact_id: Id | None = None
     stl_artifact_id: Id | None = None
+    stl_support: STLSupport | None = None
     warnings: list[Text] = Field(default_factory=list)
 
 
@@ -153,6 +172,22 @@ class GenerationTaskResponse(ModelTaskResponse):
         actual=print_check_for(inspection)
         if inspection is not None and inspection.mesh_version!=delivery.mesh_version:raise ValueError('GLB检查版本不匹配')
         if delivery.print_check!=actual:raise ValueError('打印检查标签与实际证据不符')
+        support = delivery.stl_support
+        if support is not None:
+            if delivery.geometry_policy != 'print_copy_color' or (support.status == 'blocked') != (actual != 'passed'):
+                raise ValueError('STL支撑必须跟随最终彩色修复版本及复检结论')
+            if support.status in {'generated','not_required'}:
+                overhang = next(c for c in inspection.checks if c.name == 'overhang')
+                if overhang.status != ('warn' if support.status == 'generated' else 'pass'):
+                    raise ValueError('STL支撑状态必须与悬垂复检结论一致')
+            if support.status == 'generated':
+                part = artifacts.get(support.artifact_id)
+                if (part is None or part.kind != 'candidate_stl' or part.mesh_version != delivery.mesh_version
+                        or part.unit != 'mm' or not part.relative_path.endswith('.stl')
+                        or part.artifact_id == delivery.stl_artifact_id or part.derived_from != [delivery.stl_artifact_id]):
+                    raise ValueError('支撑STL必须从同版本本体STL单独派生')
+            if support.status == 'not_required' and support.artifact_id != delivery.stl_artifact_id:
+                raise ValueError('无需支撑时只允许交付同版本本体STL')
         if self.data.slicer_confirmation is not None:raise ValueError('自动GLB交付不能声称实际切片确认')
 
 

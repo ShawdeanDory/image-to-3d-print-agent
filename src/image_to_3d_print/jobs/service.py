@@ -78,6 +78,7 @@ class TaskService:
         if automatic:
             ctx['export_options']={'export_target_faces':create.export_target_faces,'texture_size':create.texture_size}
             ctx['delivery_policy']='print-copy-color-v1' if self.settings.tools.print_repair is not None else 'repaired-glb-v1'
+            ctx['auto_stl_supports']=ctx['delivery_policy']=='print-copy-color-v1'
             ctx['gpu_hole_policy']=None if self.settings.tools.print_repair is not None else 'gpu-boundary-fill-v1'
         ctx['workflow_policy']=self.settings.workflow_policy
         if automatic:ctx['face_budget_policy']='image-complexity-v1'

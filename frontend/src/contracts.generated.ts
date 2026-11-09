@@ -162,6 +162,7 @@ export type GenerationDelivery = {
   "print_check": "passed" | "failed" | "not_run";
   "repair_attempts"?: number;
   "stl_artifact_id"?: (string | null);
+  "stl_support"?: (STLSupport | null);
   "warnings"?: Array<string>;
 };
 
@@ -359,6 +360,15 @@ export type RuntimeTask = {
   "pending"?: (PendingInput | null);
   "resources"?: Record<string, unknown>;
   "response": (ModelTaskResponse | GenerationTaskResponse | OriginalGLBTaskResponse);
+};
+
+export type STLSupport = {
+  "artifact_id"?: (string | null);
+  "blocked_samples"?: number;
+  "pillar_count"?: number;
+  "reason"?: (string | null);
+  "status": "generated" | "not_required" | "blocked" | "failed";
+  "top_gap_mm"?: (number | null);
 };
 
 export type SlicerConfirmation = {

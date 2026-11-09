@@ -13,7 +13,7 @@ it('最终预览不能选择原始或中间产物',()=>{
 });
 it('只提供两个最终文件下载入口，渲染不会下载',()=>{
   let calls=0;const html=renderToStaticMarkup(<DeliveryDownloads busy={false} stlAvailable onGLB={()=>calls++} onSTL={()=>calls++}/>);
-  expect(html.match(/<button/g)).toHaveLength(2);expect(html).toContain('下载最终彩色GLB');expect(html).toContain('下载STL');expect(calls).toBe(0);
+  expect(html.match(/<button/g)).toHaveLength(2);expect(html).toContain('下载最终彩色GLB');expect(html).toContain('下载带支撑STL');expect(calls).toBe(0);
 });
 it('预览工具不再提供PNG或JSON额外下载',()=>{
   const html=renderToStaticMarkup(<PreviewToolbar disabled={false} rotate={false} wireframe={false} background="#dddddd" onAction={()=>{}} onBackground={()=>{}}/>);

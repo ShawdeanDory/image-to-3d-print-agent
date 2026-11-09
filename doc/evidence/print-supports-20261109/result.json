@@ -1,0 +1,47 @@
+{
+  "run": "8ebf8fb9-ef8c-4800-a824-84e00da04cb4",
+  "mesh_version": "m_22a9b5954aad47b588a6e83a",
+  "geometry_check": "passed",
+  "support": {
+    "status": "generated",
+    "artifact_id": "t_5d1912441122441e_supported_stl",
+    "pillar_count": 362,
+    "blocked_samples": 59,
+    "top_gap_mm": 0.2,
+    "reason": null
+  },
+  "downloads": {
+    "duck-final.glb": {
+      "sha256": "5e43f145980222d084fd4c4e41b86f549e61a2f295b76cd0932308dcd8dbb568",
+      "bytes": 35160516
+    },
+    "duck-web-supported.stl": {
+      "sha256": "500a7ce8280c5e21f30c5b8708201be27fbc5a83ccaae91638e89d4b69b71567",
+      "bytes": 8554184
+    }
+  },
+  "preview": "GLB only",
+  "clicked_downloads": 2,
+  "automatic_downloads": 0,
+  "body_faces": 166738,
+  "supported_faces": 171082,
+  "body_sha256": "12b14971ae8c0df360cc21e9a8c918a1bfffbda8768daa2a0f3a7db80dd8eefc",
+  "body_triangle_readback": true,
+  "support_shell_count": 362,
+  "pbr_retained": true,
+  "source_unchanged": true,
+  "slice": {
+    "passed": true,
+    "layers": 600,
+    "first_z_mm": 0.2,
+    "last_z_mm": 120.0,
+    "has_extrusion_moves": true,
+    "physical_print": false,
+    "slicer": "PrusaSlicer2.9.6",
+    "demo_only": true,
+    "auto_support_generation": false,
+    "seconds": 11.938,
+    "profile_sha256": "ef8e34b58238b71ffd40b5c48ccb860327c1cc3eefab2cc6c0ac1190b7081ab7",
+    "returncode": 0
+  }
+}

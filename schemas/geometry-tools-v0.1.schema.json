@@ -1768,6 +1768,51 @@
       "title": "PrintRepairConfig",
       "type": "object"
     },
+    "PrintSupportCall": {
+      "additionalProperties": false,
+      "properties": {
+        "body_artifact_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Body Artifact Id",
+          "type": "string"
+        },
+        "inspection": {
+          "$ref": "#/$defs/MeshInspection"
+        },
+        "mesh_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Mesh Version",
+          "type": "string"
+        },
+        "operation": {
+          "const": "add_print_supports",
+          "title": "Operation",
+          "type": "string"
+        },
+        "profile": {
+          "$ref": "#/$defs/PrinterProfile"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "operation",
+        "mesh_version",
+        "body_artifact_id",
+        "inspection",
+        "profile"
+      ],
+      "title": "PrintSupportCall",
+      "type": "object"
+    },
     "PrinterProfile": {
       "additionalProperties": false,
       "properties": {
@@ -2308,6 +2353,7 @@
     {
       "discriminator": {
         "mapping": {
+          "add_print_supports": "#/$defs/PrintSupportCall",
           "analyze_complexity": "#/$defs/ComplexityCall",
           "apply": "#/$defs/ApplyCall",
           "clean": "#/$defs/MeshCall",
@@ -2357,6 +2403,9 @@
         },
         {
           "$ref": "#/$defs/PrintRepairCall"
+        },
+        {
+          "$ref": "#/$defs/PrintSupportCall"
         },
         {
           "$ref": "#/$defs/ProposeCall"

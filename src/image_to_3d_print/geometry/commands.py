@@ -69,6 +69,12 @@ class PrintRepairCall(Call):
     inspection:MeshInspection
     height_mm:float=Field(ge=100,le=150)
     min_wall_mm:float=Field(gt=0,le=1.4)
+class PrintSupportCall(Call):
+    operation:Literal['add_print_supports']
+    mesh_version:Id
+    body_artifact_id:Id
+    inspection:MeshInspection
+    profile:PrinterProfile
 class ProposeCall(Call):
     operation:Literal['propose']
     mesh_version:Id
@@ -88,7 +94,7 @@ class MeasureCall(Call):
     mask_path:RelativePath
     backend:Literal['triposr','trellis2_candidate']
 
-Command=Annotated[Union[ImportCall,ComplexityCall,PrepareCall,ReconstructCall,MeshCall,EyeTextureCall,ScaleCall,InspectCall,PrintRepairCall,ProposeCall,ConfirmCall,ApplyCall,MeasureCall],Field(discriminator='operation')]
+Command=Annotated[Union[ImportCall,ComplexityCall,PrepareCall,ReconstructCall,MeshCall,EyeTextureCall,ScaleCall,InspectCall,PrintRepairCall,PrintSupportCall,ProposeCall,ConfirmCall,ApplyCall,MeasureCall],Field(discriminator='operation')]
 COMMANDS=TypeAdapter(Command)
 
 class ToolConfiguration(ContractModel):
@@ -105,7 +111,7 @@ class ToolConfiguration(ContractModel):
 def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,human_action=False,confirmation_origin='human',automatic_input=False,automatic_action=False):
     root=Path(root).resolve();command=COMMANDS.validate_python(command)
     store=MeshStore(root);assets=AssetStore(root);op=command.operation;run=command.run_id
-    tool_name={'analyze_complexity':'preprocess','import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','repair_print_copy':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','export_print_copy':'export','export_print_color':'export','export_original_glb':'export','enhance_eye_texture':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
+    tool_name={'analyze_complexity':'preprocess','import_image':'preprocess','prepare_image':'preprocess','propose':'repair','confirm':'repair','apply':'repair','clean':'repair','repair_print_copy':'repair','scale':'repair','inspect':'inspect','export':'export','export_glb':'export','export_print_copy':'export','export_print_color':'export','export_original_glb':'export','add_print_supports':'export','enhance_eye_texture':'export','preview':'inspect','measure_view':'inspect','reconstruct':'reconstruct'}[op]
     # 包装只有原子返回值的资产/提案接口；已有ToolOutcome直接返回。
     session=None
     try:
@@ -153,6 +159,11 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
         if op=='inspect':return inspect_mesh(root,run,command.mesh_version,command.profile,command.height_mm,command.bed_review,configuration.inspection,command.component_review,automatic_bed=automatic_action)
         if op=='export':return export_mesh(root,run,command.mesh_version,configuration.inspection)
         if op=='export_glb':return export_preview(root,run,command.mesh_version,configuration.inspection)
+        if op=='add_print_supports':
+            if not (automatic_action and confirmation_origin=='automatic_policy'):
+                raise ToolFailure('STATE_CONFLICT','自动支撑只允许服务端已启用的交付策略调用')
+            from .supports import export_supported_stl
+            return export_supported_stl(root,run,command.mesh_version,command.inspection,command.profile,command.body_artifact_id)
         if op in {'repair_print_copy','export_print_copy','export_print_color'}:
             if not (automatic_action and confirmation_origin=='automatic_policy'):
                 raise ToolFailure('STATE_CONFLICT','打印副本结构修改仅允许服务端授权自动策略')

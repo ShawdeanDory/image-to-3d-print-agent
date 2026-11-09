@@ -625,6 +625,17 @@
           "default": null,
           "title": "Stl Artifact Id"
         },
+        "stl_support": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/STLSupport"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "warnings": {
           "items": {
             "maxLength": 1000,
@@ -2002,6 +2013,80 @@
         "response"
       ],
       "title": "RuntimeTask",
+      "type": "object"
+    },
+    "STLSupport": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9_-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Artifact Id"
+        },
+        "blocked_samples": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Blocked Samples",
+          "type": "integer"
+        },
+        "pillar_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Pillar Count",
+          "type": "integer"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "status": {
+          "enum": [
+            "generated",
+            "not_required",
+            "blocked",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "top_gap_mm": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top Gap Mm"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "STLSupport",
       "type": "object"
     },
     "SlicerConfirmation": {

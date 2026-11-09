@@ -1,9 +1,8 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import type {ArtifactRecord,AssetRecord,ModelTaskRequest,PrinterProfile,RuntimeEvent,RuntimeTask} from './contracts.generated';
-import {api,ApiError,artifactBlob,download,downloadSTL,setAccessToken,transferLabel,type ArtifactProgress,type Capabilities} from './api';
+import {api,ApiError,artifactBlob,download,setAccessToken,transferLabel,type ArtifactProgress,type Capabilities} from './api';
 import {finalDeliveryModel,checkLabel,checkNames,checkMeasure,display,heightNumber,id,mergeEvents,stageNames,statusNames,validateImage} from './domain';
 import PendingForm,{AxisSelect} from './PendingForm';
-import ModelView from './ModelView';
 import ResultPreview from './ResultPreview';
 import PrintSummary from './PrintSummary';
 import ReconstructionTiming from './ReconstructionTiming';
@@ -50,9 +49,12 @@ export default function App(){
   const delivery=response&&'delivery' in response?response.delivery:null;
   const printCopy=!!(delivery&&'geometry_policy' in delivery&&delivery.geometry_policy==='print_copy');
   if(printCopy){active=undefined;deliveryError='此历史任务没有最终修复彩色GLB，请新建任务使用彩色交付流程。';}
-  const previewArtifact=active;
+  const finalGLB=response?.status==='succeeded'&&delivery?.print_check==='passed'?active:undefined;
+  const support=delivery&&'stl_support' in delivery?delivery.stl_support:null;
+  const supportedSTL=finalGLB&&support&&['generated','not_required'].includes(support.status)
+    ?response?.artifacts?.find(a=>a.artifact_id===support.artifact_id&&a.run_id===run&&a.mesh_version===finalGLB.mesh_version
+      &&a.unit==='mm'&&a.kind==='candidate_stl'&&a.relative_path.toLowerCase().endsWith('.stl')):undefined;
   if(original)deliveryError='此历史任务只有原始模型，尚无最终修复彩色交付，请新建任务。';
-  const stlAvailable=!!(cap?.delivery_stl_download&&active?.unit==='mm'&&response?.schema_version==='generation-v1');
 
   async function act(fn:()=>Promise<void>){if(lock.current)return;lock.current=true;setBusy(true);setError('');try{await fn();}catch(exc){setError(message(exc));}finally{lock.current=false;setBusy(false);}}
   async function create(event:React.FormEvent<HTMLFormElement>){
@@ -70,20 +72,13 @@ export default function App(){
       const body:ModelTaskRequest={schema_version:'1.0.0',image_asset_id:assetRef.current.asset_id,printer_profile_id:String(data.get('profile')),
         height_value:height,height_unit:(data.get('unit')||null) as 'mm'|'cm'|null,scale_source:(source||null) as 'user_target'|'measured_object'|null,scale_evidence_id:evidence,
         orientation:{up_axis:axis||null,confirmed:false},description:String(data.get('description')||'')};
-      const created=await api.create(body,String(data.get('backend')),createKey.current,undefined,exportOptions);setRun(created.run_id);setNotice('任务已创建，后台先GPU复查几何，最多尝试2轮受控修补；未修好项会保留在报告。');
+      const created=await api.create(body,String(data.get('backend')),createKey.current,undefined,exportOptions);setRun(created.run_id);setNotice('任务已创建，后台最多尝试2轮受控修补，复检通过后准备STL支撑。');
     });
   }
   async function submit(body:Record<string,unknown>,slicer=false){await api.input(run,body,slicer);setNotice('已提交，继续原任务。');await fetchTask();}
   async function downloadFile(artifact:ArtifactRecord,name:string){
     setTransfer({loaded:0,total:null});setDownloadError('');setNotice('');
     try{await download(run,artifact.artifact_id,name,{onProgress:setTransfer});setNotice('文件已读取，已交给浏览器保存。');}
-    catch(exc){setDownloadError(message(exc));}
-    finally{setTransfer(null);}
-  }
-  async function downloadSTLFile(){
-    if(!stlAvailable||!active?.mesh_version)throw Error('当前交付尚无可下载的同版本毫米STL');
-    setTransfer({loaded:0,total:null});setDownloadError('');setNotice('');
-    try{await downloadSTL(run,active.mesh_version,{onProgress:setTransfer});setNotice('同版本毫米STL已交给浏览器保存；请按质量报告决定后续修复和切片。');}
     catch(exc){setDownloadError(message(exc));}
     finally{setTransfer(null);}
   }
@@ -111,16 +106,26 @@ export default function App(){
   {task&&response&&<div className="workspace task-workspace"><div className="main-column">
     <section className="sheet model-sheet"><div className="section-title"><div><span className="eyebrow">模型与版本</span><h2>查看本次产物</h2></div><span className="muted">最终修复版本</span></div>
       {active&&!original&&<p role="status" className={delivery?.print_check==='passed'?'notice':'notice error'}><strong>{printNotice(delivery?.print_check,response.data.inspection?.checks??[])}</strong></p>}
-      {deliveryError&&<p role="alert" className="error">{deliveryError}</p>}{previewArtifact?<div className="model-single">{response.status==='succeeded'?<ResultPreview key={previewArtifact.artifact_id} run={run} artifact={previewArtifact} frame={task.artifact_frames?.[previewArtifact.artifact_id]} stlAvailable={stlAvailable} dimensionsMm={!original&&response.data.inspection?.mesh_version===active?.mesh_version?response.data.inspection?.dimensions_mm:null}/>:<ModelView run={run} artifact={previewArtifact} frame={task.artifact_frames?.[previewArtifact.artifact_id]}/>}</div>:<div className="empty-model"><span>◎</span><h3>模型将在后台处理完成后显示</h3><p>当前{statusNames[response.status]}，等待服务端登记本任务交付GLB。</p></div>}
-      {previewArtifact&&<p className="muted">最终修复彩色GLB：已毫米定标并复检；颜色方式和未通过项目见报告。网格版本：{previewArtifact.mesh_version}</p>}
+      {deliveryError&&<p role="alert" className="error">{deliveryError}</p>}
+      {finalGLB?<div className="model-single"><ResultPreview key={finalGLB.artifact_id} run={run} artifact={finalGLB} frame={task.artifact_frames?.[finalGLB.artifact_id]} dimensionsMm={response.data.inspection?.dimensions_mm}/></div>
+        :<div className="empty-model"><span>◎</span><h3>{['succeeded','failed','cancelled'].includes(response.status)?'没有通过复检的最终GLB':'最终彩色GLB将在复检后显示'}</h3></div>}
+      {finalGLB&&<p className="muted">最终修复彩色GLB已毫米定标并通过几何复检。网格版本：{finalGLB.mesh_version}</p>}
       {response.data.inspection?.dimensions_mm&&<div className="dimensions"><span>{original?'检查副本尺寸（原始GLB未应用）':'交付版本检查尺寸'}</span><strong>{response.data.inspection.dimensions_mm.map(n=>n.toFixed(2)).join(' × ')}<small>mm</small></strong><span>网格：{response.data.inspection.mesh_version}</span></div>}
       <ArtifactImages run={run} artifacts={(response.artifacts??[]).filter(a=>['input_image','foreground_image'].includes(a.kind)||a.artifact_id===task.pending?.details?.preview_artifact_id)}/>
     </section>
     <ReconstructionTiming value={task.resources?.reconstruction}/>
     <GPURepairInfo value={task.resources?.gpu_boundary_repair}/>
     <MeshBudgetInfo value={task.resources?.mesh_budget} original={response.schema_version==='original-glb-v1'}/>
-    {active&&<MaterialInfo original={original} printCopy={!!(delivery&&'geometry_policy' in delivery&&delivery.geometry_policy==='print_copy_color')}/>}
-    {response.status==='succeeded'&&active&&<section className="sheet"><h2>最终修复文件</h2><p>仅提供最终修复彩色GLB和同版本STL。下载不代表可打印。</p>{delivery&&<p>自动修复尝试{delivery.repair_attempts??0}轮。</p>}{delivery?.warnings?.map((warning,index)=><p className="muted" key={index}>{warning}</p>)}<DeliveryDownloads busy={busy} stlAvailable={stlAvailable} onGLB={()=>void act(()=>downloadFile(active,`${original?'original':'repaired'}-${run}.glb`))} onSTL={()=>void act(downloadSTLFile)}/><p className="muted">STL不包含颜色，按当前交付几何以毫米导出，不会额外补洞。{!stlAvailable&&(original?'历史原始无单位GLB暂不支持STL下载。':'计算服务尚未提供同版本STL下载，请核对连接和服务更新。')}</p></section>}
+    {finalGLB&&<MaterialInfo original={original} printCopy={!!(delivery&&'geometry_policy' in delivery&&delivery.geometry_policy==='print_copy_color')}/>}
+    {finalGLB&&<section className="sheet"><h2>最终修复文件</h2><p>自动修复尝试{delivery?.repair_attempts??0}轮。</p>
+      {delivery?.warnings?.map((warning,index)=><p className="muted" key={index}>{warning}</p>)}
+      <DeliveryDownloads busy={busy} stlAvailable={!!supportedSTL} supportStatus={support?.status}
+        onGLB={()=>void act(()=>downloadFile(finalGLB,`repaired-${run}.glb`))}
+        onSTL={()=>{if(supportedSTL)void act(()=>downloadFile(supportedSTL,`${support?.status==='generated'?'supported':'repaired'}-${run}.stl`));}}/>
+      <p className="muted">{support?.status==='generated'
+        ?`毫米STL包含同版本本体和${support.pillar_count}根临时支撑柱，最小顶部间隙${support.top_gap_mm}mm。${support.blocked_samples?`另有${support.blocked_samples}个候选位置因净空不足跳过。`:''}请按实际设备切片并核对悬垂覆盖。`
+        :support?.status==='not_required'?'当前检查未检出需加支撑的悬垂，STL为同版本模型本体。'
+        :support?.reason??'该任务没有自动支撑证据，带支撑STL暂不可下载。'}</p></section>}
     {task.pending&&response.schema_version==='1.0.0'&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>{original?'检查副本的打印报告':'交付版本的打印报告'}</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>
     {!original&&active&&response.data.inspection?.mesh_version===active.mesh_version&&response.data.inspection&&<PrintSummary inspection={response.data.inspection} profile={response.data.printer_profile}/>}

@@ -3,10 +3,9 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {EXRLoader} from 'three/addons/loaders/EXRLoader.js';
-import {STLLoader} from 'three/addons/loaders/STLLoader.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import type {ArtifactRecord} from './contracts.generated';
-import {artifactBlob,deliverySTLBlob,transferLabel,type ArtifactProgress} from './api';
+import {artifactBlob,transferLabel,type ArtifactProgress} from './api';
 import PreviewToolbar,{ViewerIcon,type PreviewAction} from './PreviewToolbar';
 import {preparePreview,viewPose,modelStats,type StandardView} from './preview-geometry';
 import './result-preview.css';
@@ -17,18 +16,17 @@ type Engine={scene:THREE.Scene;camera:THREE.PerspectiveCamera;controls:OrbitCont
   view:(view:StandardView)=>void;environment:(mode:Environment)=>Promise<boolean>};
 const views:[StandardView,string][]=[['front','正视图'],['back','背视图'],['top','顶视图'],['bottom','底视图'],['left','左视图'],['right','右视图']];
 
-export default function ResultPreview({run,artifact,frame,stlAvailable,dimensionsMm,plainGeometry=false}:{
-  run:string;artifact:ArtifactRecord;frame?:'y_up'|'z_up';stlAvailable:boolean;dimensionsMm?:number[]|null;plainGeometry?:boolean;
+export default function ResultPreview({run,artifact,frame,dimensionsMm}:{
+  run:string;artifact:ArtifactRecord;frame?:'y_up'|'z_up';dimensionsMm?:number[]|null;
 }){
   const host=useRef<HTMLDivElement>(null),viewport=useRef<HTMLDivElement>(null),engine=useRef<Engine|null>(null);
-  const [format,setFormat]=useState<'glb'|'stl'>('glb'),[ready,setReady]=useState(false),[error,setError]=useState('');
+  const [ready,setReady]=useState(false),[error,setError]=useState('');
   const [phase,setPhase]=useState('正在读取模型…'),[progress,setProgress]=useState<ArtifactProgress|null>(null),[attempt,setAttempt]=useState(0);
   const [rotate,setRotate]=useState(false),[wireframe,setWireframe]=useState(false),[background,setBackground]=useState('#dddddd');
   const [environment,setEnvironment]=useState<Environment>('studio'),[environmentNotice,setEnvironmentNotice]=useState('');
   const [lighting,setLighting]=useState(false),[fullscreen,setFullscreen]=useState(false);
   const [lights,setLights]=useState({key:1.9,ambient:1.6,exposure:1,grid:false});
   const [stats,setStats]=useState<ReturnType<typeof modelStats>&{fileBytes:number}|null>(null);
-  const isSTL=format==='stl'&&stlAvailable;
   useEffect(()=>{const change=()=>setFullscreen(document.fullscreenElement===viewport.current);document.addEventListener('fullscreenchange',change);return()=>document.removeEventListener('fullscreenchange',change);},[]);
   useEffect(()=>{
     const container=host.current!;const abort=new AbortController();let disposed=false,environmentRequest=0;
@@ -41,30 +39,23 @@ export default function ResultPreview({run,artifact,frame,stlAvailable,dimension
     setLights({key:1.9,ambient:1.6,exposure:1,grid:false});
     async function load(){
       try{
-        if(isSTL&&(!artifact.mesh_version||artifact.unit!=='mm'))throw Error('STL预览缺少同版本毫米几何依据');
         const options={signal:abort.signal,onProgress:(value:ArtifactProgress)=>{if(!disposed)setProgress(value);}};
-        const blob=await (isSTL?deliverySTLBlob(run,artifact.mesh_version!,options):artifactBlob(run,artifact.artifact_id,options));
+        const blob=await artifactBlob(run,artifact.artifact_id,options);
         const bytes=await blob.arrayBuffer();if(disposed)return;
         setProgress(null);setPhase('文件已读取，正在解析模型…');
-        if(isSTL){
-          const geometry=new STLLoader().parse(bytes);geometry.computeVertexNormals();
-          content=new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({color:'#c49c83',roughness:.6,metalness:0,side:THREE.DoubleSide}));
-        }else{
-          const manager=new THREE.LoadingManager();manager.setURLModifier(url=>{
-            if(!url.startsWith('blob:')&&!url.startsWith('data:'))throw Error('拒绝读取模型中的外部资源');return url;
-          });
-          content=(await new GLTFLoader(manager).parseAsync(bytes,'')).scene;
-        }
+        const manager=new THREE.LoadingManager();manager.setURLModifier(url=>{
+          if(!url.startsWith('blob:')&&!url.startsWith('data:'))throw Error('拒绝读取模型中的外部资源');return url;
+        });
+        content=(await new GLTFLoader(manager).parseAsync(bytes,'')).scene;
         if(disposed){disposeObject(content);return;}
         const fileStats=modelStats(content);
-        // STL诊断色仅用于查看，文件本身没有材质。
-        setStats({...fileStats,materials:isSTL?0:fileStats.materials,fileBytes:blob.size});
-        const prepared=preparePreview(content,isSTL?'z_up':frame||'y_up');scene.add(prepared.root);
+        setStats({...fileStats,fileBytes:blob.size});
+        const prepared=preparePreview(content,frame||'y_up');scene.add(prepared.root);
         const grid=new THREE.GridHelper(6,24,0x9ca3af,0xc8ccd0);grid.position.y=prepared.floorY-.002;grid.visible=false;scene.add(grid);
         const ambient=new THREE.HemisphereLight(0xffffff,0xb5bcc6,1.6),key=new THREE.DirectionalLight(0xffffff,1.9);key.position.set(3,5,4);scene.add(ambient,key);
         renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
         renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;
-        container.replaceChildren(renderer.domElement);renderer.domElement.setAttribute('aria-label',isSTL?'STL模型画布':'GLB模型画布');
+        container.replaceChildren(renderer.domElement);renderer.domElement.setAttribute('aria-label','GLB模型画布');
         controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.autoRotate=false;
         controls.autoRotateSpeed=1.3;controls.target.set(0,0,0);controls.minDistance=prepared.radius*.3;controls.maxDistance=prepared.radius*30;
         const view=(name:StandardView)=>{
@@ -109,7 +100,7 @@ export default function ResultPreview({run,artifact,frame,stlAvailable,dimension
     }
     void load();
     return()=>{disposed=true;environmentRequest++;abort.abort();engine.current=null;observer?.disconnect();controls?.dispose();renderer?.setAnimationLoop(null);environmentMap?.dispose();renderer?.dispose();disposeObject(scene);container.replaceChildren();};
-  },[run,artifact.artifact_id,artifact.relative_path,artifact.mesh_version,artifact.unit,frame,isSTL,attempt]);
+  },[run,artifact.artifact_id,artifact.relative_path,artifact.mesh_version,artifact.unit,frame,attempt]);
 
   function action(value:PreviewAction){
     const e=engine.current;if(!e)return;
@@ -127,10 +118,7 @@ export default function ResultPreview({run,artifact,frame,stlAvailable,dimension
   }
   async function toggleFullscreen(){try{if(document.fullscreenElement===viewport.current)await document.exitFullscreen();else await viewport.current?.requestFullscreen();}catch{setEnvironmentNotice('当前浏览器不支持全屏，请使用窗口预览。');}}
   return <div className="result-preview">
-    <div className="result-heading"><div className="result-formats" role="group" aria-label="结果预览格式">
-      <button type="button" aria-pressed={!isSTL} onClick={()=>setFormat('glb')}>{plainGeometry?'GLB几何预览':'GLB彩色预览'}</button>
-      <button type="button" aria-pressed={isSTL} disabled={!stlAvailable} onClick={()=>setFormat('stl')}>STL几何预览</button>
-    </div><span>{isSTL||plainGeometry?'不含原UV/PBR纹理颜色':'保留本次UV/PBR材质'}</span></div>
+    <div className="result-heading"><strong>GLB彩色预览</strong><span>保留本次UV/PBR材质</span></div>
     <div className="result-viewport" ref={viewport}>
       <div className="result-canvas" ref={host}/>
       <button className="result-fullscreen" type="button" aria-label={fullscreen?'退出全屏':'全屏展示'} title={fullscreen?'退出全屏':'全屏展示'} onClick={()=>void toggleFullscreen()}><ViewerIcon name="fullscreen"/></button>
@@ -149,7 +137,7 @@ export default function ResultPreview({run,artifact,frame,stlAvailable,dimension
       </div>}
     </div>
     <div className="result-view-row"><span>视图控制</span><div>{views.map(([view,label])=><button type="button" key={view} disabled={!ready} onClick={()=>{const e=engine.current;if(e){e.controls.autoRotate=false;setRotate(false);e.view(view);}}}>{label}</button>)}</div></div>
-    <p className="result-hint">拖动旋转 · 滚轮缩放 · 右键平移 · {environment==='studio'?'柔光棚拍环境':'官方森林HDR环境'}{isSTL?' · 已按Z朝上转换显示':''}<br/>显示调整不改文件；尺寸以毫米报告为准，预览不代表打印合格。</p>
+    <p className="result-hint">拖动旋转 · 滚轮缩放 · 右键平移 · {environment==='studio'?'柔光棚拍环境':'官方森林HDR环境'}<br/>这里显示模型本体，尺寸以毫米报告为准。</p>
     {environmentNotice&&<p role="status" className="result-environment-notice">{environmentNotice}</p>}
     {stats&&<div className="result-info"><div className="result-info-title"><strong>模型信息</strong></div>
       <dl><div><dt>文件顶点数</dt><dd>{stats.vertices.toLocaleString()}</dd></div><div><dt>三角面数</dt><dd>{stats.triangles.toLocaleString()}</dd></div><div><dt>材质数</dt><dd>{stats.materials}</dd></div><div><dt>文件大小</dt><dd>{(stats.fileBytes/1000000).toFixed(2)}MB</dd></div></dl>
