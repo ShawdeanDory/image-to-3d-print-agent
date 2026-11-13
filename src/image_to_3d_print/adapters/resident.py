@@ -6,6 +6,7 @@ import socket
 import time
 from uuid import uuid4
 from .resident_protocol import PROTOCOL, process_identity, send_message
+from .reconstruction import recorded_seed
 from ..tools import ToolFailure, digest
 
 
@@ -65,7 +66,7 @@ def execute_resident(config, input_path, output, revision, cancel_event=None):
                      'exit_code': 0 if reason is None else 1, 'exit_code_scope': 'resident_request_not_process_exit',
                      'process_exit_code': None, 'execution_mode': 'resident',
                      'process_wall_seconds': time.perf_counter() - started, 'process_wall_scope': 'resident_request',
-                     'seed': 42, 'inference_profile': config.inference_profile, 'entry': 'resident_model_worker.py',
+                     'seed': recorded_seed(output), 'inference_profile': config.inference_profile, 'entry': 'resident_model_worker.py',
                      'machine': 'configured_linux_instance', 'device': config.device, 'offline': True,
                      'automatic_retries': 0, 'input_sha256': request['input_sha256'],
                      'resident': {key: reply.get(key) for key in ['instance_id', 'pid', 'request_index', 'server_request_seconds', 'model_reused']} if reply else None}

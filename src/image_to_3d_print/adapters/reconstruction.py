@@ -18,6 +18,13 @@ from ..tools import ToolFailure,ToolSession,digest,stop_process_group
 
 REVISIONS={'triposr':'107cefdc244c39106fa830359024f6a2f1c78871','trellis2_candidate':'75fbf0183001ed9876c8dbb35de6b68552ee08bd'}
 
+def recorded_seed(output):
+    try:
+        value=json.loads((Path(output)/'seed.json').read_text(encoding='utf-8'))['seed']
+        return value if type(value) is int and 0<=value<2**31 else None
+    except (OSError,ValueError,KeyError,TypeError):
+        return None
+
 class BackendConfig(ContractModel):
     backend: Literal['triposr','trellis2_candidate']
     python: Path
@@ -96,7 +103,7 @@ def execute_worker(config,mode,input_path,output,script,cancel_event=None):
             stop_process_group(process)
             raise
     execution={'backend':config.backend,'upstream_revision':revision,'exit_code':process.returncode,
-        'process_wall_seconds':time.perf_counter()-started,'seed':(42 if config.backend=='trellis2_candidate' else None) if config.inference_profile in {'official','course_fast'} else (config.seed or 0),
+        'process_wall_seconds':time.perf_counter()-started,'seed':recorded_seed(output) if config.inference_profile=='course_fast' else (42 if config.backend=='trellis2_candidate' else None) if config.inference_profile=='official' else (config.seed or 0),
         'inference_profile':config.inference_profile,'entry':'model_worker.py',
         'machine':'configured_linux_instance','device':config.device,'offline':True,'automatic_retries':0,'input_sha256':digest(input_path)}
     (output/'execution.json').write_text(json.dumps(execution,indent=2)+'\n',encoding='utf-8')

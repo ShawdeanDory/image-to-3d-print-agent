@@ -1,7 +1,7 @@
 """在锁定后端环境内工作，不导入服务层，不联网，不选官方固定图。"""
 import argparse,importlib.util,json,os,runpy,shutil,hashlib
 from pathlib import Path
-import sys,time,subprocess
+import sys,time,subprocess,secrets
 from contextlib import nullcontext
 
 def main():
@@ -177,6 +177,8 @@ def course_fast_inference(args,source,torch,started,*,pipeline_cache=None,reside
     sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src'))
     from image_to_3d_print.adapters.official import read_official_geometry
     output=args.output.resolve();stages={}
+    seed=secrets.randbelow(2**31)
+    (output/'seed.json').write_text(json.dumps({'seed':seed})+'\n',encoding='utf-8')
     target_faces=args.export_target_faces if args.export_target_faces is not None else 100000
     texture_size=args.texture_size if args.texture_size is not None else 2048
     def stamp():
@@ -196,7 +198,7 @@ def course_fast_inference(args,source,torch,started,*,pipeline_cache=None,reside
     prepared=pipeline.preprocess_image(image);prepared.save(output/'backend_input.png')
     ready=stamp();stages['preprocess']=ready-loaded
     with torch.inference_mode():
-        native=pipeline.run(prepared,seed=42,preprocess_image=False,pipeline_type='1024_cascade')[0]
+        native=pipeline.run(prepared,seed=seed,preprocess_image=False,pipeline_type='1024_cascade')[0]
         native.simplify(16777216)
     inferred=stamp();stages['inference']=inferred-ready
     trimesh.Trimesh(vertices=native.vertices.detach().cpu().numpy(),faces=native.faces.detach().cpu().numpy(),process=False).export(output/'native_mesh.ply')
@@ -216,11 +218,11 @@ def course_fast_inference(args,source,torch,started,*,pipeline_cache=None,reside
     from image_to_3d_print.geometry.glb_preserve import prepare_inspection_glb
     geometry=prepare_inspection_glb(output/'fast_export.glb',output/'raw_mesh.glb','y_up')
     finished=stamp();stages['independent_readback']=finished-exported;stages['total']=finished-started
-    parameters={'pipeline_type':'1024_cascade','seed':42,'decimation_target':target_faces,'texture_size':texture_size,
+    parameters={'pipeline_type':'1024_cascade','seed':seed,'decimation_target':target_faces,'texture_size':texture_size,
         'export_target_source':'task_budget' if args.export_target_faces is not None else 'automatic_generation_ceiling',
         'texture_size_source':'manual' if args.texture_size is not None else 'default',
         'remesh':True,'remesh_band':1,'remesh_project':0,'official_pbr_video':False}
-    report={'mode':args.mode,'backend':args.backend,'inference_profile':'course_fast','seed':42,'parameters':parameters,
+    report={'mode':args.mode,'backend':args.backend,'inference_profile':'course_fast','seed':seed,'parameters':parameters,
         'official_entry':None,'upstream_library':'trellis2.pipelines + o_voxel.postprocess.to_glb',
         'official_export_frame':'y_up','geometry_frame':'z_up','geometry_source':'fast_export_readback',
         'appearance':{'original':'pbr_glb','processed':'original_uv_pbr_preserved'},
