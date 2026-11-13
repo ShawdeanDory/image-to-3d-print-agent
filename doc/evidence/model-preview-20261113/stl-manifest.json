@@ -1,0 +1,40 @@
+[
+  {
+    "file": "runs\\model-preview-20261113-01\\delivery\\小鸭A_120mm_本体_已通过几何和演示切片.stl",
+    "source": "runs/print-supports-20261109-01/duck-web-body.stl",
+    "sha256": "12b14971ae8c0df360cc21e9a8c918a1bfffbda8768daa2a0f3a7db80dd8eefc",
+    "faces": 166738,
+    "dimensions_mm": [
+      151.4071807861328,
+      120.17263793945312,
+      120.0
+    ],
+    "watertight": true,
+    "winding_consistent": true,
+    "positive_volume": true,
+    "shells": 1,
+    "contains_supports": false,
+    "existing_evidence": "doc/evidence/print-demo-20261029/result.json",
+    "demo_slice_layers": 672,
+    "physical_print": false
+  },
+  {
+    "file": "runs\\model-preview-20261113-01\\delivery\\小鸭B_120mm_本体_保形试验候选.stl",
+    "source": "runs/print-duck-shape-20261106-01/duck-123a6686-120mm-review.stl",
+    "sha256": "12381f532749fd3ef258a3c47744c5cde823fe9adc7736bde900fd1338518f2b",
+    "faces": 162390,
+    "dimensions_mm": [
+      151.5009307861328,
+      119.94259643554688,
+      120.0
+    ],
+    "watertight": true,
+    "winding_consistent": true,
+    "positive_volume": true,
+    "shells": 1,
+    "contains_supports": false,
+    "existing_evidence": "doc/evidence/print-duck-shape-20261106/result.json",
+    "demo_slice_layers": 663,
+    "physical_print": false
+  }
+]

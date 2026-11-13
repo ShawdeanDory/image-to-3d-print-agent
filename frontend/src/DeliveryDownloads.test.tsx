@@ -6,16 +6,16 @@ describe('同版本文件交付和打印状态',()=>{
   it('GLB和STL分别提供按钮，渲染本身不下载',()=>{
     let calls=0;
     const html=renderToStaticMarkup(<DeliveryDownloads busy={false} stlAvailable={true} onGLB={()=>calls++} onSTL={()=>calls++}/>);
-    expect(html).toContain('下载最终彩色GLB');expect(html).toContain('下载带支撑STL');expect(calls).toBe(0);
+    expect(html).toContain('下载GLB');expect(html).toContain('下载模型STL');expect(calls).toBe(0);
     expect(html).not.toContain('disabled');
   });
   it('历史无单位原件或旧服务不能静默导出错误尺度',()=>{
     const html=renderToStaticMarkup(<DeliveryDownloads busy={false} stlAvailable={false} onGLB={()=>{}} onSTL={()=>{}}/>);
-    expect(html).toMatch(/disabled[^>]*>下载带支撑STL/);
+    expect(html).toMatch(/disabled[^>]*>下载模型STL/);
   });
-  it('无需支撑时说明STL为本体',()=>{
-    const html=renderToStaticMarkup(<DeliveryDownloads busy={false} stlAvailable supportStatus="not_required" onGLB={()=>{}} onSTL={()=>{}}/>);
-    expect(html).toContain('下载STL（无需支撑）');
+  it('失败检查不阻止查看建模结果',()=>{
+    expect(printNotice('failed',[])).toContain('可以预览和下载当前模型');
+    expect(printNotice('not_run',[])).toContain('可以预览和下载当前模型');
   });
   it('failed和not_run突出显示，不能因任务succeeded写成可打印',()=>{
     expect(printNotice('failed',[{name:'boundary_edges',status:'fail'},{name:'wall_thickness',status:'not_run'}]))

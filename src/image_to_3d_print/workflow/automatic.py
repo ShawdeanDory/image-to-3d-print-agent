@@ -8,7 +8,7 @@ from ..image.assets import AutomaticInputAcceptance
 from ..schemas.task import ModelTaskRequest
 from ..schemas.common import MeshInspection
 from ..tools import ToolFailure,ToolOutcome
-from ..runtime_contracts import GenerationDelivery,OriginalGLBDelivery,STLSupport,print_check_for
+from ..runtime_contracts import GenerationDelivery,OriginalGLBDelivery,print_check_for
 from ..reports.quality import write_quality
 from .state import save_context,fail
 from .llm import LanguageModel
@@ -71,22 +71,6 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
         if candidate is None:return None
         tried.append(candidate)
         return {'operation':'simplify','target_faces':candidate,'min_wall_mm':float(ctx['profile']['min_wall_mm'])}
-
-    def support_result(ctx, status, body_artifact_id):
-        if not ctx.get('auto_stl_supports'):
-            return None
-        if status != 'passed':
-            return STLSupport(status='blocked', reason='最终几何复检未通过，未生成支撑STL')
-        try:
-            result = tool(ctx, 'add_print_supports', mesh_version=ctx['mesh_version'],
-                          body_artifact_id=body_artifact_id, inspection=ctx['inspection'], profile=ctx['profile'])
-            data = result.tool.data
-            return STLSupport(status=data['status'], artifact_id=data['artifact_id'], pillar_count=data['pillar_count'],
-                              blocked_samples=data.get('blocked_samples', 0), top_gap_mm=data.get('top_gap_mm'))
-        except ToolFailure as exc:
-            if exc.code == 'STATE_CONFLICT':
-                raise
-            return STLSupport(status='failed', reason=exc.message[:300])
 
     def node(name):
         def execute(state):
@@ -223,10 +207,8 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                             inspection_mesh_version=ctx['mesh_version'],source_sha256=data['source_sha256'],
                             independent_readback=True,inspection_print_check=status,repair_attempts=ctx.get('repair_attempts',0),warnings=ctx['warnings']).model_dump(mode='json')
                     else:
-                        support = support_result(ctx, status, data['stl_artifact_id']) if print_copy else None
                         ctx['delivery']=GenerationDelivery(artifact_id=data['artifact_id'],mesh_version=ctx['mesh_version'],
                             independent_readback=True,print_check=status,repair_attempts=ctx.get('repair_attempts',0),dimensions_mm=data['dimensions_mm'],warnings=ctx['warnings'],
-                            stl_support=support,
                             **({'geometry_policy':'print_copy_color' if ctx.get('delivery_policy')=='print-copy-color-v1' else 'print_copy','stl_artifact_id':data['stl_artifact_id'],
                                 'original_artifact_id':original_data['artifact_id']} if print_copy else {})).model_dump(mode='json')
                     ctx['export_data']=data;ctx['next']='explain' if settings.llm.configured else 'finish'

@@ -1,7 +1,7 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import type {ArtifactRecord,AssetRecord,ModelTaskRequest,PrinterProfile,RuntimeEvent,RuntimeTask} from './contracts.generated';
-import {api,ApiError,artifactBlob,download,setAccessToken,transferLabel,type ArtifactProgress,type Capabilities} from './api';
-import {finalDeliveryModel,checkLabel,checkNames,checkMeasure,display,heightNumber,id,mergeEvents,stageNames,statusNames,validateImage} from './domain';
+import {api,ApiError,artifactBlob,download,downloadSTL,setAccessToken,transferLabel,type ArtifactProgress,type Capabilities} from './api';
+import {previewModel,checkLabel,checkNames,checkMeasure,display,heightNumber,id,mergeEvents,stageNames,statusNames,validateImage} from './domain';
 import PendingForm,{AxisSelect} from './PendingForm';
 import ResultPreview from './ResultPreview';
 import PrintSummary from './PrintSummary';
@@ -43,18 +43,13 @@ export default function App(){
   },[run,fetchTask]);
   useEffect(()=>()=>{if(preview)URL.revokeObjectURL(preview);},[preview]);
   const response=task?.response;
-  const original=response?.schema_version==='original-glb-v1';
   let active:ArtifactRecord|undefined;let deliveryError='';
-  try{active=finalDeliveryModel(response?.artifacts??[],run,response&&'delivery' in response?response.delivery:null);}catch(exc){deliveryError=message(exc);}
+  try{active=previewModel(response?.artifacts??[],run,response&&'delivery' in response?response.delivery:null);}catch(exc){deliveryError=message(exc);}
   const delivery=response&&'delivery' in response?response.delivery:null;
-  const printCopy=!!(delivery&&'geometry_policy' in delivery&&delivery.geometry_policy==='print_copy');
-  if(printCopy){active=undefined;deliveryError='此历史任务没有最终修复彩色GLB，请新建任务使用彩色交付流程。';}
-  const finalGLB=response?.status==='succeeded'&&delivery?.print_check==='passed'?active:undefined;
-  const support=delivery&&'stl_support' in delivery?delivery.stl_support:null;
-  const supportedSTL=finalGLB&&support&&['generated','not_required'].includes(support.status)
-    ?response?.artifacts?.find(a=>a.artifact_id===support.artifact_id&&a.run_id===run&&a.mesh_version===finalGLB.mesh_version
-      &&a.unit==='mm'&&a.kind==='candidate_stl'&&a.relative_path.toLowerCase().endsWith('.stl')):undefined;
-  if(original)deliveryError='此历史任务只有原始模型，尚无最终修复彩色交付，请新建任务。';
+  const original=active?.kind==='raw_mesh';
+  const stlAvailable=!!(cap?.delivery_stl_download&&response?.status==='succeeded'&&response.schema_version==='generation-v1'
+    &&active?.kind==='repaired_mesh'&&active.unit==='mm'&&delivery?.artifact_id===active.artifact_id);
+  const sameInspection=!!active&&response?.data.inspection?.mesh_version===active.mesh_version;
 
   async function act(fn:()=>Promise<void>){if(lock.current)return;lock.current=true;setBusy(true);setError('');try{await fn();}catch(exc){setError(message(exc));}finally{lock.current=false;setBusy(false);}}
   async function create(event:React.FormEvent<HTMLFormElement>){
@@ -72,13 +67,20 @@ export default function App(){
       const body:ModelTaskRequest={schema_version:'1.0.0',image_asset_id:assetRef.current.asset_id,printer_profile_id:String(data.get('profile')),
         height_value:height,height_unit:(data.get('unit')||null) as 'mm'|'cm'|null,scale_source:(source||null) as 'user_target'|'measured_object'|null,scale_evidence_id:evidence,
         orientation:{up_axis:axis||null,confirmed:false},description:String(data.get('description')||'')};
-      const created=await api.create(body,String(data.get('backend')),createKey.current,undefined,exportOptions);setRun(created.run_id);setNotice('任务已创建，后台最多尝试2轮受控修补，复检通过后准备STL支撑。');
+      const created=await api.create(body,String(data.get('backend')),createKey.current,undefined,exportOptions);setRun(created.run_id);setNotice('任务已创建，生成模型后即可预览，后台继续检查和最多2轮受控修补。');
     });
   }
   async function submit(body:Record<string,unknown>,slicer=false){await api.input(run,body,slicer);setNotice('已提交，继续原任务。');await fetchTask();}
   async function downloadFile(artifact:ArtifactRecord,name:string){
     setTransfer({loaded:0,total:null});setDownloadError('');setNotice('');
     try{await download(run,artifact.artifact_id,name,{onProgress:setTransfer});setNotice('文件已读取，已交给浏览器保存。');}
+    catch(exc){setDownloadError(message(exc));}
+    finally{setTransfer(null);}
+  }
+  async function downloadBodySTL(){
+    if(!stlAvailable||!active?.mesh_version)throw Error('当前模型尚无同版本毫米STL');
+    setTransfer({loaded:0,total:null});setDownloadError('');
+    try{await downloadSTL(run,active.mesh_version,{onProgress:setTransfer});setNotice('模型STL已交给浏览器保存。');}
     catch(exc){setDownloadError(message(exc));}
     finally{setTransfer(null);}
   }
@@ -104,28 +106,25 @@ export default function App(){
   {downloadError&&<p role="alert" className="error">下载未完成：{downloadError}。可再次点击原下载按钮重试。</p>}
   {transfer&&<div role="status" className="notice">正在下载：{transferLabel(transfer)}<br/><progress aria-label="文件下载进度" max={transfer.total||undefined} value={transfer.total?transfer.loaded:undefined}/></div>}
   {task&&response&&<div className="workspace task-workspace"><div className="main-column">
-    <section className="sheet model-sheet"><div className="section-title"><div><span className="eyebrow">模型与版本</span><h2>查看本次产物</h2></div><span className="muted">最终修复版本</span></div>
+    <section className="sheet model-sheet"><div className="section-title"><div><span className="eyebrow">模型与版本</span><h2>查看本次产物</h2></div><span className="muted">{original?'原始建模结果':'当前交付版本'}</span></div>
       {active&&!original&&<p role="status" className={delivery?.print_check==='passed'?'notice':'notice error'}><strong>{printNotice(delivery?.print_check,response.data.inspection?.checks??[])}</strong></p>}
       {deliveryError&&<p role="alert" className="error">{deliveryError}</p>}
-      {finalGLB?<div className="model-single"><ResultPreview key={finalGLB.artifact_id} run={run} artifact={finalGLB} frame={task.artifact_frames?.[finalGLB.artifact_id]} dimensionsMm={response.data.inspection?.dimensions_mm}/></div>
-        :<div className="empty-model"><span>◎</span><h3>{['succeeded','failed','cancelled'].includes(response.status)?'没有通过复检的最终GLB':'最终彩色GLB将在复检后显示'}</h3></div>}
-      {finalGLB&&<p className="muted">最终修复彩色GLB已毫米定标并通过几何复检。网格版本：{finalGLB.mesh_version}</p>}
-      {response.data.inspection?.dimensions_mm&&<div className="dimensions"><span>{original?'检查副本尺寸（原始GLB未应用）':'交付版本检查尺寸'}</span><strong>{response.data.inspection.dimensions_mm.map(n=>n.toFixed(2)).join(' × ')}<small>mm</small></strong><span>网格：{response.data.inspection.mesh_version}</span></div>}
+      {active?<div className="model-single"><ResultPreview key={active.artifact_id} run={run} artifact={active} frame={task.artifact_frames?.[active.artifact_id]} dimensionsMm={sameInspection?response.data.inspection?.dimensions_mm:null}/></div>
+        :<div className="empty-model"><span>◎</span><h3>{['succeeded','failed','cancelled'].includes(response.status)?'本任务尚无可读取的GLB':'建模结果生成后将在这里显示'}</h3></div>}
+      {active&&<p className="muted">{original?'当前显示原始建模结果，修复和定标记录见下方报告。':'当前显示已定标并检查的交付模型，打印结论见报告。'}网格版本：{active.mesh_version}</p>}
+      {sameInspection&&response.data.inspection?.dimensions_mm&&<div className="dimensions"><span>当前模型检查尺寸</span><strong>{response.data.inspection.dimensions_mm.map(n=>n.toFixed(2)).join(' × ')}<small>mm</small></strong><span>网格：{response.data.inspection.mesh_version}</span></div>}
       <ArtifactImages run={run} artifacts={(response.artifacts??[]).filter(a=>['input_image','foreground_image'].includes(a.kind)||a.artifact_id===task.pending?.details?.preview_artifact_id)}/>
     </section>
     <ReconstructionTiming value={task.resources?.reconstruction}/>
     <GPURepairInfo value={task.resources?.gpu_boundary_repair}/>
     <MeshBudgetInfo value={task.resources?.mesh_budget} original={response.schema_version==='original-glb-v1'}/>
-    {finalGLB&&<MaterialInfo original={original} printCopy={!!(delivery&&'geometry_policy' in delivery&&delivery.geometry_policy==='print_copy_color')}/>}
-    {finalGLB&&<section className="sheet"><h2>最终修复文件</h2><p>自动修复尝试{delivery?.repair_attempts??0}轮。</p>
+    {active&&<MaterialInfo original={original} printCopy={!!(delivery&&'geometry_policy' in delivery&&delivery.geometry_policy==='print_copy_color')}/>}
+    {active&&<section className="sheet"><h2>模型文件</h2>{delivery&&<p>自动修复尝试{delivery.repair_attempts??0}轮。</p>}
       {delivery?.warnings?.map((warning,index)=><p className="muted" key={index}>{warning}</p>)}
-      <DeliveryDownloads busy={busy} stlAvailable={!!supportedSTL} supportStatus={support?.status}
-        onGLB={()=>void act(()=>downloadFile(finalGLB,`repaired-${run}.glb`))}
-        onSTL={()=>{if(supportedSTL)void act(()=>downloadFile(supportedSTL,`${support?.status==='generated'?'supported':'repaired'}-${run}.stl`));}}/>
-      <p className="muted">{support?.status==='generated'
-        ?`毫米STL包含同版本本体和${support.pillar_count}根临时支撑柱，最小顶部间隙${support.top_gap_mm}mm。${support.blocked_samples?`另有${support.blocked_samples}个候选位置因净空不足跳过。`:''}请按实际设备切片并核对悬垂覆盖。`
-        :support?.status==='not_required'?'当前检查未检出需加支撑的悬垂，STL为同版本模型本体。'
-        :support?.reason??'该任务没有自动支撑证据，带支撑STL暂不可下载。'}</p></section>}
+      <DeliveryDownloads busy={busy} stlAvailable={stlAvailable}
+        onGLB={()=>void act(()=>downloadFile(active,`${original?'original':'repaired'}-${run}.glb`))}
+        onSTL={()=>void act(downloadBodySTL)}/>
+      <p className="muted">{stlAvailable?'STL为毫米模型本体。请打印店按实际设备切片并设置支撑。':original?'原始模型尚未完成毫米交付，STL暂不可用。':'同版本STL将在毫米文件导出完成后提供。'}</p></section>}
     {task.pending&&response.schema_version==='1.0.0'&&<PendingForm key={task.pending.pending_input_id} task={task} onSubmit={submit}/>}
     <section className="sheet"><span className="eyebrow">质量与证据</span><h2>{original?'检查副本的打印报告':'交付版本的打印报告'}</h2><p className="muted">结论来自服务端检查。“未执行”表示没有取得结果，不能视为通过。</p>
     {!original&&active&&response.data.inspection?.mesh_version===active.mesh_version&&response.data.inspection&&<PrintSummary inspection={response.data.inspection} profile={response.data.printer_profile}/>}

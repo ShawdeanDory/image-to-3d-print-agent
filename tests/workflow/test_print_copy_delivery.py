@@ -25,14 +25,14 @@ def test_policy_snapshot_and_original_stl_binding(setup_service,monkeypatch):
     run=service.create(CreateTask(request=request),'same')['run_id']
     ctx=service.store.row(run)['context']
     assert ctx['delivery_policy']=='print-copy-color-v1' and not ctx.get('gpu_hole_policy')
+    assert not ctx.get('auto_stl_supports')
     row=pump(service,settings,run,tools);assert row['status']=='succeeded',row['context'].get('error')
     delivery=row['response']['delivery'];assert delivery['geometry_policy']=='print_copy_color'
     assert delivery['print_certified'] is False
     artifacts={a['artifact_id']:a for a in row['response']['artifacts']}
     stl=artifacts[delivery['stl_artifact_id']];glb=artifacts[delivery['artifact_id']]
     assert stl['mesh_version']==glb['mesh_version']==delivery['mesh_version']
-    assert delivery['stl_support']['status']=='not_required'
-    assert delivery['stl_support']['artifact_id']==stl['artifact_id']
+    assert delivery['stl_support'] is None
     np.testing.assert_allclose(load_mesh(settings.root/stl['relative_path']).extents,load_mesh(settings.root/glb['relative_path']).extents,atol=.01)
     from image_to_3d_print.geometry.glb_preserve import GLBDocument
     exported=GLBDocument(settings.root/glb['relative_path'])
@@ -41,6 +41,7 @@ def test_policy_snapshot_and_original_stl_binding(setup_service,monkeypatch):
     original=artifacts[delivery['original_artifact_id']]
     assert digest(settings.root/original['relative_path'])==tools.original_sha
     assert tools.calls.count('reconstruct')==1 and tools.calls.count('export_print_color')==1
+    assert 'add_print_supports' not in tools.calls
     assert service.create(CreateTask(request=request),'same')['run_id']==run
 
 
@@ -56,7 +57,7 @@ def test_native_failure_keeps_valid_files_and_explains_failure(setup_service,mon
     assert row['status']=='succeeded',row['context'].get('error')
     delivery=row['response']['delivery']
     assert delivery['print_check']!='passed' and delivery['repair_attempts']==1
-    assert delivery['stl_support']['status']=='blocked' and delivery['stl_support']['artifact_id'] is None
+    assert delivery['stl_support'] is None
     assert 'add_print_supports' not in tools.calls
     assert any('打印副本修复失败' in w for w in delivery['warnings'])
     assert digest(tools.original)==tools.original_sha and tools.calls.count('reconstruct')==1

@@ -1,0 +1,33 @@
+[
+  {
+    "run": "00df5c40-ef7c-4c56-b398-fcf4862de2d9",
+    "status": "succeeded",
+    "print_check": "failed",
+    "preview_loaded": true,
+    "automatic_downloads": 0,
+    "kind": "inspection_failed",
+    "files": {
+      "glb": {
+        "bytes": 3020248,
+        "sha256": "55400667cc8e347ff553f3583f74a348a43be7a55725ecaa9b2b839e82365d7b",
+        "artifact_id": "t_954496e634f647d7_glb"
+      },
+      "stl": {
+        "bytes": 4793934,
+        "sha256": "242c8a9a9c03dbfa0385c660178431b0f60823d1f003eba0317ecd63c5794a6d",
+        "artifact_id": "t_954496e634f647d7_stl"
+      }
+    },
+    "stl_is_body_artifact": true
+  },
+  {
+    "run": "92c35aca-8bea-4f95-b94a-6c640ef34006",
+    "status": "failed",
+    "print_check": "not_run",
+    "preview_loaded": true,
+    "automatic_downloads": 0,
+    "kind": "color_export_failed",
+    "original_artifact_id": "t_095f8403c95f4fc9_original_glb",
+    "source_sha256": "fc72717a1160f501599297fe568aa3a28e47d02ff858bd63bebefec753f28cbc"
+  }
+]

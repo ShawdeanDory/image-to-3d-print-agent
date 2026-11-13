@@ -37,6 +37,10 @@ export function finalDeliveryModel(artifacts:ArtifactRecord[],run:string,deliver
   const result=deliveryModel(artifacts,run,delivery);
   return result?.kind==='repaired_mesh'&&result.unit==='mm'?result:undefined;
 }
+export function previewModel(artifacts:ArtifactRecord[],run:string,delivery?:{artifact_id:string;mesh_version:string;print_check?:string}|null){
+  const delivered=deliveryModel(artifacts,run,delivery);
+  return delivered??[...artifacts].reverse().find(a=>a.kind==='raw_mesh'&&!!a.mesh_version&&a.relative_path.toLowerCase().endsWith('.glb'));
+}
 export function display(value: unknown) { return value == null ? '未知' : typeof value==='object' ? JSON.stringify(value) : String(value); }
 export function checkMeasure(name:string,value:unknown,unit?:string|null,threshold=false){
   if(value==null)return '未知';if(typeof value==='boolean')return value?'是':'否';
