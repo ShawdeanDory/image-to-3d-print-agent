@@ -1709,6 +1709,15 @@
           "title": "Phase",
           "type": "integer"
         },
+        "policy": {
+          "default": "legacy",
+          "enum": [
+            "legacy",
+            "wall05-components-v2"
+          ],
+          "title": "Policy",
+          "type": "string"
+        },
         "reference_version": {
           "maxLength": 64,
           "minLength": 1,
@@ -1751,6 +1760,15 @@
         "native_python": {
           "format": "path",
           "title": "Native Python",
+          "type": "string"
+        },
+        "policy": {
+          "default": "legacy",
+          "enum": [
+            "legacy",
+            "wall05-components-v2"
+          ],
+          "title": "Policy",
           "type": "string"
         },
         "timeout_s": {

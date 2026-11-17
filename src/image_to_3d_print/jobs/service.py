@@ -72,6 +72,10 @@ class TaskService:
         try: validate_request_references(req, {req.image_asset_id}, self.profiles, measurements)
         except ValueError as exc: raise ToolFailure('REFERENCE_NOT_FOUND', '图片、打印配置或测量依据未注册') from exc
         profile = self.profiles[req.printer_profile_id]
+        if (automatic and self.settings.tools.print_repair is not None
+                and self.settings.tools.print_repair.policy=='wall05-components-v2'
+                and (profile.profile_id!='demo_wall05_v2' or profile.version!='2.0.0' or profile.min_wall_mm!=.5)):
+            raise ToolFailure('STATE_CONFLICT','新打印修复政策需要选择0.5mm的v2打印配置')
         ctx = initial_context(uuid4(), req.model_dump(mode='json'), profile.model_dump(mode='json'),
             create.backend or self.settings.default_backend)
         ctx['reconstruction_profile']=create.reconstruction_profile
@@ -79,6 +83,8 @@ class TaskService:
             ctx['export_options']={'export_target_faces':create.export_target_faces,'texture_size':create.texture_size}
             ctx['delivery_policy']='print-copy-color-v1' if self.settings.tools.print_repair is not None else 'repaired-glb-v1'
             ctx['gpu_hole_policy']=None if self.settings.tools.print_repair is not None else 'gpu-boundary-fill-v1'
+            if self.settings.tools.print_repair is not None:
+                ctx['print_repair_policy']=self.settings.tools.print_repair.policy
         ctx['workflow_policy']=self.settings.workflow_policy
         if automatic:ctx['face_budget_policy']='image-complexity-v1'
         ctx['orientation_source']=orientation_source

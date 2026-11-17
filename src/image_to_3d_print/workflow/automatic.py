@@ -130,6 +130,8 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     ctx['inspection']=inspection.model_dump(mode='json');ctx.setdefault('inspection_history',[]).append(ctx['inspection'])
                     faces=len(load_mesh(root/MeshStore(root).get(ctx['run_id'],ctx['mesh_version']).relative_path).faces)
                     score=(sum(c.status=='not_run' for c in inspection.checks),sum(c.status=='fail' for c in inspection.checks),inspection.boundary_edge_count+inspection.non_manifold_edge_count+inspection.non_manifold_vertex_count,faces)
+                    if ctx.get('print_repair_policy')=='wall05-components-v2':
+                        score=(not inspection.ready_for_print,*score[:3],max(0,inspection.component_count-1),faces)
                     if not ctx.get('best_checked') or tuple(ctx['best_checked']['score'])>score:
                         ctx['best_checked']={'score':list(score),'mesh_version':ctx['mesh_version'],'inspection':ctx['inspection']}
                     ctx['next']='plan'
@@ -174,10 +176,16 @@ def build_generation_graph(settings,store,checkpointer,tool_dispatch=dispatch,la
                     ctx['repair_attempt_log'][-1]['status']='applied';ctx['next']='inspect'
                 elif name=='print_repair':
                     ctx['stage']='repair'
+                    policy={'policy':ctx['print_repair_policy']} if ctx.get('print_repair_policy') else {}
                     result=tool(ctx,'repair_print_copy',mesh_version=ctx['mesh_version'],reference_version=ctx['print_copy_reference'],
                         phase=ctx['repair_attempts'],inspection=ctx['inspection'],
-                        height_mm=ModelTaskRequest.model_validate(ctx['request']).height_mm,min_wall_mm=ctx['profile']['min_wall_mm'])
-                    ctx['repair_attempt_log'][-1].update(status='applied',details=result.tool.data['print_copy'])
+                        height_mm=ModelTaskRequest.model_validate(ctx['request']).height_mm,min_wall_mm=ctx['profile']['min_wall_mm'],**policy)
+                    ctx['repair_attempt_log'][-1].update(status='retained_previous' if result.tool.data.get('retained_previous') else 'applied',details=result.tool.data['print_copy'])
+                    if result.tool.data.get('retained_previous'):
+                        ctx['warnings'].append('第一轮候选未通过保形，保留上一有效几何并继续末轮修复。')
+                    method=result.tool.data['print_copy'].get('method',{})
+                    removed=sum(len(method.get(key,{}).get('removed_components',[])) for key in ('components','post_local_components'))
+                    if removed:ctx['warnings'].append(f'末轮融合后删除仍分离的副壳体{removed}个，原件和删除前候选后台保留。')
                     ctx['next']='inspect'
                 elif name=='deliver':
                     ctx['stage']='export'

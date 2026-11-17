@@ -6,6 +6,7 @@ from pydantic import Field,StrictBool,StrictInt
 from ..schemas.common import ContractModel,CheckResult,MeshInspection,PrinterProfile,Text,Id
 from ..geometry.core import MeshStore,load_mesh,topology
 from ..tools import ToolFailure,ToolSession,digest,stop_process_group
+from ..print_config import wall_probe_tolerance
 
 class InspectionConfig(ContractModel):
     blender: Path
@@ -81,7 +82,8 @@ def inspect_mesh(root,run,version,profile:PrinterProfile,height_mm=None,bed_revi
         for name,key in [('watertight','watertight'),('normals','normals_consistent')]:check(name,'pass' if facts[key] else 'fail',facts[key],True)
         error=None;external=None
         try:
-            external=blender_call(config,'inspect',mesh,session.directory,{'unit':source.unit,'min_wall_mm':profile.min_wall_mm})
+            tolerance=wall_probe_tolerance(profile)
+            external=blender_call(config,'inspect',mesh,session.directory,{'unit':source.unit,'min_wall_mm':profile.min_wall_mm,'wall_tolerance_mm':tolerance})
             session.add('blender_evidence',session.directory/'blender-result.json','inspection_report',source.unit)
             tool='Blender4.5.14/print_toolbox@b42d6862'
             faces=external['self_intersection_faces'];check('self_intersection','fail' if faces else 'pass',len(faces),0,details={'face_indices':faces},tool=tool)
@@ -91,7 +93,7 @@ def inspect_mesh(root,run,version,profile:PrinterProfile,height_mm=None,bed_revi
                 thin=external['thin_faces_low'];critical=external['thin_faces_high']
                 if thin:check('wall_thickness','fail',{'thin_face_count':len(thin)},profile.min_wall_mm,'mm',{'face_indices':thin,'method':'six_seeded_inward_rays_per_face'},tool)
                 elif critical:check('wall_thickness','warn',{'near_threshold_face_count':len(critical)},profile.min_wall_mm,'mm',{'face_indices':critical,'reason':'阈值附近±0.02毫米需复核'},tool)
-                else:check('wall_thickness','pass',profile.min_wall_mm,profile.min_wall_mm,'mm',{'value_kind':'validated_sampling_lower_bound','sample_threshold_mm':profile.min_wall_mm+.02,'global_minimum_proven':False},tool)
+                else:check('wall_thickness','pass',profile.min_wall_mm,profile.min_wall_mm,'mm',{'value_kind':'validated_sampling_lower_bound','sample_threshold_mm':profile.min_wall_mm+tolerance,'global_minimum_proven':False},tool)
             overhang=external['overhang_faces'];critical=external['critical_overhang_faces']
             check('overhang','warn' if overhang or critical else 'pass',len(overhang),45.,'degree',
                 {'face_indices':overhang,'critical_face_indices':critical,'definition':'downward normal angle to -Z <45 degrees, bed faces excluded','supports':'human_slicer_review'},tool)

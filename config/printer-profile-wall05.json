@@ -1,0 +1,13 @@
+{
+  "profile_id": "demo_wall05_v2",
+  "version": "2.0.0",
+  "profile_kind": "demo",
+  "process": "FDM",
+  "material": "PLA",
+  "nozzle_mm": 0.4,
+  "layer_height_mm": 0.2,
+  "min_wall_mm": 0.5,
+  "build_volume_mm": [220, 220, 250],
+  "slicer_version": "2.9.6",
+  "supports_policy": "human_review"
+}

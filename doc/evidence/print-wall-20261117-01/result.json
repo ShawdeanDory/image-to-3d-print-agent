@@ -1,0 +1,54 @@
+{
+  "task": "MID-PRINT-WALL-001",
+  "date": "2026-11-17",
+  "baseline_commit": "90f6807564541cbe91fdfcc05ffc6e24cbd8f60f",
+  "status": "local_verified_cloud_pending",
+  "execution_machine": "Windows local CPU",
+  "policy": "wall05-components-v2",
+  "printer_profile_id": "demo_wall05_v2",
+  "min_wall_mm": 0.5,
+  "baseline": {
+    "new_policy_test": "collection_error_missing_print_components_module",
+    "first_rejected_round_test": "failed_expected_phases_1_2_observed_1"
+  },
+  "first_full_suite": {
+    "passed": 325,
+    "failed": 3,
+    "skipped": 20,
+    "seconds": 113.77,
+    "failures": [
+      "Windows_child_UTF8_parent_GBK_decode_mismatch",
+      "Trimesh_split_implicitly_repairs_holes",
+      "new_test_assumed_ArtifactRecord_has_sha256"
+    ]
+  },
+  "verification": {
+    "command": "python -m pytest tests -q",
+    "environment": {"PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8", "PYTHONPATH": "src"},
+    "passed": 328,
+    "failed": 0,
+    "skipped": 20,
+    "warnings": 2,
+    "seconds": 114.87,
+    "focused_passed": 32,
+    "focused_seconds": 15.29,
+    "geometry_schema_check": "passed",
+    "wall_policy_native_cases_skipped": 6,
+    "all_native_cases_skipped": 9,
+    "test_doubles": ["reconstruction", "Blender", "MeshFix_MeshLib_workflow_calls"]
+  },
+  "not_run": [
+    "Linux_MeshFix_MeshLib_native_fixtures",
+    "Linux_Blender_0.4_0.5_0.8mm_thickness_probes",
+    "original_wooden_rack_replay",
+    "cloud_service_deployment",
+    "new_reconstruction",
+    "LLM",
+    "slicing",
+    "physical_print"
+  ],
+  "original_files_modified": false,
+  "production_policy_changed": false,
+  "human_review": "passed_local_subtask_only_user_confirmation_2026-11-17",
+  "full_logs": "runs/print-wall-20261117-01"
+}

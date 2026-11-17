@@ -29,8 +29,10 @@ def main():
         solid.free()
         result['self_intersection_faces']=sorted(helper.bmesh_check_self_intersect_object(obj))
         if parameters['unit']=='mm':
-            result['thin_faces_low']=sorted(helper.bmesh_check_thick_object(obj,(parameters['min_wall_mm']-.02)*.001))
-            result['thin_faces_high']=sorted(helper.bmesh_check_thick_object(obj,(parameters['min_wall_mm']+.02)*.001))
+            tolerance=parameters.get('wall_tolerance_mm',.02)
+            result['thin_faces_low']=sorted(helper.bmesh_check_thick_object(obj,(parameters['min_wall_mm']-tolerance)*.001))
+            result['thin_faces_high']=(result['thin_faces_low'] if tolerance==0 else
+                sorted(helper.bmesh_check_thick_object(obj,(parameters['min_wall_mm']+tolerance)*.001)))
         else:result.update(thin_faces_low=[],thin_faces_high=[])
         down=Vector((0,0,-1));overhang=[];critical=[]
         for face in mesh.polygons:

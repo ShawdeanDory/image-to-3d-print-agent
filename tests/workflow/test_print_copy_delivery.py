@@ -109,3 +109,51 @@ def test_download_is_registered_stl_and_read_only(setup_service,monkeypatch):
     payload,headers=delivery_stl(settings.root,run,row['response'],delivery['mesh_version'])
     assert payload==(settings.root/stl['relative_path']).read_bytes()
     assert headers['X-Print-Certified']=='false' and service.store.row(run)['response']==row['response']
+
+
+def test_v2_policy_is_snapshotted_and_reaches_both_rounds(setup_service,monkeypatch):
+    service,settings,request=configured(setup_service)
+    old=service.create(CreateTask(request=request),'old')['run_id']
+    settings=settings.model_copy(update={'profile_files':[Path('config/printer-profile-wall05.json')],
+        'tools':settings.tools.model_copy(update={'print_repair':settings.tools.print_repair.model_copy(update={'policy':'wall05-components-v2'})})})
+    service=TaskService(settings)
+    # 旧幂等请求先返回历史任务，不受新配置要求影响。
+    assert service.create(CreateTask(request=request),'old')['run_id']==old
+    assert service.store.row(old)['context']['print_repair_policy']=='legacy'
+    with pytest.raises(ToolFailure):service.create(CreateTask(request=request))
+    request={**request,'printer_profile_id':'demo_wall05_v2'}
+    tools=TexturedFixture(monkeypatch,thin=True);seen=[]
+    def native(mesh,directory,phase,config,*args):
+        seen.append((phase,config.policy,args[-1]));return mesh.copy(),{'evidence_origin':'test_fixture'}
+    monkeypatch.setattr('image_to_3d_print.print_demo.native_call',native)
+    run=service.create(CreateTask(request=request))['run_id']
+    row=pump(service,settings,run,tools)
+    assert row['status']=='succeeded',row['context'].get('error')
+    assert seen==[(1,'wall05-components-v2',.5),(2,'wall05-components-v2',.5)]
+    assert row['context']['profile']['min_wall_mm']==.5
+    assert row['response']['delivery']['print_check']=='failed'
+    assert row['response']['delivery']['stl_artifact_id'] and row['response']['delivery']['artifact_id']
+
+
+def test_v2_rejected_first_candidate_retains_mesh_and_still_tries_second_round(setup_service,monkeypatch):
+    service,settings,request=configured(setup_service)
+    settings=settings.model_copy(update={'profile_files':[Path('config/printer-profile-wall05.json')],
+        'tools':settings.tools.model_copy(update={'print_repair':settings.tools.print_repair.model_copy(update={'policy':'wall05-components-v2'})})})
+    service=TaskService(settings);request={**request,'printer_profile_id':'demo_wall05_v2'}
+    tools=TexturedFixture(monkeypatch,thin=True);seen=[]
+    def native(mesh,directory,phase,*args):
+        seen.append((phase,mesh.extents.copy()))
+        candidate=mesh.copy()
+        if phase==1:candidate.apply_scale(.5)
+        return candidate,{'evidence_origin':'test_fixture'}
+    monkeypatch.setattr('image_to_3d_print.print_demo.native_call',native)
+    run=service.create(CreateTask(request=request))['run_id'];row=pump(service,settings,run,tools)
+    assert row['status']=='succeeded' and [s[0] for s in seen]==[1,2]
+    np.testing.assert_allclose(seen[0][1],seen[1][1])
+    assert row['context']['repair_attempt_log'][0]['status']=='retained_previous'
+    assert row['context']['repair_attempt_log'][0]['details']['shape']['accepted'] is False
+    for artifact in row['response']['artifacts']:
+        if artifact['relative_path'].endswith('acceptance.json'):
+            import json
+            record=json.loads((settings.root/artifact['relative_path']).read_text(encoding='utf-8'))
+            assert record['candidate_applied']==(record['phase']==2)

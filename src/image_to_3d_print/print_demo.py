@@ -50,6 +50,7 @@ def native_call(mesh,directory,phase,config,inspection,height,min_wall):
     states={c.name:c.status for c in inspection.checks};request={'input':str(input),'output':str(output),
         'native_paths':[str(p) for p in config.native_paths],'phase':phase,'thin':states.get('wall_thickness')=='fail',
         'bed':states.get('bed_contact')=='fail','height':height,'min_wall':min_wall}
+    if config.policy!='legacy':request['policy']=config.policy
     file=directory/'request.json';file.write_text(json.dumps(request),encoding='utf-8')
     worker=Path(__file__).resolve().parents[2]/'scripts/tools/print_repair_worker.py'
     environment={**os.environ,'CUDA_VISIBLE_DEVICES':'','OMP_NUM_THREADS':'4'};environment.pop('PYTHONPATH',None);environment.pop('PYTHONHOME',None)

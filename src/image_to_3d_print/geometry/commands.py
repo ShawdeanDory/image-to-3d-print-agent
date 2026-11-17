@@ -69,6 +69,7 @@ class PrintRepairCall(Call):
     inspection:MeshInspection
     height_mm:float=Field(ge=100,le=150)
     min_wall_mm:float=Field(gt=0,le=1.4)
+    policy:Literal['legacy','wall05-components-v2']='legacy'
 class PrintSupportCall(Call):
     operation:Literal['add_print_supports']
     mesh_version:Id
@@ -169,8 +170,12 @@ def dispatch(root,command,configuration:ToolConfiguration,cancel_event=None,*,hu
                 raise ToolFailure('STATE_CONFLICT','打印副本结构修改仅允许服务端授权自动策略')
             from .print_copy import repair_copy,export_copy
             if op in {'export_print_copy','export_print_color'}:return export_copy(root,run,command.mesh_version,colored=op=='export_print_color')
+            native_config=configuration.print_repair
+            if command.policy!='legacy' and (native_config is None or native_config.policy!=command.policy):
+                raise ToolFailure('STATE_CONFLICT','当前部署未启用该打印修复政策')
+            if native_config is not None:native_config=native_config.model_copy(update={'policy':command.policy})
             return repair_copy(root,run,command.mesh_version,command.reference_version,command.phase,
-                command.inspection,command.height_mm,command.min_wall_mm,configuration.print_repair)
+                command.inspection,command.height_mm,command.min_wall_mm,native_config)
         if op=='export_original_glb':return export_original(root,run,command.mesh_version)
         if op=='enhance_eye_texture':
             raise ToolFailure('TOOL_UNAVAILABLE','眼部与局部底色试用已按用户要求回退，使用原始GLB')
